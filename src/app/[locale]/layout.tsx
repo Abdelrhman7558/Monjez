@@ -9,6 +9,7 @@ import Script from "next/script";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.monjez-agency.com"),
   title: "Monjez | AI Infrastructure & Automation Systems",
   description:
     "We build AI Infrastructure Systems that replace operational bottlenecks. Revenue-focused automation for scaling companies.",
@@ -23,16 +24,25 @@ export const metadata: Metadata = {
     title: "Monjez | AI Infrastructure & Automation Systems",
     description:
       "We build AI Infrastructure Systems that replace operational bottlenecks.",
-    url: "https://monjez.ai",
+    url: "https://www.monjez-agency.com",
     siteName: "Monjez",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 800,
+        alt: "Monjez Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Monjez | AI Infrastructure & Automation Systems",
     description:
       "We build AI Infrastructure Systems that replace operational bottlenecks.",
+    images: ["/logo.png"],
   },
   icons: {
     icon: "/logo.png",
@@ -66,6 +76,20 @@ export default async function LocaleLayout({ children, params }: Props) {
             src="https://checkout.freemius.com/js/v1/"
             strategy="beforeInteractive"
           />
+          {/* Google Analytics Tag */}
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-5ZEJN3652H"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-5ZEJN3652H');
+            `}
+          </Script>
         </NextIntlClientProvider>
       </body>
     </html>
