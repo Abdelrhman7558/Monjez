@@ -42,8 +42,16 @@ export function Header() {
             <div className="container mx-auto px-4 md:px-6 relative flex items-center">
                 {/* 1. Logo - Pushed to the start */}
                 <div className="flex-1">
-                    <Link href="/" className="z-20 inline-block flex items-center gap-3 group">
-                        {/*<div className="relative w-10 h-10"> <Image src="/logo.png" alt="Monjez Logo" fill className="object-contain" priority/></div>*/}
+                    <Link href="/" className="z-20 inline-block flex items-center gap-2 group">
+                        <div className="relative w-8 h-8">
+                            <Image
+                                src="/logo.png"
+                                alt="Monjez Logo"
+                                fill
+                                className="object-contain"
+                                priority
+                            />
+                        </div>
                         <span className="text-2xl font-bold tracking-tighter text-white transition-colors">
                             MONJEZ
                             <span className="text-monjez-accent text-3xl leading-none">.</span>
