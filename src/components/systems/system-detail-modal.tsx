@@ -84,7 +84,7 @@ export function SystemDetailModal({ system, isOpen, onClose }: SystemDetailModal
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
                             transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
-                            className="bg-[#0B0B0B] border border-white/10 rounded-3xl w-full max-w-5xl h-[115vh] flex flex-col shadow-2xl overflow-hidden relative shrink-0 my-10"
+                            className="bg-[#0B0B0B] border border-white/10 rounded-3xl w-full max-w-5xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative shrink-0 my-10"
                         >
                             {/* Decorative Gradients */}
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-monjez-blue via-monjez-purple to-monjez-blue opacity-50" />
@@ -247,14 +247,6 @@ export function SystemDetailModal({ system, isOpen, onClose }: SystemDetailModal
                                 </div>
                             </div>
 
-                            {/* Footer CTA */}
-                            <div className="p-6 border-t border-white/5 bg-[#0B0B0B]/80 backdrop-blur-md flex justify-end">
-                                <button className="group relative flex items-center gap-2 px-8 py-3 rounded-full bg-monjez-blue text-white font-bold overflow-hidden shadow-[0_0_20px_rgba(30,144,255,0.4)] hover:shadow-[0_0_40px_rgba(30,144,255,0.6)] transition-all duration-300 font-bold">
-                                    <span className="relative z-10">{t("request_demo")}</span>
-                                    <div className="absolute inset-0 bg-gradient-to-r from-monjez-highlight to-monjez-blue opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                    <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform rtl:rotate-180 rtl:group-hover:translate-x-[-4px]" />
-                                </button>
-                            </div>
 
                         </motion.div>
                     </div>
