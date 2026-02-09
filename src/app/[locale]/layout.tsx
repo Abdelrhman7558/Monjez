@@ -34,6 +34,9 @@ export const metadata: Metadata = {
     description:
       "We build AI Infrastructure Systems that replace operational bottlenecks.",
   },
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 type Props = {

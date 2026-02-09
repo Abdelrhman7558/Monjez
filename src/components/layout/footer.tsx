@@ -2,6 +2,7 @@
 
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export function Footer() {
     const t = useTranslations("footer");
@@ -12,9 +13,19 @@ export function Footer() {
             <div className="container mx-auto px-4 md:px-6">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
                     <div className="col-span-1 md:col-span-2">
-                        <Link href="/" className="text-2xl font-bold tracking-tighter text-white mb-4 block text-start">
-                            MONJEZ
-                            <span className="text-monjez-accent text-3xl leading-none">.</span>
+                        <Link href="/" className="mb-6 flex items-center gap-3 text-start group">
+                            <div className="relative w-10 h-10">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Monjez Logo"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                            <span className="text-2xl font-bold tracking-tighter text-white">
+                                MONJEZ
+                                <span className="text-monjez-accent text-3xl leading-none">.</span>
+                            </span>
                         </Link>
                         <p className="text-gray-400 max-w-sm mb-6 text-start">
                             {t("description")}
