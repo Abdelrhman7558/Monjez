@@ -1,0 +1,522 @@
+{
+    "hero": {
+        "badge": "Accepting New Partners for Q2",
+        "title_part1": "We Build AI Systems That",
+        "title_part2": "Replace Operational Bottlenecks.",
+        "subtitle": "Stop hiring more people to do repetitive work. We engineer custom AI Infrastructure that scales your revenue, reduces costs, and automates execution.",
+        "cta_primary": "Book Strategy Call",
+        "cta_secondary": "Explore Our Systems"
+    },
+    "problem": {
+        "title": "Most Companies Don’t Need More Tools.",
+        "title_accent": "They Need Systems.",
+        "subtitle": "Scaling with \"more people\" breaks your margins. Scaling with \"more software\" breaks your focus. The gap between tool overload and operational clarity is where we live.",
+        "chaos_title": "The Typical Chaos",
+        "chaos_list": [
+            "Disconnected Tools (Zapier Spaghetti)",
+            "Manual Data Entry & Human Error",
+            "Siloed Departments & Hidden Costs",
+            "Reactive Decision Making"
+        ],
+        "system_title": "The Monjez System",
+        "system_list": [
+            "Unified Intelligence Layer",
+            "Autonomous Agents Execution",
+            "Real-time Financial Visibility",
+            "Predictive Growth Modeling"
+        ]
+    },
+    "philosophy": {
+        "badge": "Our Core Philosophy",
+        "title": "AI Is Not a Feature. ",
+        "title_accent": "It’s Infrastructure.",
+        "subtitle": "We don't sell \"chatbots\". We build full operational ecosystems where data flows like electricity—powering decisions, executing tasks, and scaling revenue without increasing headcount."
+    },
+    "systems": {
+        "title": "Core Systems We Build",
+        "subtitle": "Specialized modules designed to replace manual bottlenecks with intelligent automation.",
+        "learn_more": "Learn more",
+        "labels": {
+            "overview": "Overview",
+            "modules": "Modules",
+            "examples": "Examples",
+            "expected_roi": "Expected ROI",
+            "system_overview": "System Overview",
+            "who_builds": "Who Builds This?",
+            "system_modules": "System Modules",
+            "modules_desc": "Built on modular architecture, deployable as a monolith or microservices.",
+            "real_world": "Real-World Deployments",
+            "request_demo": "Request System Demo",
+            "infra": "AI Infrastructure"
+        },
+        "revenue": {
+            "title": "AI Revenue Systems",
+            "description": "Autonomous campaign management, predictive lead scoring, and automated sales outreach.",
+            "features": [
+                "Ad Tech Automation",
+                "CRM Intelligence",
+                "Conversion Optimization"
+            ],
+            "roi": [
+                {
+                    "label": "Revenue Increase",
+                    "value": "+34%"
+                },
+                {
+                    "label": "Lead Conv. Rate",
+                    "value": "3.5x"
+                },
+                {
+                    "label": "CAC Reduction",
+                    "value": "-28%"
+                }
+            ],
+            "users": [
+                {
+                    "role": "Founders / CEOs",
+                    "benefit": "Predictable revenue forecasting and clear ROI visibility."
+                },
+                {
+                    "role": "Marketing Teams",
+                    "benefit": "Automated ad optimization and lead scoring."
+                },
+                {
+                    "role": "Sales Directors",
+                    "benefit": "Intelligent pipeline management and automated follow-ups."
+                }
+            ],
+            "modules": [
+                {
+                    "name": "Predictive Lead Scoring",
+                    "description": "Uses historical data to rank leads by conversion probability."
+                },
+                {
+                    "name": "Automated Outreach API",
+                    "description": "Multi-channel sequences (Email, LinkedIn) triggers by user behavior."
+                },
+                {
+                    "name": "Revenue Intelligence Dashboard",
+                    "description": "Real-time visualization of ARR, MRR, and churn metrics."
+                }
+            ],
+            "examples": [
+                {
+                    "title": "Scaling SaaS ARR",
+                    "scenario": "Using predictive analytics, the system increased monthly recurring revenue by 15% within 3 months for a B2B SaaS client by identifying upsell opportunities."
+                }
+            ]
+        },
+        "financial": {
+            "title": "AI Financial Infrastructure",
+            "description": "Real-time cash flow analysis, automated bookkeeping, and predictive financial forecasting.",
+            "features": [
+                "Cash Flow Visibility",
+                "Automated Invoicing",
+                "Expense Optimization"
+            ],
+            "roi": [
+                {
+                    "label": "Processing Speed",
+                    "value": "100x"
+                },
+                {
+                    "label": "Error Reduction",
+                    "value": "99.9%"
+                },
+                {
+                    "label": "Hrs Saved/Week",
+                    "value": "40+"
+                }
+            ],
+            "users": [
+                {
+                    "role": "CFOs",
+                    "benefit": "Real-time audit trails and automated compliance."
+                },
+                {
+                    "role": "Finance Teams",
+                    "benefit": "90% reduction in manual data entry."
+                },
+                {
+                    "role": "E-commerce Ops",
+                    "benefit": "Instant reconciliation of multi-gateway transactions."
+                }
+            ],
+            "modules": [
+                {
+                    "name": "Ledger Automation",
+                    "description": "The core engine that syncs bank feeds with accounting software instantly."
+                },
+                {
+                    "name": "Smart Expense Categorization",
+                    "description": "LLM-based categorization of undefined transaction rows."
+                },
+                {
+                    "name": "Cash Flow Forecaster",
+                    "description": "Predictive modeling of future burn rate and runway."
+                }
+            ],
+            "examples": [
+                {
+                    "title": "Fintech Reconciliation",
+                    "scenario": "Automated invoice reconciliation reduced errors by 95% and saved 20 work hours/week for a high-volume payment processor."
+                }
+            ]
+        },
+        "operational": {
+            "title": "AI Operational Automation",
+            "description": "End-to-end workflow automation reducing human touchpoints by 90%.",
+            "features": [
+                "Task Autopilot",
+                "Data Synchronization",
+                "Decision Support"
+            ],
+            "roi": [
+                {
+                    "label": "Efficiency Boost",
+                    "value": "10x"
+                },
+                {
+                    "label": "SLA Improvement",
+                    "value": "60%"
+                },
+                {
+                    "label": "Human Touchpts",
+                    "value": "-90%"
+                }
+            ],
+            "users": [
+                {
+                    "role": "COOs",
+                    "benefit": "System-wide visibility and bottleneck detection."
+                },
+                {
+                    "role": "Product Managers",
+                    "benefit": "Automated JIRA/Linear syncs and user feedback loops."
+                },
+                {
+                    "role": "Support Teams",
+                    "benefit": "AI-triaged ticketing and automated resolution."
+                }
+            ],
+            "modules": [
+                {
+                    "name": "Workflow Autopilot",
+                    "description": "Zapier-like automation but with complex conditional logic and code execution."
+                },
+                {
+                    "name": "Data Sync Engine",
+                    "description": "Bi-directional sync between CRM, Database, and internal tools."
+                },
+                {
+                    "name": "SOP Bot",
+                    "description": "AI agent that executes standard operating procedures on demand."
+                }
+            ],
+            "examples": [
+                {
+                    "title": "Logistics Automation",
+                    "scenario": "Automated reporting and task assignment improved execution speed 10x for a logistics coordinator, removing manual dispatch entirely."
+                }
+            ]
+        }
+    },
+    "nav": {
+        "home": "Home",
+        "philosophy": "Philosophy",
+        "systems": "Systems",
+        "case_studies": "Case Studies",
+        "process": "Process",
+        "pricing": "Pricing",
+        "faq": "FAQ",
+        "roi": "ROI",
+        "book_call": "Book Strategy Call"
+    },
+    "case_studies": {
+        "badge": "Proven Architecture",
+        "title": "Engineered for",
+        "title_accent": "Impact.",
+        "subtitle": "We don’t just \"use AI tools\". We architect dedicated systems that become your competitive advantage.",
+        "see_more": "See More Examples"
+    },
+    "pricing": {
+        "title": "Investment Models",
+        "subtitle": "We don't sell hours. We sell operational leverage.",
+        "infrastructure": "Infrastructure",
+        "services": "Services",
+        "most_popular": "Most Popular",
+        "per_month": "/mo",
+        "tiers": {
+            "starter": {
+                "name": "Starter AI System",
+                "price": "From $1,500",
+                "description": "For small teams looking to automate specific operational bottlenecks.",
+                "features": [
+                    "Custom Automation Workflows",
+                    "Lead Qualification Agent",
+                    "CRM Integration",
+                    "Weekly Performance Report"
+                ],
+                "cta": "Book Strategy Call"
+            },
+            "growth": {
+                "name": "Growth AI Infrastructure",
+                "price": "From $3,000",
+                "description": "For scaling agencies & businesses needing full-stack operational intelligence.",
+                "features": [
+                    "Everything in Starter",
+                    "Autonomous Ad Operations",
+                    "Financial Reconciliation Engine",
+                    "Real-time Data Dashboard",
+                    "Priority Engineering Support"
+                ],
+                "cta": "Book Strategy Call"
+            },
+            "enterprise": {
+                "name": "Enterprise Architecture",
+                "price": "Custom",
+                "description": "Deep custom engineering for organizations with complex data requirements.",
+                "features": [
+                    "Full Custom LLM Training",
+                    "On-Premise / Private Cloud",
+                    "SLA & uptime Guarantees",
+                    "Dedicated Solutions Architect",
+                    "24/7 Monitoring & Optimization"
+                ],
+                "cta": "Contact Sales"
+            }
+        },
+        "support": {
+            "name": "Support Plan",
+            "price": "$450",
+            "description": "Ongoing management, optimization, and scaling of your AI infrastructure.",
+            "features": [
+                "24/7 System Monitoring",
+                "Bug Fixes & Maintenance",
+                "Monthly Performance Audit",
+                "Priority Technical Support"
+            ],
+            "cta": "Add Support"
+        },
+        "customize": {
+            "name": "Build Your Own",
+            "price": "Modular",
+            "description": "Select specific AI agents and infrastructure modules based on your current bottlenecks.",
+            "features": [
+                "Custom Agent Selection",
+                "Workflow Orchestration",
+                "Performance-Based Scaling",
+                "Flexible Integration"
+            ],
+            "cta": "Start Building"
+        },
+        "managed": {
+            "name": "AI Workflows",
+            "price": "$2,500",
+            "description": "Custom complex workflows. Automated sequences that bridge multiple systems to handle your entire operation.",
+            "features": [
+                "Multi-System Orchestration",
+                "Advanced Logic & Branching",
+                "Error Handling & Retries",
+                "Performance Optimization"
+            ],
+            "cta": "SOON"
+        }
+    },
+    "projects": {
+        "ad_agent": {
+            "title": "Building a Scalable Revenue Infrastructure for a Performance-Driven Agency",
+            "tagline": "Structuring growth from execution-heavy to system-backed expansion.",
+            "description": "A comprehensive infrastructure overhaul for a high-growth performance marketing agency. We moved them from manual, chaotic scaling to a data-driven, automated revenue machine.",
+            "challenge_title": "The Challenge",
+            "challenge": "The Ad Agent is a performance marketing agency operating in a fast-paced, high-pressure environment where results are everything.\nLike most growing agencies, they weren’t struggling with talent or client acquisition. The issue was deeper.\nThey had the clients. They had the ads. They had the revenue.\nBut they didn’t have the *system* to handle it efficiently.\nAs they scaled, the cracks started to show:\n- **Data was fragmented.** Reports were built manually in spreadsheets.\n- **Onboarding was slow.** New clients took days to set up instead of hours.\n- **Team burnout was rising.** Media buyers were spending more time on admin than on strategy.\n- **Financial clarity was missing.** Tracking true profitability per client was a guessing game.\n\nThey didn’t need a \"consultant\" to tell them to work harder. They needed an **infrastructure engineer** to rebuild their engine while the car was still moving.",
+            "strategy_title": "The Strategy",
+            "strategy": "We didn't just applying \"fixes.\" We re-architected their entire operational flow.\nOur approach was built on three core pillars:\n**1. Centralized Data Backbone (The \"Truth\" Source)**\nWe killed the spreadsheets. We built a unified data warehouse that aggregated data from:\n- Meta Ads & Google Ads\n- Shopify & WooCommerce (Client stores)\n- Slack & Email (Communication)\n- Accounting Software\nThis meant that for the first time, the agency owner could see *everything* in one dashboard. Real-time ROAS. Real-time margins. Real-time bottlenecks.\n\n**2. Automated Client Onboarding (The \"Zero-Touch\" Flow)**\nWe built a custom onboarding portal.\n- Contract signed → System auto-generates Slack channels.\n- System auto-creates Google Drive folders.\n- System sends welcome emails & access forms.\n- System alerts the team only when specific inputs are needed.\nWhat used to take a dedicated account manager 4 hours now took 15 minutes.\n\n**3. Performance Intelligence (The \"Warning System\")**\nWe implemented automated alerts.\n- If ROAS drops below 2.0 → Slack alert to Media Buyer.\n- If Spend exceeds daily budget → Slack alert to Account Manager.\n- If a client credit card fails → Automated email to client + Slack alert to Finance.\nWe moved the team from *reactive* fire-fighting to *proactive* management.",
+            "execution_title": "The Execution",
+            "execution": "We executed this in 3 phases over 9 weeks to ensure zero disruption to active campaigns.\n**Phase 1: Diagnosis & Mapping (Week 1-2)**\n- Audited every tool, every spreadsheet, and every manual message.\n- Mapped the \"Ideal State\" workflow vs. the \"Current State\" mess.\n\n**Phase 2: The Build (Week 3-6)**\n- Built the custom dashboard using their existing stack (no expensive new enterprise software).\n- Wrote the automation scripts connecting their disparate tools.\n- Migrated historical data to the new system.\n\n**Phase 3: Training & Handover (Week 7-9)**\n- Ran the new system in parallel with the old one for 2 weeks to verify accuracy.\n- Conducted workshops with the team to ensure adoption.\n- Handed over full documentation and \"Emergency Protocols.\"",
+            "outcome_title": "The Outcome",
+            "outcome": "The results were immediate and measurable.\n- **30+ Hours Saved Weekly:** The team stopped doing manual data entry.\n- **100% Data Accuracy:** No more \"I think the spreadsheet is wrong.\"\n- **Faster Client Scaling:** They could now handle 2x the client load with the same headcount.\n- **Profitability Visibility:** They identified 3 clients who were actually *losing* them money and renegotiated/churned them.\n\nThe Ad Agent didn't just get a new piece of software. They got a scalable operating system that allowed them to grow aggressively without breaking.",
+            "finalNote": "Most agencies die of indigestion, not starvation. They get too much work and can't digest it. We gave The Ad Agent the digestive system of a giant.",
+            "results": {
+                "saved": "Hours Saved / Week",
+                "accuracy": "Data Accuracy",
+                "speed": "Onboarding Speed"
+            }
+        },
+        "paynest": {
+            "title": "Designing a Financial Operating System for Scalable Digital Payments",
+            "tagline": "From operational complexity to structured financial intelligence.",
+            "description": "We approached Paynest as a financial infrastructure project — not a UI redesign. The objective was to create a system where revenue, risk, operations, and reporting were connected into a single source of truth.",
+            "challenge_title": "The Challenge",
+            "challenge": "Paynest was struggling with fragmented financial data across multiple platforms, leading to slow customer onboarding and high error rates in manual reconciliation. As transaction volume grew, the lack of a centralized system became a critical bottleneck for scaling.",
+            "strategy_title": "The Strategy",
+            "strategy": "We architected a centralized financial operating system designed to automate the entire data lifecycle. This involved building a unified ledger that syncs real-time transaction data with risk Assessment modules and performance reporting dashboards.",
+            "execution_title": "The Execution",
+            "execution": "The system was deployed in three phases: first, the data aggregation layer to centralize fragmented sources; second, the automation engine for reconciliation and risk; and finally, the real-time reporting interface for executive visibility.",
+            "results": {
+                "time": "Onboarding Time",
+                "visibility": "Revenue Visibility",
+                "rate": "Discrepancy Rate"
+            }
+        },
+        "linkedin_agent": {
+            "title": "Social Media Automation – LinkedIn Agent",
+            "tagline": "Automating Lead Generation and Engagement on LinkedIn",
+            "description": "Managing social media for business growth is more than posting content. For B2B companies, LinkedIn is a goldmine — but also highly time-consuming. We built a system to automate LinkedIn workflows while maintaining quality engagement and collecting actionable insights for their campaigns.",
+            "challenge_title": "The Challenge",
+            "challenge": "Manual prospect search takes hours daily.\nConnection requests and follow-ups are inconsistent.\nData collection is scattered across spreadsheets.\nLead nurturing requires repetitive tasks.\nScaling outreach without losing personalization is difficult.\n\nOur client needed a system to automate LinkedIn workflows while maintaining quality engagement and collecting actionable insights for their campaigns.",
+            "strategy_title": "Our Strategy",
+            "strategy": "We approached the project as a LinkedIn operational automation system rather than just a scheduling tool.\n\nThe goal was to:\n- Automate repetitive LinkedIn tasks\n- Collect data for intelligent decision-making\n- Maintain a scalable workflow for multiple campaigns\n\nThe LinkedIn Agent became the backbone of this system.",
+            "execution_title": "The Execution",
+            "execution": "Phase 1 — Workflow Mapping: Identify high-value prospects and map the entire outreach process.\nPhase 2 — LinkedIn Agent Deployment: Deployed the Agent to handle automated actions with safe delays. Connected data pipeline to Supabase.\nPhase 3 — Reporting and Optimization: Built dashboards to monitor acceptance rates, engagement per campaign, and leads added to CRM.",
+            "outcome_title": "The Outcome",
+            "outcome": "Time spent on LinkedIn tasks reduced by 70%.\nLead qualification and collection became fully automated.\nEngagement rate improved due to consistent follow-ups.\nData-driven campaigns allowed better ROI tracking.\nThe client could scale LinkedIn outreach without adding staff.",
+            "finalNote": "LinkedIn is powerful but resource-intensive. With the LinkedIn Agent, the social media project became not just a presence tool, but a strategic revenue driver.",
+            "results": {
+                "saved": "Time Saved",
+                "leads": "Leads Collected",
+                "engagement": "Engagement Boost"
+            }
+        }
+    },
+    "faq": {
+        "title": "Common Questions",
+        "items": [
+            {
+                "question": "How much revenue can AI automation generate?",
+                "answer": "It varies by industry, but our clients typically see a 20-40% increase in profit margins within the first 6 months through a combination of reduced operational costs and increased output capacity."
+            },
+            {
+                "question": "What is the ROI of AI infrastructure?",
+                "answer": "We target a minimum 3x ROI. For every $1 spent on Monjez infrastructure, we aim to generate or save $3 in business value. If we can't project this during our audit, we won't take the project."
+            },
+            {
+                "question": "Is AI automation worth it for agencies?",
+                "answer": "Absolutely. Agencies often suffer from high labor costs and low margins. AI infrastructure allows you to scale client deliverables without linearly scaling headcount, directly impacting your bottom line."
+            },
+            {
+                "question": "How long does implementation take?",
+                "answer": "Our typical build cycle is 4-8 weeks. We deploy in phases, so you often start seeing value from initial modules within the first 14 days."
+            },
+            {
+                "question": "How does AI reduce operational cost?",
+                "answer": "By replacing manual data entry, reconciliation, reporting, and routine communication tasks with autonomous agents. This frees your expensive human talent to focus on strategy and creative work."
+            }
+        ]
+    },
+    "footer": {
+        "description": "AI Infrastructure & Automation Systems for scaling companies. We replace operational bottlenecks with intelligent engineering.",
+        "company": "Company",
+        "legal": "Legal",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "revenue_audit": "Revenue Audit",
+        "rights": "All rights reserved."
+    },
+    "engagement": {
+        "title": "How We Engage",
+        "subtitle": "A transparent, step-by-step partnership model designed for speed and clarity.",
+        "steps": [
+            "Discovery Call",
+            "System Audit",
+            "Proposal",
+            "Build Phase",
+            "Optimization"
+        ],
+        "cta_title": "If Your Company Is Scaling — Your Systems Should Too.",
+        "cta_button": "Book Your Revenue Strategy Call",
+        "cta_audit": "Or Get an Instant Audit"
+    },
+    "booking": {
+        "title": "Request Strategy Call",
+        "step": "Step {step} of 5",
+        "next": "Next Step",
+        "back": "Back",
+        "submit": "Submit Request",
+        "success_title": "Request Received",
+        "success_subtitle": "Redirecting you to our scheduler...",
+        "fields": {
+            "full_name": "Full Name",
+            "full_name_placeholder": "John Doe",
+            "email": "Email Address",
+            "email_placeholder": "john@example.com",
+            "phone": "Phone Number",
+            "phone_placeholder": "+1 234 567 890",
+            "company_name": "Company / Brand Name",
+            "company_name_placeholder": "Acme Corp",
+            "website": "Website URL",
+            "website_placeholder": "https://example.com",
+            "industry": "Industry",
+            "client_type": "Client Type",
+            "primary_goal": "Primary Goal",
+            "team_size": "Team Size",
+            "monthly_revenue": "Approx. Monthly Revenue (Optional)",
+            "current_challenges": "Current Challenges",
+            "current_challenges_placeholder": "Describe your operational bottlenecks...",
+            "interested_services": "Interested Services",
+            "previous_experience": "Previous Experience with AI/Automation?",
+            "referral_source": "How did you hear about us?",
+            "preferred_time": "Preferred Call Time",
+            "preferred_time_placeholder": "e.g. Monday 2 PM Cairo Time",
+            "additional_notes": "Additional Notes (Optional)",
+            "additional_notes_placeholder": "Anything else you'd like us to know?"
+        },
+        "options": {
+            "industries": {
+                "ecommerce": "E-commerce",
+                "agency": "Marketing Agency",
+                "saas": "SaaS",
+                "fintech": "FinTech",
+                "other": "Other"
+            },
+            "client_types": {
+                "founder": "Founder",
+                "ceo": "CEO",
+                "marketing_manager": "Marketing Manager",
+                "agency_owner": "Agency Owner",
+                "other": "Other"
+            },
+            "goals": {
+                "revenue": "Increase Revenue",
+                "automate": "Automate Processes",
+                "launch": "Launch AI System",
+                "optimize": "Optimize Ads",
+                "other": "Other"
+            },
+            "services": {
+                "ai_automation": "AI Automation",
+                "agency_services": "Marketing Agency Services",
+                "workflow": "Workflow Automation",
+                "support": "Technical Support"
+            },
+            "experience": {
+                "yes": "Yes",
+                "no": "No"
+            },
+            "referral": {
+                "linkedin": "LinkedIn",
+                "instagram": "Instagram",
+                "google": "Google",
+                "referral": "Referral",
+                "other": "Other"
+            }
+        }
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "Something went wrong",
+        "retry": "Retry",
+        "show_project": "Show Project"
+    },
+    "thank_you": {
+        "title": "Welcome to Monjez Infrastructure",
+        "subtitle": "Your technical support plan is now active.",
+        "description": "We've sent a confirmation email with your license details and next steps to get you onboarded.",
+        "success": "Purchase Successful",
+        "next_steps": "What's Next?",
+        "step_1": "Check your email for login details",
+        "step_2": "Access your dedicated support channel",
+        "step_3": "Schedule your initialization call",
+        "back_home": "Back to Home"
+    }
+}

@@ -1,0 +1,83 @@
+﻿
+> monjez@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+node.exe : ΓÜá The 
+"middleware" file 
+convention is 
+deprecated. Please 
+use "proxy" instead. 
+Learn more: https://ne
+xtjs.org/docs/messages
+/middleware-to-proxy
+At line:1 char:1
++ & "C:\Program Files\
+nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (ΓÜá The "m   
+ iddle...leware-to    
+-proxy:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 9.4s
+  Running TypeScript ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/8) ...
+  Generating static pages using 7 workers (2/8) 
+  Generating static pages using 7 workers (4/8) 
+  Generating static pages using 7 workers (6/8) 
+Γ£ô Generating static pages using 7 workers (8/8) in 186.4ms
+  Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /_not-found
+Γö£ ╞Æ /[locale]
+Γö£ ╞Æ /[locale]/case-studies
+Γö£ ╞Æ /[locale]/dashboard
+Γö£ ╞Æ /[locale]/dashboard/ads
+Γö£ ╞Æ /[locale]/dashboard/companies
+Γö£ ╞Æ /[locale]/dashboard/competitors
+Γö£ ╞Æ /[locale]/dashboard/education
+Γö£ ╞Æ /[locale]/dashboard/finance
+Γö£ ╞Æ /[locale]/dashboard/goals
+Γö£ ╞Æ /[locale]/dashboard/habits
+Γö£ ╞Æ /[locale]/dashboard/identity
+Γö£ ╞Æ /[locale]/dashboard/investments
+Γö£ ╞Æ /[locale]/dashboard/news
+Γö£ ╞Æ /[locale]/dashboard/planner
+Γö£ ╞Æ /[locale]/dashboard/projects
+Γö£ ╞Æ /[locale]/dashboard/social
+Γö£ ╞Æ /[locale]/dashboard/website-analyzer
+Γö£ ╞Æ /[locale]/login
+Γö£ ╞Æ /[locale]/privacy
+Γö£ ╞Æ /[locale]/revenue-audit
+Γö£ ╞Æ /[locale]/terms
+Γö£ ╞Æ /[locale]/thank-you
+Γö£ ╞Æ /[locale]/workflows
+Γö£ ╞Æ /api/log-purchase
+Γö£ ╞Æ /api/strategy-call
+Γö£ ╞Æ /api/webhooks/incoming
+Γö£ Γùï /robots.txt
+Γöö Γùï /sitemap.xml
+
+
+╞Æ Proxy (Middleware)
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+
