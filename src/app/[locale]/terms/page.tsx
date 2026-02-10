@@ -16,7 +16,7 @@ export default function TermsPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-white mb-4">1. Agreement to Terms</h2>
                         <p className="mb-4">
-                            These Terms of Service ("Terms") constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("Client", "User", "You") and <strong>Monjez</strong> ("Company", "We", "Us", or "Our"), concerning your access to and use of the <a href="https://monjez.com" className="text-monjez-accent hover:underline">https://monjez.com</a> website, our SaaS products, Strategy Calls, and Subscription Services (collectively, the "Services").
+                            These Terms of Service ("Terms") constitute a legally binding agreement made between you, whether personally or on behalf of an entity ("Client", "User", "You") and <strong>Monjez</strong> ("Company", "We", "Us", or "Our"), concerning your access to and use of the <a href="https://monjez-agency.com" className="text-monjez-accent hover:underline">https://monjez-agency.com</a> website, our SaaS products, Strategy Calls, and Subscription Services (collectively, the "Services").
                         </p>
                         <p>
                             By accessing the Services, you confirm that you have read, understood, and agreed to be bound by all of these Terms.
@@ -140,7 +140,7 @@ export default function TermsPage() {
                         <p className="mb-4">In order to resolve a complaint regarding the Services or to receive further information regarding use of the Services, please contact us at:</p>
                         <ul className="list-none space-y-2">
                             <li><strong>Monjez</strong></li>
-                            <li>Email: support@monjez.com</li>
+                            <li>Email: support@monjez-agency.com</li>
                         </ul>
                     </section>
                 </div>

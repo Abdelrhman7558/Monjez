@@ -16,7 +16,7 @@ export default function PrivacyPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-white mb-4">1. Introduction</h2>
                         <p className="mb-4">
-                            Monjez ("Company", "We", "Us", or "Our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="https://monjez.com" className="text-monjez-accent hover:underline">https://monjez.com</a>, use our SaaS products, strategy calls, digital workflows, or subscription services (collectively, the "Services").
+                            Monjez ("Company", "We", "Us", or "Our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="https://monjez-agency.com" className="text-monjez-accent hover:underline">https://monjez-agency.com</a>, use our SaaS products, strategy calls, digital workflows, or subscription services (collectively, the "Services").
                         </p>
                         <p>
                             By accessing or using our Services, you agree to the terms of this Privacy Policy. If you do not agree, please do not use our Services.
@@ -30,7 +30,7 @@ export default function PrivacyPage() {
                         <h3 className="text-xl font-semibold text-white mt-6 mb-3">A. Personal Data</h3>
                         <p className="mb-4">You may provide us with "Personal Data" when you book a strategy call, purchase a digital product, or subscribe to our maintenance services. This includes:</p>
                         <ul className="list-disc pl-6 space-y-2 mb-4">
-                            <li><strong>Identifying Information:</strong> Application name, email address (support@monjez.com), phone number, and physical address (if billing requires).</li>
+                            <li><strong>Identifying Information:</strong> Application name, email address (support@monjez-agency.com), phone number, and physical address (if billing requires).</li>
                             <li><strong>Payment Data:</strong> We use <strong>Freemius</strong> to process payments. We do <em>not</em> store your credit card information on our servers. All payment data is handled by Freemius in compliance with PCI-DSS standards.</li>
                         </ul>
 
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
                             <li><strong>Erasure:</strong> Request that we delete your personal data ("Right to be Forgotten").</li>
                             <li><strong>Opt-Out:</strong> Opt-out of marketing communications.</li>
                         </ul>
-                        <p>To exercise these rights, please contact us at <strong>support@monjez.com</strong>.</p>
+                        <p>To exercise these rights, please contact us at <strong>support@monjez-agency.com</strong>.</p>
                     </section>
 
                     <section>
@@ -131,7 +131,7 @@ export default function PrivacyPage() {
                         <h2 className="text-2xl font-bold text-white mb-4">12. Contact Us</h2>
                         <p className="mb-4">If you have questions about this Privacy Policy, please contact us:</p>
                         <ul className="list-none space-y-2">
-                            <li><strong>Email:</strong> support@monjez.com</li>
+                            <li><strong>Email:</strong> support@monjez-agency.com</li>
                             <li><strong>Company Name:</strong> Monjez</li>
                         </ul>
                     </section>
