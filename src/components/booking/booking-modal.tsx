@@ -138,19 +138,20 @@ export function BookingModal({
     return (
         <AnimatePresence>
             {isOpen && (
-                <>
+
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto"
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                     />
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="fixed left-0 right-0 top-0 bottom-0 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 z-50 w-full md:w-[650px] h-full md:h-auto bg-monjez-dark border border-white/10 md:rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+                        className="relative w-full md:w-[650px] max-h-[90vh] flex flex-col bg-monjez-dark border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/5">
@@ -353,7 +354,7 @@ export function BookingModal({
                             )}
                         </div>
                     </motion.div>
-                </>
+                </div>
             )}
         </AnimatePresence>
     );
