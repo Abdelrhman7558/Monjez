@@ -93,7 +93,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             `}
           </Script>
           {/* Apollo Tracking Code */}
-          <Script id="apollo-tracker" strategy="afterInteractive">
+          <Script id="apollo-tracker" strategy="beforeInteractive">
             {`
               function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");
               o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,
