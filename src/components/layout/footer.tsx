@@ -3,6 +3,7 @@
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { Facebook, Instagram, Linkedin, Mail } from "lucide-react";
 
 export function Footer() {
     const t = useTranslations("footer");
@@ -30,6 +31,42 @@ export function Footer() {
                         <p className="text-gray-400 max-w-sm mb-6 text-start">
                             {t("description")}
                         </p>
+                        <div className="flex gap-4">
+                            <a
+                                href="https://www.facebook.com/profile.php?id=61587799739627"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-monjez-blue transition-all duration-300 group"
+                                aria-label="Facebook"
+                            >
+                                <Facebook className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
+                            </a>
+                            <a
+                                href="https://www.instagram.com/monjez41/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-monjez-blue transition-all duration-300 group"
+                                aria-label="Instagram"
+                            >
+                                <Instagram className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
+                            </a>
+                            <a
+                                href="https://www.linkedin.com/company/monjez1/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-monjez-blue transition-all duration-300 group"
+                                aria-label="LinkedIn"
+                            >
+                                <Linkedin className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
+                            </a>
+                            <a
+                                href="mailto:support@monjez-agency.com"
+                                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-monjez-blue transition-all duration-300 group"
+                                aria-label="Email"
+                            >
+                                <Mail className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
+                            </a>
+                        </div>
                     </div>
                     <div>
                         <h4 className="text-white font-semibold mb-4 text-start">{t("company")}</h4>
