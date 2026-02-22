@@ -18,34 +18,35 @@ export async function fetchLeadsFromApollo(count: number = 111): Promise<ApolloL
     }
 
     try {
-        const response = await fetch("https://api.apollo.io/v1/mixed_people/search", {
+        const response = await fetch("https://api.apollo.io/v1/mixed_people/api_search", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Cache-Control": "no-cache"
+                "X-Api-Key": API_KEY as string
             },
             body: JSON.stringify({
-                api_key: API_KEY,
-                q_organization_domains: "marketing.me, ecommerce.ae, startup.sa", // Target domains
-                person_titles: ["founder", "ceo", "owner", "managing director"],
-                person_locations: ["Saudi Arabia", "United Arab Emirates", "Egypt", "Jordan"],
+                q_person_titles: ["founder", "ceo", "owner", "managing director", "marketing director", "digital officer"],
+                person_locations: ["Saudi Arabia", "United Arab Emirates", "Egypt", "Jordan", "Kuwait", "Qatar"],
                 page: 1,
-                per_page: count
+                per_page: 50
             })
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Failed to fetch from Apollo");
+            const errorText = await response.text();
+            console.error("Apollo Search Raw Error:", errorText);
+            throw new Error(`Apollo Error ${response.status}: ${errorText.substring(0, 100)}`);
         }
 
         const data = await response.json();
-        return data.people.map((p: any) => ({
-            name: `${p.first_name} ${p.last_name}`,
+        const peopleList = data.people || data.contacts || [];
+
+        return peopleList.map((p: any) => ({
+            name: p.name || `${p.first_name} ${p.last_name}`,
             first_name: p.first_name,
             last_name: p.last_name,
             title: p.title,
-            organization_name: p.organization?.name || "Private Company",
+            organization_name: p.organization?.name || p.organization_name || "Private Company",
             email: p.email,
             phone_numbers: p.phone_numbers,
             linkedin_url: p.linkedin_url,

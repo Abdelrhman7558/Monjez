@@ -16,6 +16,11 @@ import {
     Info
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+    getConsultantChatHistory,
+    saveConsultantChatMessage,
+    generateConsultantResponse
+} from "@/lib/actions/consultant-actions";
 
 export default function ConsultantPage() {
     const [messages, setMessages] = useState([
@@ -38,43 +43,64 @@ export default function ConsultantPage() {
         "لو معاك ميزانية مفتوحة ليوم واحد، هتصرفها في إيه في البزنس بتاعك؟"
     ];
 
-    const scrollToBottom = () => {
-        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages, isLoading]);
 
-    const handleSend = () => {
-        if (!input.trim()) return;
+    useEffect(() => {
+        const loadHistory = async () => {
+            const history = await getConsultantChatHistory();
+            if (history && history.length > 0) {
+                setMessages(history);
+                setIsDiscoveryMode(false); // Assume discovery is done if there's history
+            }
+        };
+        loadHistory();
+    }, []);
+
+    const handleSend = async () => {
+        if (!input.trim() || isLoading) return;
 
         const userMsg = input;
         const newMessages = [...messages, { role: "user", content: userMsg }];
         setMessages(newMessages);
         setInput("");
+        setIsLoading(true);
 
-        // Simulated AI Logic for Personality Discovery
-        setTimeout(() => {
-            let assistantResponse = "";
+        try {
+            // 1. Save user message
+            await saveConsultantChatMessage('user', userMsg);
 
-            if (isDiscoveryMode) {
-                if (discoveryStep < discoveryQuestions.length) {
-                    assistantResponse = `تمام جداً، فهمتك. السؤال اللي بعده: ${discoveryQuestions[discoveryStep]}`;
-                    setDiscoveryStep(prev => prev + 1);
-                } else {
-                    assistantResponse = "عظيم! كدة أنا كونت صورة كويسة جداً عن شخصيتك وأهدافك. دلوقتي أقدر أديك نصايح فعالة. تحب نبدأ منين؟";
-                    setIsDiscoveryMode(false);
-                }
-            } else {
-                assistantResponse = "بناءً على اللي عرفته عنك، أنت شخص بيميل للتنفيذ السريع. نصيحتي ليك دلوقتي إنك تبدأ بتبسيط العمليات الروتينية عشان توفر وقت للإبداع. إيه رأيك؟";
-            }
+            // 2. Generate AI Response
+            const assistantResponse = await generateConsultantResponse(newMessages);
+
+            // 3. Save assistant response
+            await saveConsultantChatMessage('assistant', assistantResponse);
 
             setMessages(prev => [...prev, {
                 role: "assistant",
                 content: assistantResponse
             }]);
-        }, 800);
+
+            // Scroll to bottom after new message
+            setTimeout(() => {
+                chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+
+            if (isDiscoveryMode) {
+                if (discoveryStep < discoveryQuestions.length) {
+                    setDiscoveryStep(prev => prev + 1);
+                } else {
+                    setIsDiscoveryMode(false);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const tasks = [
@@ -130,6 +156,16 @@ export default function ConsultantPage() {
                             </div>
                         </div>
                     ))}
+                    {isLoading && (
+                        <div className="flex items-start gap-4">
+                            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-lg bg-monjez-accent text-black">
+                                <Bot className="w-5 h-5 animate-spin" />
+                            </div>
+                            <div className="bg-white/5 text-gray-200 p-4 rounded-2xl rounded-tl-none border border-white/5 text-xs italic">
+                                بفكّر وبرد عليك يا بطل...
+                            </div>
+                        </div>
+                    )}
                     <div ref={chatEndRef} />
                 </div>
 
@@ -142,6 +178,7 @@ export default function ConsultantPage() {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                            disabled={isLoading}
                         />
                         <button
                             onClick={handleSend}

@@ -71,6 +71,10 @@ export default function LeadsPage() {
                     return { id: `real-${idx}`, date, time: "07:00 AM", status: "Success", count, hotCount };
                 });
                 if (newLogs.length > 0) setExtractionLogs(newLogs);
+            } else {
+                // If no leads exist, trigger AUTO extraction immediately upon landing
+                console.log("No leads found, triggering auto-extraction...");
+                handleManualExtraction();
             }
         };
 
