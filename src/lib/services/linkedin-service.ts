@@ -58,8 +58,11 @@ function generateMockProfessionalContent(category: string): string {
 }
 
 export async function postToLinkedIn(post: LinkedInPost) {
-    const ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN;
-    let MEMBER_ID = process.env.LINKEDIN_MEMBER_ID;
+    const supabase = await createSupabaseServerClient();
+    const { data: config } = await supabase.from('linkedin_config').select('*').single();
+
+    const ACCESS_TOKEN = config?.access_token || process.env.LINKEDIN_ACCESS_TOKEN;
+    let MEMBER_ID = config?.member_id || process.env.LINKEDIN_MEMBER_ID;
 
     if (!ACCESS_TOKEN) {
         console.warn("LinkedIn Access Token missing.");
@@ -67,10 +70,14 @@ export async function postToLinkedIn(post: LinkedInPost) {
     }
 
     try {
-        // Auto-fetch Member ID if not provided in Env
+        // Auto-fetch Member ID if not provided
         if (!MEMBER_ID || MEMBER_ID === 'your_member_id_here') {
             console.log("Fetching Member ID automatically...");
             MEMBER_ID = await getLinkedInMemberId(ACCESS_TOKEN);
+            // Save it back to config for next time
+            if (config) {
+                await supabase.from('linkedin_config').update({ member_id: MEMBER_ID }).eq('id', config.id);
+            }
         }
 
         const response = await fetch("https://api.linkedin.com/v2/ugcPosts", {
@@ -94,15 +101,19 @@ export async function postToLinkedIn(post: LinkedInPost) {
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(JSON.stringify(error));
+            const errorData = await response.json();
+            const msg = errorData.message || JSON.stringify(errorData);
+            await logPostToDatabase(post, 'failed', { error: msg });
+            throw new Error(`LinkedIn API Error: ${msg}`);
         }
 
         const data = await response.json();
         await logPostToDatabase(post, 'posted', data);
+        return { success: true, data };
     } catch (error: any) {
         console.error("LinkedIn Post Error:", error);
         await logPostToDatabase(post, 'failed', { error: error.message });
+        throw error;
     }
 }
 

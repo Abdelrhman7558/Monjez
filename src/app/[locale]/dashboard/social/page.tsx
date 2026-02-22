@@ -21,11 +21,21 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createSupabaseClient } from "@/lib/supabase/client";
+import {
+    getLinkedInConfigAction,
+    updateLinkedInConfigAction,
+    triggerLinkedInPostAction,
+    verifyLinkedInTokenAction
+} from "@/lib/actions/social-actions";
 
 export default function SocialPage() {
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
+    const [isPosting, setIsPosting] = useState(false);
+    const [countdown, setCountdown] = useState<{ hours: number, mins: number } | null>(null);
+    const [tokenInput, setTokenInput] = useState("");
+    const [showTokenInput, setShowTokenInput] = useState(false);
 
     const [postHistory, setPostHistory] = useState<any[]>([]);
     const [metrics, setMetrics] = useState({
@@ -35,6 +45,46 @@ export default function SocialPage() {
     });
 
     useEffect(() => {
+        const updateCountdown = () => {
+            const now = new Date();
+            const slots = ["09:00", "13:00", "18:00", "21:00"];
+
+            let nextSlot = null;
+            for (const slot of slots) {
+                const [hour, min] = slot.split(':').map(Number);
+                const slotDate = new Date();
+                slotDate.setHours(hour, min, 0, 0);
+
+                if (slotDate > now) {
+                    nextSlot = slotDate;
+                    break;
+                }
+            }
+
+            if (!nextSlot) {
+                // Next slot is 09:00 tomorrow
+                nextSlot = new Date();
+                nextSlot.setDate(nextSlot.getDate() + 1);
+                nextSlot.setHours(9, 0, 0, 0);
+            }
+
+            const diffMs = nextSlot.getTime() - now.getTime();
+            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+            setCountdown({ hours: diffHrs, mins: diffMins });
+        };
+
+        updateCountdown();
+        const timer = setInterval(updateCountdown, 60000); // Update every minute
+
+        const fetchConfig = async () => {
+            const config = await getLinkedInConfigAction();
+            if (config?.is_connected) {
+                setIsConnected(true);
+            }
+        };
+
         const fetchPosts = async () => {
             const supabase = createSupabaseClient();
             const { data, error } = await supabase
@@ -43,7 +93,7 @@ export default function SocialPage() {
                 .order('created_at', { ascending: false });
 
             if (data && data.length > 0) {
-                // Calculate metrics
+                // ... (rest of the metric calculation remains same)
                 let totalReach = 0;
                 let totalEngagement = 0;
                 let totalComments = 0;
@@ -72,7 +122,7 @@ export default function SocialPage() {
                     groups[dateStr].push({
                         id: p.id,
                         time: new Date(p.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-                        platform: p.platform,
+                        platform: "LinkedIn",
                         type: p.post_type,
                         content: p.content,
                         likes: p.analytics?.likes || 0,
@@ -90,19 +140,66 @@ export default function SocialPage() {
             }
         };
 
+        fetchConfig();
         fetchPosts();
+
+        return () => clearInterval(timer);
     }, []);
 
-    const handleConnect = () => {
+    const handleConnect = async () => {
+        if (!showTokenInput) {
+            setShowTokenInput(true);
+            return;
+        }
+
+        if (!tokenInput) {
+            alert("يرجى لصق الرمز (Access Token) أولاً");
+            return;
+        }
+
         setIsConnecting(true);
-        setTimeout(() => {
-            setIsConnected(true);
+        try {
+            const result = await verifyLinkedInTokenAction(tokenInput);
+            if (result.success) {
+                setIsConnected(true);
+                setShowTokenInput(false);
+                setTokenInput("");
+                alert(`تم الاتصال بنجاح! معرف الحساب: ${result.memberId}`);
+            }
+        } catch (err: any) {
+            console.error(err);
+            alert(`فشل الاتصال: ${err.message || "الرمز غير صالح"}`);
+        } finally {
             setIsConnecting(false);
-        }, 1500);
+        }
     };
 
-    const handleDisconnect = () => {
-        setIsConnected(false);
+    const handleDisconnect = async () => {
+        try {
+            await updateLinkedInConfigAction({ is_connected: false });
+            setIsConnected(false);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handlePostNow = async () => {
+        if (!isConnected) {
+            alert("Please connect LinkedIn first");
+            return;
+        }
+        setIsPosting(true);
+        try {
+            const content = "أول خطوة في رحلة المئة ميل بتبدأ بـ 'منجز'. 🚀\n\nالنهاردة بدأنا رسميًا أتمتة العمليات لعملائنا في السعودية ومصر. تابعونا لكل جديد في عالم الذكاء الاصطناعي. #منجز #AI #Success";
+            const result = await triggerLinkedInPostAction(content, 'Post');
+            alert("Successfully posted to LinkedIn!");
+            window.location.reload();
+        } catch (err: any) {
+            console.error(err);
+            alert(`Failed to post: ${err.message || "Unknown error"}`);
+        } finally {
+            setIsPosting(false);
+        }
     };
 
     // Format numbers
@@ -124,6 +221,27 @@ export default function SocialPage() {
                 </div>
 
                 <div className="flex items-center gap-4">
+                    {showTokenInput && !isConnected && (
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                placeholder="Paste LinkedIn Access Token..."
+                                className="px-4 py-2 bg-black/40 border border-white/10 rounded-xl text-xs text-white focus:outline-none focus:border-monjez-accent w-64"
+                                value={tokenInput}
+                                onChange={(e) => setTokenInput(e.target.value)}
+                            />
+                        </div>
+                    )}
+                    {isConnected && (
+                        <button
+                            onClick={handlePostNow}
+                            disabled={isPosting}
+                            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg disabled:opacity-50"
+                        >
+                            <Linkedin className="w-5 h-5" />
+                            {isPosting ? "Posting..." : "Post Now"}
+                        </button>
+                    )}
                     {!isConnected ? (
                         <button
                             onClick={handleConnect}
@@ -249,7 +367,13 @@ export default function SocialPage() {
                         <div className="flex flex-wrap gap-4 pt-2">
                             <div className="flex items-center gap-2 text-sm text-gray-300">
                                 <Clock className="w-4 h-4 text-monjez-accent" />
-                                Optimal: 09:00, 13:00, 18:00, 21:00
+                                <span>Next Post In:</span>
+                                <span className="font-bold text-white bg-black/40 px-2 py-1 rounded">
+                                    {countdown ? `${countdown.hours}h ${countdown.mins}m` : "Calculating..."}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-gray-500 italic">
+                                Optimal Slots: 09:00, 13:00, 18:00, 21:00
                             </div>
                         </div>
                     </div>

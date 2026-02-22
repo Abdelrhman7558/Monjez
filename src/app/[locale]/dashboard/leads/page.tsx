@@ -40,6 +40,15 @@ import {
     generateLinkedInMessage
 } from "@/lib/utils/email-templates";
 
+import {
+    getLinkedInConfigAction,
+    updateLinkedInConfigAction,
+    triggerLinkedInPostAction,
+    getSocialAssetsAction,
+    addSocialAssetAction,
+    deleteSocialAssetAction
+} from "@/lib/actions/social-actions";
+
 export default function LeadsPage() {
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
     const [extractionLogs, setExtractionLogs] = useState<any[]>([]);
@@ -49,13 +58,10 @@ export default function LeadsPage() {
     const [isExtracting, setIsExtracting] = useState(false);
     const [progress, setProgress] = useState({ current: 0, total: 0 });
     const [activeTab, setActiveTab] = useState<"leads" | "assets">("leads");
-    const [assets, setAssets] = useState<any[]>([
-        { id: 1, name: "Intro Video.mp4", type: "video", size: "12MB", date: "2026-02-22" },
-        { id: 2, name: "Founder Story.jpg", type: "image", size: "2MB", date: "2026-02-21" },
-        { id: 3, name: "Consultation Call.mp4", type: "video", size: "45MB", date: "2026-02-20" },
-    ]);
+    const [assets, setAssets] = useState<any[]>([]);
     const [copyStatus, setCopyStatus] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     const supabase = createSupabaseClient();
 
@@ -139,13 +145,50 @@ export default function LeadsPage() {
             }
         };
 
+        const fetchInitialAssets = async () => {
+            const data = await getSocialAssetsAction();
+            setAssets(data);
+        };
+
         fetchInitialLeads();
+        fetchInitialAssets();
         checkJobStatus();
 
         return () => {
             if (pollInterval) clearInterval(pollInterval);
         };
     }, []);
+
+    const handleAddAsset = async () => {
+        setIsUploading(true);
+        try {
+            const names = ["Promo Teaser", "Product Demo", "Client Interview", "Office Tour"];
+            const types = ["video", "video", "image", "image"];
+            const idx = Math.floor(Math.random() * names.length);
+
+            const newAsset = await addSocialAssetAction({
+                name: `${names[idx]} ${assets.length + 1}`,
+                type: types[idx] as 'video' | 'image',
+                size: `${Math.floor(Math.random() * 50) + 1}MB`,
+                url: "#"
+            });
+
+            setAssets([newAsset, ...assets]);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const handleDeleteAsset = async (id: string) => {
+        try {
+            await deleteSocialAssetAction(id);
+            setAssets(assets.filter(a => a.id !== id));
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const handleManualExtraction = async () => {
         setIsExtracting(true);
@@ -237,15 +280,30 @@ export default function LeadsPage() {
                     <h3 className="text-xl font-bold text-white mb-1">Creative Assets Library</h3>
                     <p className="text-sm text-gray-400">Manage your photos and videos for the LinkedIn Agent.</p>
                 </div>
-                <button className="bg-monjez-accent text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-all">
-                    <Plus className="w-4 h-4" />
-                    Upload Material
+                <button
+                    onClick={handleAddAsset}
+                    disabled={isUploading}
+                    className="bg-monjez-accent text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
+                >
+                    <Plus className={cn("w-4 h-4", isUploading && "animate-spin")} />
+                    {isUploading ? "Uploading..." : "Upload Material"}
                 </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {assets.length === 0 && !isUploading && (
+                    <div className="col-span-3 py-12 text-center text-gray-500 bg-white/5 border border-dashed border-white/10 rounded-xl">
+                        No materials uploaded yet. Click "Upload Material" to start.
+                    </div>
+                )}
                 {assets.map((asset) => (
-                    <div key={asset.id} className="bg-black/40 border border-white/5 rounded-xl p-4 group hover:border-monjez-accent/30 transition-all">
+                    <div key={asset.id} className="bg-black/40 border border-white/5 rounded-xl p-4 group hover:border-monjez-accent/30 transition-all relative">
+                        <button
+                            onClick={() => handleDeleteAsset(asset.id)}
+                            className="absolute top-2 right-2 p-1.5 bg-red-500/10 text-red-400 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20"
+                        >
+                            <Plus className="w-3 h-3 rotate-45" />
+                        </button>
                         <div className="aspect-video bg-[#242424] rounded-lg mb-4 flex items-center justify-center border border-white/5 overflow-hidden relative">
                             {asset.type === 'video' ? <Video className="w-8 h-8 text-gray-600" /> : <ImageIcon className="w-8 h-8 text-gray-600" />}
                             <div className="absolute inset-0 bg-monjez-accent/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -255,7 +313,7 @@ export default function LeadsPage() {
                         <div className="flex justify-between items-start">
                             <div className="flex-1 min-w-0">
                                 <h4 className="text-sm font-bold text-white truncate">{asset.name}</h4>
-                                <p className="text-[10px] text-gray-500 mt-0.5">{asset.size} • {asset.date}</p>
+                                <p className="text-[10px] text-gray-500 mt-0.5">{asset.size} • {new Date(asset.created_at).toLocaleDateString()}</p>
                             </div>
                             <span className={cn(
                                 "text-[9px] px-2 py-0.5 rounded-full font-bold uppercase",
