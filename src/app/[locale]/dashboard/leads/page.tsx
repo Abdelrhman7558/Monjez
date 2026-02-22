@@ -26,7 +26,11 @@ import {
     getRawLeadsAction,
     saveSingleLeadAction
 } from "@/lib/actions/leads-actions";
-import { generateLeadHTML } from "@/lib/utils/email-templates";
+import {
+    generateLeadHTML,
+    generateArabicLeadHTML,
+    generateLinkedInMessage
+} from "@/lib/utils/email-templates";
 
 export default function LeadsPage() {
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -65,11 +69,11 @@ export default function LeadsPage() {
             phone: l.phone || "N/A",
             role: l.role || "Professional",
             company: l.company || "Private Entity",
-            description: `${l.role} at ${l.company}`,
+            description: l.description || `${l.role} at ${l.company}`,
             linkedin: l.linkedin_url || "#",
             isHot: l.is_hot,
             problem: l.problem || "Checking for automation needs.",
-            category: l.role?.includes('Founder') ? 'Founder' : 'Exec',
+            category: l.role?.toLowerCase().includes('founder') ? 'Founder' : 'Exec',
             status: "New",
             lastExtracted: l.batch_date || new Date(l.created_at).toISOString().split('T')[0]
         }));
@@ -135,23 +139,66 @@ export default function LeadsPage() {
         }
     };
 
-    const copyEmailToClipboard = (lead: Lead) => {
-        const html = generateLeadHTML({
-            name: lead.name,
-            company: lead.company,
-            role: lead.role,
-            problem: lead.problem,
-            result: lead.role.includes("Founder") ? "3x higher operational efficiency" : "30% reduction in manual overhead"
-        });
+    const getLeadInsights = (lead: Lead) => {
+        const isFounder = lead.role.toLowerCase().includes("founder") || lead.role.toLowerCase().includes("ceo");
+        return {
+            problem: isFounder
+                ? "إزاي تكبر البزنس بتاعك من غير ما تضيع وقت في تفاصيل التشغيل اليومية"
+                : "صعوبة إدارة المهام المتكررة وضياع فرص مبيعات محتملة",
+            result: isFounder
+                ? "زيادة في المبيعات بنسبة 35% باستخدام أتمتة الذكاء الاصطناعي"
+                : "توفير 20 ساعة أسبوعياً من المجهود اليدوي لفريقك"
+        };
+    };
+
+    const copyEmailToClipboard = (lead: Lead, isArabic: boolean = false) => {
+        const insights = getLeadInsights(lead);
+        const html = isArabic
+            ? generateArabicLeadHTML({
+                name: lead.name,
+                company: lead.company,
+                role: lead.role,
+                problem: insights.problem,
+                result: insights.result
+            })
+            : generateLeadHTML({
+                name: lead.name,
+                company: lead.company,
+                role: lead.role,
+                problem: lead.role.includes("Founder") ? "Scaling without manual overhead" : "Managing cross-functional workflows",
+                result: lead.role.includes("Founder") ? "3x more operational throughput" : "30% reduction in lead response time"
+            });
 
         const type = "text/html";
         const blob = new Blob([html], { type });
         const data = [new ClipboardItem({ [type]: blob })];
 
         navigator.clipboard.write(data).then(() => {
-            setCopyStatus(lead.id);
+            setCopyStatus(`${lead.id}-${isArabic ? 'ar' : 'en'}`);
             setTimeout(() => setCopyStatus(null), 2000);
         });
+    };
+
+    const copyLinkedInToClipboard = (lead: Lead) => {
+        const insights = getLeadInsights(lead);
+        const message = generateLinkedInMessage({
+            name: lead.name,
+            company: lead.company,
+            role: lead.role,
+            problem: lead.role.includes("Founder") ? "scaling bottlenecks" : "workflow inefficiencies",
+            result: lead.role.includes("Founder") ? "3x growth" : "40% efficiency boost"
+        });
+
+        navigator.clipboard.writeText(message).then(() => {
+            setCopyStatus(`${lead.id}-li`);
+            setTimeout(() => setCopyStatus(null), 2000);
+        });
+    };
+
+    const openInGmail = (lead: Lead) => {
+        const body = `Hi ${lead.name},\n\nI saw your work at ${lead.company} and thought we could help with ${lead.problem}.\n\nBest,\nMonjez Team`;
+        const subject = `Opportunity for ${lead.company}`;
+        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${lead.email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
     };
 
     const filteredLeads = leads.filter(lead => {
@@ -326,23 +373,62 @@ export default function LeadsPage() {
                                                     {lead.category}
                                                 </span>
                                             </div>
-                                            <p className="text-sm text-gray-400 font-medium">{lead.role} at <span className="text-white">{lead.company}</span></p>
+                                            <p className="text-sm text-gray-400 font-medium line-clamp-1">{lead.description}</p>
                                         </div>
                                     </div>
                                     <div className="flex flex-col gap-2">
-                                        <button
-                                            onClick={() => copyEmailToClipboard(lead)}
-                                            className="bg-monjez-accent/10 border border-monjez-accent/20 hover:bg-monjez-accent/20 text-monjez-accent px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2"
-                                        >
-                                            <Mail className="w-3 h-3" />
-                                            {copyStatus === lead.id ? "Copied!" : "Outreach Email"}
-                                        </button>
-                                        <div className="flex gap-2">
-                                            <a href={lead.linkedin} target="_blank" className="flex-1 p-2 border border-white/10 rounded-lg hover:bg-white/5 transition-all flex justify-center">
-                                                <Linkedin className="w-4 h-4 text-[#0a66c2]" />
+                                        {/* Row 1: Emails */}
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <button
+                                                onClick={() => copyEmailToClipboard(lead, false)}
+                                                className="bg-monjez-accent/10 border border-monjez-accent/20 hover:bg-monjez-accent/20 text-monjez-accent px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                            >
+                                                <Mail className="w-3 h-3" />
+                                                {copyStatus === `${lead.id}-en` ? "Copied!" : "Email (EN)"}
+                                            </button>
+                                            <button
+                                                onClick={() => copyEmailToClipboard(lead, true)}
+                                                className="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                            >
+                                                <Mail className="w-3 h-3 text-monjez-accent" />
+                                                {copyStatus === `${lead.id}-ar` ? "نسخ الإيميل" : "Email (AR)"}
+                                            </button>
+                                        </div>
+
+                                        {/* Row 2: Platforms */}
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <button
+                                                onClick={() => copyLinkedInToClipboard(lead)}
+                                                className="bg-[#0a66c2]/10 border border-[#0a66c2]/20 hover:bg-[#0a66c2]/20 text-[#0a66c2] px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                            >
+                                                <Linkedin className="w-3 h-3" />
+                                                {copyStatus === `${lead.id}-li` ? "Copied!" : "LinkedIn Msg"}
+                                            </button>
+                                            <a
+                                                href={`https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}`}
+                                                target="_blank"
+                                                className="bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 text-green-500 px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                            >
+                                                <Phone className="w-3 h-3 text-[#25D366]" />
+                                                WhatsApp
                                             </a>
-                                            <a href={`https://${lead.company.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`} target="_blank" className="flex-1 p-2 border border-white/10 rounded-lg hover:bg-white/5 transition-all flex justify-center">
-                                                <ExternalLink className="w-4 h-4 text-white/40" />
+                                        </div>
+
+                                        {/* Row 3: Action Links */}
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <button
+                                                onClick={() => openInGmail(lead)}
+                                                className="bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-500 px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                            >
+                                                <ExternalLink className="w-3 h-3" />
+                                                Gmail App
+                                            </button>
+                                            <a
+                                                href={lead.linkedin}
+                                                target="_blank"
+                                                className="p-2 border border-white/10 rounded-lg hover:bg-white/5 transition-all flex justify-center items-center text-[9px] text-gray-400 font-bold"
+                                            >
+                                                View LinkedIn
                                             </a>
                                         </div>
                                     </div>

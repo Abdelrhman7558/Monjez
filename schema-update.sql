@@ -9,6 +9,8 @@ create table if not exists public.apollo_leads (
     company text,
     linkedin_url text,
     problem text,
+    headline text,
+    description text,
     is_hot boolean default false,
     batch_date date default current_date
 );

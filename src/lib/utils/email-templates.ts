@@ -61,3 +61,59 @@ export function generateLeadHTML(data: EmailData): string {
 </html>
     `;
 }
+export function generateArabicLeadHTML(data: EmailData): string {
+    const primaryColor = "#9B59B6";
+    const bgColor = "#0B0B0B";
+    const textColor = "#E5E5E5";
+
+    return `
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: ${bgColor}; color: ${textColor}; margin: 0; padding: 20px; text-align: right; }
+        .container { max-width: 600px; margin: 0 auto; background: #151515; border: 1px solid ${primaryColor}40; border-radius: 16px; overflow: hidden; }
+        .header { background: linear-gradient(135deg, ${primaryColor}, #5B2C6F); padding: 40px 20px; text-align: center; }
+        .content { padding: 40px; line-height: 1.8; }
+        .problem-box { background: rgba(155, 89, 182, 0.1); border-right: 4px solid ${primaryColor}; padding: 20px; margin: 30px 0; border-radius: 8px 0 0 8px; }
+        .cta-button { display: inline-block; background: ${primaryColor}; color: white; padding: 15px 35px; text-decoration: none; border-radius: 12px; font-weight: bold; margin-top: 30px; }
+        .footer { padding: 30px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #333; }
+        h1 { color: white; margin: 0; font-size: 24px; }
+        b { color: ${primaryColor}; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>منجز للذكاء الاصطناعي</h1>
+        </div>
+        <div class="content">
+            <p>أهلاً سيد/ة <b>${data.name}</b>،</p>
+            
+            <p>أتابع باهتمام كبير النجاحات اللي بتحققها شركة <b>${data.company}</b>، وواضح إنكم من الرواد في المجال ده في المنطقة.</p>
+            
+            <div class="problem-box">
+                <p>كتير من الـ <b>${data.role}s</b> اللي بنتعاون معاهم بيواجهوا تحدي مشترك وهو:<br>
+                <b>"${data.problem}"</b></p>
+            </div>
+            
+            <p>في "منجز"، طورنا استراتيجية ذكاء اصطناعي مخصصة بتساعد الشركات اللي زيكم على تحقيق <b>${data.result}</b> خلال أول 3 شهور بس.</p>
+            
+            <p>هل يناسبك ندردش لمدة 10 دقايق الأسبوع الجاي؟ حجزت وقت مخصوص عشان نناقش خريطة طريق <b>${data.company}</b>.</p>
+            
+            <center>
+                <a href="https://monjez.ai/book" class="cta-button">احجز جلستك الاستشارية الآن</a>
+            </center>
+        </div>
+        <div class="footer">
+            <p>© 2026 منجز. كل الحقوق محفوظة.<br>تمكين رواد الأعمال في المملكة العربية السعودية بأدوات الذكاء الاصطناعي.</p>
+        </div>
+    </div>
+</body>
+</html>`;
+}
+
+export function generateLinkedInMessage(data: EmailData): string {
+    return `Hi ${data.name}, noticed the impressive growth at ${data.company}. Many ${data.role}s I work with are struggling with ${data.problem} lately. We've helped similar firms achieve ${data.result} using automated AI pipelines. Open to a quick chat about how this could work for ${data.company}?`;
+}

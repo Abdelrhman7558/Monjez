@@ -6,6 +6,7 @@ export interface ApifyLead {
     phone?: string;
     linkedinUrl: string;
     location: string;
+    description: string;
 }
 
 export async function fetchLeadsFromApify(count: number = 80): Promise<ApifyLead[]> {
@@ -75,7 +76,8 @@ export async function fetchLeadsFromApify(count: number = 80): Promise<ApifyLead
                 linkedinUrl: item.url || "https://linkedin.com",
                 location: pInfo.location || "Saudi Arabia",
                 email: desc.match(/[a-zA-Z0-9._%+-]+@ [a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)?.[0], // Basic email search
-                phone: extractedPhone
+                phone: extractedPhone,
+                description: desc
             };
         });
     } catch (error: any) {

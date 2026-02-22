@@ -27,7 +27,8 @@ export async function getRawLeadsAction(): Promise<any[]> {
                 organization_name: l.company,
                 email: l.email,
                 phone_numbers: l.phone ? [l.phone] : [],
-                linkedin_url: l.linkedinUrl
+                linkedin_url: l.linkedinUrl,
+                headline: l.description // Apify's best 'headline' is its snippet
             }));
             console.log(`Apify provided ${rawLeads.length} leads.`);
         } catch (e: any) {
@@ -69,6 +70,23 @@ export async function saveSingleLeadAction(p: any): Promise<Lead | null> {
         const safeCompany = p.organization_name || "Enterprise";
         const safeRole = p.title || "Executive";
 
+        const generateDynamicProblem = (role: string, headline: string) => {
+            const h = (headline + " " + role).toLowerCase();
+            if (h.includes("founder") || h.includes("ceo")) {
+                return "صعوبة الموازنة بين تطوير المنتج (Product) وإدارة المبيعات والتوسع في السوق السعودي.";
+            }
+            if (h.includes("marketing") || h.includes("growth")) {
+                return "الحاجة لأدوات ذكاء اصطناعي تقلل تكلفة الاستحواذ على العميل (CAC) وتزود نسبة التحويل.";
+            }
+            if (h.includes("tech") || h.includes("cto") || h.includes("developer")) {
+                return "تراكم المهام التقنية (Tech Debt) والحاجة لأتمتة عمليات الـ Deployment والدعم الفني.";
+            }
+            if (h.includes("hr") || h.includes("people")) {
+                return "صعوبة فلترة مئات السير الذاتية والبحث عن الكفاءات المناسبة بسرعة.";
+            }
+            return "الحاجة لتبسيط العمليات اليومية وتقليل الاعتماد على المهام اليدوية المتكررة.";
+        };
+
         const dbLead = {
             name: safeName,
             email: p.email || `contact@${safeCompany.toLowerCase().replace(/[^a-z0-9]/g, '') || 'monjez'}.com`,
@@ -76,7 +94,9 @@ export async function saveSingleLeadAction(p: any): Promise<Lead | null> {
             role: safeRole,
             company: safeCompany,
             linkedin_url: p.linkedin_url || "https://linkedin.com",
-            problem: "Optimizing growth and automation.",
+            problem: generateDynamicProblem(safeRole, p.headline || ""),
+            headline: p.headline || "",
+            description: p.description || p.headline || "",
             is_hot: safeRole.toLowerCase().includes('founder') || safeRole.toLowerCase().includes('ceo'),
             batch_date: new Date().toISOString().split('T')[0]
         };
@@ -104,7 +124,7 @@ export async function saveSingleLeadAction(p: any): Promise<Lead | null> {
             phone: data.phone || "N/A",
             role: data.role || "Professional",
             company: data.company || "Private Entity",
-            description: `${data.role} at ${data.company}`,
+            description: data.description || `${data.role} at ${data.company}`,
             linkedin: data.linkedin_url || "#",
             isHot: data.is_hot,
             problem: data.problem || "N/A",
