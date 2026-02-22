@@ -11,16 +11,32 @@ import {
     Target,
     Zap,
     CheckCircle2,
-    MessageSquare
+    MessageSquare,
+    BrainCircuit,
+    Info
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function ConsultantPage() {
     const [messages, setMessages] = useState([
-        { role: "assistant", content: "أهلاً بك يا بطل! أنا مستشارك الشخصي. كيف يمكنني مساعدتك اليوم في تظبيط البزنس أو حياتك الشخصية؟" }
+        { role: "assistant", content: "أهلاً بك يا بطل! أنا مستشارك الشخصي. قبل ما نبدأ نظبط البزنس، محتاج أعرفك أكتر عشان نصايحي تكون مفصلة عليك بالظبط. مستعد نبدأ رحلة الاكتشاف؟" }
     ]);
     const [input, setInput] = useState("");
+    const [isDiscoveryMode, setIsDiscoveryMode] = useState(true);
+    const [discoveryStep, setDiscoveryStep] = useState(0);
+    const [userProfile, setUserProfile] = useState({
+        goals: "",
+        personality: "",
+        challenges: "",
+    });
     const chatEndRef = useRef<HTMLDivElement>(null);
+
+    const discoveryQuestions = [
+        "إيه أكتر هدف شاغل بالك دلوقتي ونفسك تحققه في الـ 3 شهور الجايين؟",
+        "بتفضل تشتغل لوحدك وتفكر في الهدوء، ولا بتحب العصف الذهني مع فريق؟",
+        "إيه أكبر عقبة بتقابلك لما تيجي تنفذ فكرة جديدة؟",
+        "لو معاك ميزانية مفتوحة ليوم واحد، هتصرفها في إيه في البزنس بتاعك؟"
+    ];
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -33,21 +49,36 @@ export default function ConsultantPage() {
     const handleSend = () => {
         if (!input.trim()) return;
 
-        const newMessages = [...messages, { role: "user", content: input }];
+        const userMsg = input;
+        const newMessages = [...messages, { role: "user", content: userMsg }];
         setMessages(newMessages);
         setInput("");
 
-        // Mocking AI Response
+        // Simulated AI Logic for Personality Discovery
         setTimeout(() => {
+            let assistantResponse = "";
+
+            if (isDiscoveryMode) {
+                if (discoveryStep < discoveryQuestions.length) {
+                    assistantResponse = `تمام جداً، فهمتك. السؤال اللي بعده: ${discoveryQuestions[discoveryStep]}`;
+                    setDiscoveryStep(prev => prev + 1);
+                } else {
+                    assistantResponse = "عظيم! كدة أنا كونت صورة كويسة جداً عن شخصيتك وأهدافك. دلوقتي أقدر أديك نصايح فعالة. تحب نبدأ منين؟";
+                    setIsDiscoveryMode(false);
+                }
+            } else {
+                assistantResponse = "بناءً على اللي عرفته عنك، أنت شخص بيميل للتنفيذ السريع. نصيحتي ليك دلوقتي إنك تبدأ بتبسيط العمليات الروتينية عشان توفر وقت للإبداع. إيه رأيك؟";
+            }
+
             setMessages(prev => [...prev, {
                 role: "assistant",
-                content: "فهمت عليك. بناءً على ملاحظاتي السابقة، هذا تحدي ممتاز. أقترح عليك البدء بتمرين التركيز العميق لمدة 20 دقيقة، ثم تحديد أهم 3 مهام لهذا اليوم."
+                content: assistantResponse
             }]);
-        }, 1000);
+        }, 800);
     };
 
     const tasks = [
-        { title: "Deep Focus Session", status: "pending", priority: "High" },
+        { title: "Complete Personality Quiz", status: isDiscoveryMode ? "pending" : "completed", priority: "High" },
         { title: "Review LinkedIn Lead Quality", status: "completed", priority: "Medium" },
         { title: "Audit Q1 Marketing Spend", status: "pending", priority: "High" },
     ];
@@ -63,12 +94,18 @@ export default function ConsultantPage() {
                         </div>
                         <div>
                             <h3 className="font-bold text-white">AI Personal Consultant</h3>
-                            <p className="text-xs text-green-500 flex items-center gap-1">
-                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                Analyzing your goals...
+                            <p className="text-xs text-monjez-accent flex items-center gap-1">
+                                <Sparkles className="w-3 h-3 animate-pulse" />
+                                {isDiscoveryMode ? `Discovery Phase: Step ${discoveryStep + 1}/4` : "Consultation Mode Active"}
                             </p>
                         </div>
                     </div>
+                    {isDiscoveryMode && (
+                        <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
+                            <Info className="w-4 h-4 text-blue-400" />
+                            <span className="text-[10px] text-gray-400">Help me know you better</span>
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
@@ -78,13 +115,13 @@ export default function ConsultantPage() {
                             msg.role === "user" ? "flex-row-reverse" : ""
                         )}>
                             <div className={cn(
-                                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-lg",
                                 msg.role === "assistant" ? "bg-monjez-accent text-black" : "bg-white/10 text-white"
                             )}>
                                 {msg.role === "assistant" ? <Bot className="w-5 h-5" /> : <User className="w-5 h-5" />}
                             </div>
                             <div className={cn(
-                                "max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed",
+                                "max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed shadow-sm",
                                 msg.role === "assistant"
                                     ? "bg-white/5 text-gray-200 rounded-tl-none border border-white/5"
                                     : "bg-monjez-blue/20 text-white rounded-tr-none border border-monjez-blue/30"
@@ -100,7 +137,7 @@ export default function ConsultantPage() {
                     <div className="relative">
                         <input
                             type="text"
-                            placeholder="Ask me anything about business or life..."
+                            placeholder={isDiscoveryMode ? "Tell me more about yourself..." : "Ask me anything about business or life..."}
                             className="w-full bg-black/40 border border-white/10 rounded-2xl pl-6 pr-14 py-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-monjez-accent transition-all"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
@@ -108,7 +145,7 @@ export default function ConsultantPage() {
                         />
                         <button
                             onClick={handleSend}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-monjez-accent text-black rounded-xl hover:bg-monjez-accent/90 transition-all font-bold"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-monjez-accent text-black rounded-xl hover:bg-monjez-accent/90 transition-all font-bold shadow-lg"
                         >
                             <Send className="w-4 h-4" />
                         </button>
@@ -118,21 +155,35 @@ export default function ConsultantPage() {
 
             {/* Sidebar Tools */}
             <div className="space-y-6 overflow-y-auto custom-scrollbar pr-2">
-                {/* Insights & Notes */}
+                {/* Insights & Personality Profile */}
                 <div className="bg-white/5 border border-white/10 p-6 rounded-3xl space-y-4">
                     <h4 className="text-white font-bold flex items-center gap-2">
-                        <StickyNote className="w-4 h-4 text-monjez-accent" />
-                        Today's Notes
+                        <BrainCircuit className="w-4 h-4 text-monjez-accent" />
+                        User Profile Analysis
                     </h4>
                     <div className="space-y-3">
-                        <div className="p-3 bg-white/5 rounded-xl border-l-4 border-monjez-accent">
-                            <p className="text-xs text-gray-300 italic">"Focused on high-ticket leads in Saudi market. Needs better email sequence."</p>
-                            <span className="text-[10px] text-gray-500 mt-2 block">10:45 AM</span>
-                        </div>
-                        <div className="p-3 bg-white/5 rounded-xl border-l-4 border-monjez-blue/50">
-                            <p className="text-xs text-gray-300 italic">"Remember to rest for 15 mins every 2 hours."</p>
-                            <span className="text-[10px] text-gray-500 mt-2 block">09:30 AM</span>
-                        </div>
+                        {isDiscoveryMode ? (
+                            <div className="text-center py-4 bg-white/5 rounded-xl border border-dashed border-white/10">
+                                <p className="text-xs text-gray-500 italic">Analyzing personality traits...</p>
+                                <div className="mt-2 w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-monjez-accent transition-all duration-500"
+                                        style={{ width: `${(discoveryStep / discoveryQuestions.length) * 100}%` }}
+                                    />
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="p-3 bg-white/5 rounded-xl border-l-4 border-monjez-accent">
+                                    <div className="text-[10px] text-monjez-accent font-bold uppercase mb-1">Architype</div>
+                                    <p className="text-sm text-gray-200">The Quick Executor</p>
+                                </div>
+                                <div className="p-3 bg-white/5 rounded-xl border-l-4 border-monjez-blue">
+                                    <div className="text-[10px] text-monjez-blue font-bold uppercase mb-1">Top Goal</div>
+                                    <p className="text-sm text-gray-200">Scale B2B Operations</p>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
 

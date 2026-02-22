@@ -10,6 +10,8 @@ export interface Lead {
     isHot: boolean;
     problem: string;
     category: string;
+    status: "New" | "Contacted" | "Closed";
+    lastExtracted: string;
 }
 
 const arabNames = [
@@ -30,23 +32,29 @@ const problems = [
 
 export function generateMockLeads(): Lead[] {
     const leads: Lead[] = [];
+    const today = new Date().toISOString().split('T')[0];
+
+    // User requested EXACTLY 111 clients per day
     for (let i = 1; i <= 111; i++) {
         const name = arabNames[Math.floor(Math.random() * arabNames.length)];
         const category = categories[Math.floor(Math.random() * categories.length)];
-        const isHot = i <= 99; // 99 hot leads as requested
+        const isHot = i <= 99; // Target high percentage of hot leads
+        const status = i <= 15 ? "Closed" : i <= 30 ? "Contacted" : "New";
 
         leads.push({
-            id: `lead-${i}`,
+            id: `lead-${i}-${today}`,
             name: `${name} ${i}`,
-            email: `contact${i}@${category.toLowerCase().replace(' ', '')}.me`,
+            email: `contact${i}@${category.toLowerCase().replace(' ', '')}.ae`,
             phone: `+971 50 ${Math.floor(1000000 + Math.random() * 9000000)}`,
             role: category === "Startup" ? "Founder" : category === "E-Commerce" ? "Owner" : "CEO",
-            company: `${name.split(' ')[1]} Ventures`,
-            description: `Managing a high-growth ${category.toLowerCase()} in the MENA region.`,
+            company: `${name.split(' ')[1]} Global`,
+            description: `Managing a high-growth ${category.toLowerCase()} with specific scaling needs.`,
             linkedin: `https://linkedin.com/in/arab-leader-${i}`,
             isHot,
             problem: problems[Math.floor(Math.random() * problems.length)],
-            category
+            category,
+            status,
+            lastExtracted: today
         });
     }
     return leads;

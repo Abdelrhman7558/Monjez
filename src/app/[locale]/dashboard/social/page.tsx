@@ -12,12 +12,18 @@ import {
     Sparkles,
     Plus,
     Clock,
-    ArrowUpRight
+    ArrowUpRight,
+    Linkedin,
+    Unlink,
+    CheckCircle2,
+    AlertCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function SocialPage() {
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
+    const [isConnected, setIsConnected] = useState(false);
+    const [isConnecting, setIsConnecting] = useState(false);
 
     const postHistory = [
         {
@@ -40,6 +46,18 @@ export default function SocialPage() {
         }
     ];
 
+    const handleConnect = () => {
+        setIsConnecting(true);
+        setTimeout(() => {
+            setIsConnected(true);
+            setIsConnecting(false);
+        }, 1500);
+    };
+
+    const handleDisconnect = () => {
+        setIsConnected(false);
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex justify-between items-center">
@@ -50,11 +68,51 @@ export default function SocialPage() {
                     </h1>
                     <p className="text-gray-400 text-sm">Automated LinkedIn content distribution and live performance tracking.</p>
                 </div>
-                <button className="flex items-center gap-2 px-6 py-3 bg-monjez-accent text-black rounded-xl font-bold hover:bg-monjez-accent/90 transition-all shadow-lg shadow-monjez-accent/20">
-                    <Plus className="w-5 h-5" />
-                    New Content Batch
-                </button>
+
+                <div className="flex items-center gap-4">
+                    {!isConnected ? (
+                        <button
+                            onClick={handleConnect}
+                            disabled={isConnecting}
+                            className="flex items-center gap-2 px-6 py-3 bg-[#0a66c2] text-white rounded-xl font-bold hover:bg-[#0a66c2]/90 transition-all shadow-lg disabled:opacity-50"
+                        >
+                            <Linkedin className="w-5 h-5" />
+                            {isConnecting ? "Connecting..." : "Connect LinkedIn"}
+                        </button>
+                    ) : (
+                        <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-xl">
+                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                <span className="text-sm font-bold text-white">LinkedIn Active</span>
+                            </div>
+                            <button
+                                onClick={handleDisconnect}
+                                className="p-2 text-gray-500 hover:text-red-500 transition-colors"
+                                title="Disconnect Account"
+                            >
+                                <Unlink className="w-5 h-5" />
+                            </button>
+                        </div>
+                    )}
+                    <button className="flex items-center gap-2 px-6 py-3 bg-monjez-accent text-black rounded-xl font-bold hover:bg-monjez-accent/90 transition-all shadow-lg shadow-monjez-accent/20">
+                        <Plus className="w-5 h-5" />
+                        New Content Batch
+                    </button>
+                </div>
             </div>
+
+            {/* LinkedIn Connection Warning if disconnected */}
+            {!isConnected && (
+                <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl flex items-center justify-between text-orange-200">
+                    <div className="flex items-center gap-3 text-sm">
+                        <AlertCircle className="w-5 h-5" />
+                        Your LinkedIn account is not connected. The agent cannot post automatically without access.
+                    </div>
+                    <button className="text-xs font-bold underline uppercase tracking-widest" onClick={handleConnect}>
+                        Connect Now
+                    </button>
+                </div>
+            )}
 
             {/* Global Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -93,7 +151,7 @@ export default function SocialPage() {
                         >
                             <div className="bg-white/5 p-4 flex justify-between items-center border-b border-white/5">
                                 <span className="text-sm font-bold text-gray-300">{day.date}</span>
-                                <span className="text-xs text-monjez-accent font-medium uppercase tracking-widest">{day.posts.length} Posts Active</span>
+                                <span className="text-xs text-monjez-accent font-medium uppercase tracking-widest">{day.posts.length} Posts Distributed</span>
                             </div>
                             <div className="divide-y divide-white/5">
                                 {day.posts.map((post) => (
@@ -142,10 +200,16 @@ export default function SocialPage() {
                         </div>
                     </div>
                     <div className="flex flex-col gap-3 w-full md:w-auto">
-                        <button className="flex items-center justify-center gap-3 px-8 py-4 bg-white text-black rounded-2xl font-black hover:scale-105 transition-transform">
-                            <Sparkles className="w-5 h-5" />
-                            Generate Batch
+                        <button
+                            disabled={!isConnected}
+                            className="flex items-center justify-center gap-3 px-8 py-4 bg-white text-black rounded-2xl font-black hover:scale-105 transition-transform disabled:opacity-50 disabled:grayscale disabled:hover:scale-100"
+                        >
+                            <Sparkles className="w-5 h-5 text-monjez-accent" />
+                            Generate & Schedule
                         </button>
+                        {!isConnected && (
+                            <p className="text-[10px] text-orange-400 text-center font-bold uppercase tracking-tighter">Connection Required</p>
+                        )}
                         <button className="flex items-center justify-center gap-3 px-8 py-4 bg-black/40 border border-white/20 text-white rounded-2xl font-bold hover:bg-black/60 transition-all">
                             <Video className="w-5 h-5 text-monjez-accent" />
                             Create Promo Video
