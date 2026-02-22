@@ -140,3 +140,22 @@ export async function saveSingleLeadAction(p: any): Promise<Lead | null> {
         return null;
     }
 }
+
+export async function performRealExtractionAction(): Promise<Lead[]> {
+    try {
+        console.log("Starting full autonomous extraction sequence...");
+        const rawLeads = await getRawLeadsAction();
+        const savedLeads: Lead[] = [];
+
+        for (const raw of rawLeads) {
+            const saved = await saveSingleLeadAction(raw);
+            if (saved) savedLeads.push(saved);
+        }
+
+        console.log(`Autonomous extraction complete. Saved ${savedLeads.length} leads.`);
+        return savedLeads;
+    } catch (error) {
+        console.error("performRealExtractionAction Error:", error);
+        return [];
+    }
+}

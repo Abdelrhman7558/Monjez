@@ -15,7 +15,12 @@ import {
     Phone,
     Linkedin,
     RefreshCw,
-    ShieldCheck
+    ShieldCheck,
+    Image as ImageIcon,
+    Video,
+    Plus,
+    LayoutDashboard,
+    Briefcase
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MacPopup } from "@/components/dashboard/leads/mac-popup";
@@ -40,6 +45,12 @@ export default function LeadsPage() {
     const [filterHot, setFilterHot] = useState(false);
     const [isExtracting, setIsExtracting] = useState(false);
     const [progress, setProgress] = useState({ current: 0, total: 0 });
+    const [activeTab, setActiveTab] = useState<"leads" | "assets">("leads");
+    const [assets, setAssets] = useState<any[]>([
+        { id: 1, name: "Intro Video.mp4", type: "video", size: "12MB", date: "2026-02-22" },
+        { id: 2, name: "Founder Story.jpg", type: "image", size: "2MB", date: "2026-02-21" },
+        { id: 3, name: "Consultation Call.mp4", type: "video", size: "45MB", date: "2026-02-20" },
+    ]);
     const [copyStatus, setCopyStatus] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -201,6 +212,56 @@ export default function LeadsPage() {
         window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${lead.email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
     };
 
+    const CreativeAssetsView = () => (
+        <div className="space-y-6">
+            <div className="flex justify-between items-center bg-[#242424] p-6 rounded-xl border border-white/5">
+                <div>
+                    <h3 className="text-xl font-bold text-white mb-1">Creative Assets Library</h3>
+                    <p className="text-sm text-gray-400">Manage your photos and videos for the LinkedIn Agent.</p>
+                </div>
+                <button className="bg-monjez-accent text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:opacity-90 transition-all">
+                    <Plus className="w-4 h-4" />
+                    Upload Material
+                </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {assets.map((asset) => (
+                    <div key={asset.id} className="bg-black/40 border border-white/5 rounded-xl p-4 group hover:border-monjez-accent/30 transition-all">
+                        <div className="aspect-video bg-[#242424] rounded-lg mb-4 flex items-center justify-center border border-white/5 overflow-hidden relative">
+                            {asset.type === 'video' ? <Video className="w-8 h-8 text-gray-600" /> : <ImageIcon className="w-8 h-8 text-gray-600" />}
+                            <div className="absolute inset-0 bg-monjez-accent/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span className="text-[10px] font-bold text-monjez-accent uppercase tracking-widest">Select for Post</span>
+                            </div>
+                        </div>
+                        <div className="flex justify-between items-start">
+                            <div className="flex-1 min-w-0">
+                                <h4 className="text-sm font-bold text-white truncate">{asset.name}</h4>
+                                <p className="text-[10px] text-gray-500 mt-0.5">{asset.size} • {asset.date}</p>
+                            </div>
+                            <span className={cn(
+                                "text-[9px] px-2 py-0.5 rounded-full font-bold uppercase",
+                                asset.type === 'video' ? "bg-blue-500/10 text-blue-400" : "bg-purple-500/10 text-purple-400"
+                            )}>
+                                {asset.type}
+                            </span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="bg-monjez-accent/5 border border-monjez-accent/20 rounded-xl p-4 flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-full bg-monjez-accent/20 flex items-center justify-center">
+                    <Briefcase className="w-5 h-5 text-monjez-accent" />
+                </div>
+                <div className="flex-1">
+                    <h5 className="text-xs font-bold text-white">Agent Request Notification</h5>
+                    <p className="text-[10px] text-gray-400">The LinkedIn Agent will notify you here when it needs a specific photo or video for a scheduled post.</p>
+                </div>
+            </div>
+        </div>
+    );
+
     const filteredLeads = leads.filter(lead => {
         const matchesSearch = lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             lead.company.toLowerCase().includes(searchQuery.toLowerCase());
@@ -310,157 +371,177 @@ export default function LeadsPage() {
             <MacPopup
                 isOpen={!!selectedDay}
                 onClose={() => setSelectedDay(null)}
-                title={`LinkedIn Leads Explorer - ${selectedDay}`}
+                title="Monjez Intel: LinkedIn Agent Control Center"
             >
-                <div className="space-y-6 h-full">
-                    {/* Toolbar */}
-                    <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/5">
-                        <div className="flex items-center gap-4 flex-1">
-                            <div className="relative flex-1 max-w-md">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                                <input
-                                    type="text"
-                                    placeholder="Search by name or company..."
-                                    className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-monjez-accent transition-colors"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                            </div>
-                            <button
-                                onClick={() => setFilterHot(!filterHot)}
-                                className={cn(
-                                    "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all border",
-                                    filterHot
-                                        ? "bg-orange-500/20 border-orange-500 text-orange-500"
-                                        : "bg-white/5 border-white/10 text-gray-400 hover:text-white"
-                                )}
-                            >
-                                <Flame className="w-4 h-4" />
-                                High Value Only
-                            </button>
-                        </div>
+                <div className="flex h-full min-h-[600px]">
+                    {/* Inner Sidebar */}
+                    <div className="w-48 border-r border-white/5 pr-4 flex flex-col gap-2">
                         <button
-                            onClick={handleDownload}
-                            className="flex items-center gap-2 px-6 py-2 bg-monjez-accent text-black rounded-lg text-sm font-bold hover:bg-monjez-accent/90 transition-colors"
+                            onClick={() => setActiveTab("leads")}
+                            className={cn(
+                                "w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-3",
+                                activeTab === 'leads' ? "bg-monjez-accent text-white shadow-lg shadow-monjez-accent/20" : "text-gray-400 hover:bg-white/5"
+                            )}
                         >
-                            <Download className="w-4 h-4" />
-                            Download Batch ({filteredLeads.length})
+                            <LayoutDashboard className="w-4 h-4" />
+                            Daily Leads
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("assets")}
+                            className={cn(
+                                "w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-3",
+                                activeTab === 'assets' ? "bg-monjez-accent text-white shadow-lg shadow-monjez-accent/20" : "text-gray-400 hover:bg-white/5"
+                            )}
+                        >
+                            <ImageIcon className="w-4 h-4" />
+                            Creative Assets
                         </button>
                     </div>
 
-                    {/* Leads Grid/List */}
-                    <div className="grid gap-4">
-                        {filteredLeads.map((lead) => (
-                            <div
-                                key={lead.id}
-                                className="bg-[#242424] border border-white/5 rounded-xl p-5 hover:border-white/20 transition-all group"
-                            >
-                                <div className="flex justify-between items-start">
-                                    <div className="flex items-start gap-4">
-                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-monjez-blue to-monjez-accent flex items-center justify-center text-xl font-bold text-white shadow-lg overflow-hidden">
-                                            {lead.name[0]}
+                    {/* Content Area */}
+                    <div className="flex-1 pl-6 overflow-y-auto">
+                        {activeTab === 'leads' ? (
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-xl font-bold text-white">Leads for {selectedDay}</h3>
+                                    <div className="flex gap-2">
+                                        <div className="relative">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                                            <input
+                                                type="text"
+                                                placeholder="Search by name or company..."
+                                                className="bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-monjez-accent transition-all w-64"
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                            />
                                         </div>
-                                        <div>
-                                            <div className="flex items-center gap-3">
-                                                <h4 className="text-lg font-bold text-white">{lead.name}</h4>
-                                                {lead.isHot && (
-                                                    <span className="px-2 py-0.5 rounded bg-orange-500/10 text-orange-500 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
-                                                        <Flame className="w-3 h-3" />
-                                                        Verified Lead
-                                                    </span>
-                                                )}
-                                                <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-wider">
-                                                    {lead.category}
-                                                </span>
-                                            </div>
-                                            <p className="text-sm text-gray-400 font-medium line-clamp-1">{lead.description}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        {/* Row 1: Emails */}
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <button
-                                                onClick={() => copyEmailToClipboard(lead, false)}
-                                                className="bg-monjez-accent/10 border border-monjez-accent/20 hover:bg-monjez-accent/20 text-monjez-accent px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
-                                            >
-                                                <Mail className="w-3 h-3" />
-                                                {copyStatus === `${lead.id}-en` ? "Copied!" : "Email (EN)"}
-                                            </button>
-                                            <button
-                                                onClick={() => copyEmailToClipboard(lead, true)}
-                                                className="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
-                                            >
-                                                <Mail className="w-3 h-3 text-monjez-accent" />
-                                                {copyStatus === `${lead.id}-ar` ? "نسخ الإيميل" : "Email (AR)"}
-                                            </button>
-                                        </div>
-
-                                        {/* Row 2: Platforms */}
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <button
-                                                onClick={() => copyLinkedInToClipboard(lead)}
-                                                className="bg-[#0a66c2]/10 border border-[#0a66c2]/20 hover:bg-[#0a66c2]/20 text-[#0a66c2] px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
-                                            >
-                                                <Linkedin className="w-3 h-3" />
-                                                {copyStatus === `${lead.id}-li` ? "Copied!" : "LinkedIn Msg"}
-                                            </button>
-                                            <a
-                                                href={`https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}`}
-                                                target="_blank"
-                                                className="bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 text-green-500 px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
-                                            >
-                                                <Phone className="w-3 h-3 text-[#25D366]" />
-                                                WhatsApp
-                                            </a>
-                                        </div>
-
-                                        {/* Row 3: Action Links */}
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <button
-                                                onClick={() => openInGmail(lead)}
-                                                className="bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-500 px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
-                                            >
-                                                <ExternalLink className="w-3 h-3" />
-                                                Gmail App
-                                            </button>
-                                            <a
-                                                href={lead.linkedin}
-                                                target="_blank"
-                                                className="p-2 border border-white/10 rounded-lg hover:bg-white/5 transition-all flex justify-center items-center text-[9px] text-gray-400 font-bold"
-                                            >
-                                                View LinkedIn
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div className="space-y-3 col-span-2">
-                                        <div className="p-4 rounded-lg bg-black/40 border border-white/5 h-full">
-                                            <div className="text-[10px] uppercase tracking-wider text-monjez-accent font-bold mb-2">Problem Analysis</div>
-                                            <p className="text-sm text-gray-300 leading-relaxed italic">
-                                                "{lead.problem}"
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="space-y-3">
-                                        <div className="flex flex-col gap-2">
-                                            <div className="flex items-center gap-2 text-xs text-gray-500 italic">
-                                                <Mail className="w-3 h-3" />
-                                                {lead.email}
-                                            </div>
-                                            <div className="flex items-center gap-2 text-xs text-gray-500 italic">
-                                                <Phone className="w-3 h-3" />
-                                                {lead.phone}
-                                            </div>
-                                        </div>
-                                        <button className="w-full mt-2 py-2 bg-monjez-accent/10 border border-monjez-accent/30 rounded-lg text-[10px] font-bold text-white hover:bg-monjez-accent/20 transition-colors uppercase">
-                                            AI Personal Outreach
+                                        <button
+                                            onClick={handleDownload}
+                                            className="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all"
+                                        >
+                                            Download Batch ({filteredLeads.length})
                                         </button>
                                     </div>
                                 </div>
+
+                                {/* Leads Grid/List */}
+                                <div className="grid gap-4">
+                                    {filteredLeads.map((lead) => (
+                                        <div
+                                            key={lead.id}
+                                            className="bg-[#242424] border border-white/5 rounded-xl p-5 hover:border-white/20 transition-all group"
+                                        >
+                                            <div className="flex justify-between items-start">
+                                                <div className="flex items-start gap-4">
+                                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-monjez-blue to-monjez-accent flex items-center justify-center text-xl font-bold text-white shadow-lg overflow-hidden">
+                                                        {lead.name[0]}
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex items-center gap-3">
+                                                            <h4 className="text-lg font-bold text-white">{lead.name}</h4>
+                                                            {lead.isHot && (
+                                                                <span className="px-2 py-0.5 rounded bg-orange-500/10 text-orange-500 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                                                                    <Flame className="w-3 h-3" />
+                                                                    Verified Lead
+                                                                </span>
+                                                            )}
+                                                            <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-wider">
+                                                                {lead.category}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-sm text-gray-400 font-medium line-clamp-1">{lead.description}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    {/* Row 1: Emails */}
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <button
+                                                            onClick={() => copyEmailToClipboard(lead, false)}
+                                                            className="bg-monjez-accent/10 border border-monjez-accent/20 hover:bg-monjez-accent/20 text-monjez-accent px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                                        >
+                                                            <Mail className="w-3 h-3" />
+                                                            {copyStatus === `${lead.id}-en` ? "Copied!" : "Email (EN)"}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => copyEmailToClipboard(lead, true)}
+                                                            className="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                                        >
+                                                            <Mail className="w-3 h-3 text-monjez-accent" />
+                                                            {copyStatus === `${lead.id}-ar` ? "نسخ الإيميل" : "Email (AR)"}
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Row 2: Platforms */}
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <button
+                                                            onClick={() => copyLinkedInToClipboard(lead)}
+                                                            className="bg-[#0a66c2]/10 border border-[#0a66c2]/20 hover:bg-[#0a66c2]/20 text-[#0a66c2] px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                                        >
+                                                            <Linkedin className="w-3 h-3" />
+                                                            {copyStatus === `${lead.id}-li` ? "Copied!" : "LinkedIn Msg"}
+                                                        </button>
+                                                        <a
+                                                            href={`https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}`}
+                                                            target="_blank"
+                                                            className="bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 text-green-500 px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                                        >
+                                                            <Phone className="w-3 h-3 text-[#25D366]" />
+                                                            WhatsApp
+                                                        </a>
+                                                    </div>
+
+                                                    {/* Row 3: Action Links */}
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <button
+                                                            onClick={() => openInGmail(lead)}
+                                                            className="bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-500 px-2 py-2 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5"
+                                                        >
+                                                            <ExternalLink className="w-3 h-3" />
+                                                            Gmail App
+                                                        </button>
+                                                        <a
+                                                            href={lead.linkedin}
+                                                            target="_blank"
+                                                            className="p-2 border border-white/10 rounded-lg hover:bg-white/5 transition-all flex justify-center items-center text-[9px] text-gray-400 font-bold"
+                                                        >
+                                                            View LinkedIn
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                <div className="space-y-3 col-span-2">
+                                                    <div className="p-4 rounded-lg bg-black/40 border border-white/5 h-full">
+                                                        <div className="text-[10px] uppercase tracking-wider text-monjez-accent font-bold mb-2">Problem Analysis</div>
+                                                        <p className="text-sm text-gray-300 leading-relaxed italic">
+                                                            "{lead.problem}"
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-3">
+                                                    <div className="flex flex-col gap-2">
+                                                        <div className="flex items-center gap-2 text-xs text-gray-500 italic">
+                                                            <Mail className="w-3 h-3" />
+                                                            {lead.email}
+                                                        </div>
+                                                        <div className="flex items-center gap-2 text-xs text-gray-500 italic">
+                                                            <Phone className="w-3 h-3" />
+                                                            {lead.phone}
+                                                        </div>
+                                                    </div>
+                                                    <button className="w-full mt-2 py-2 bg-monjez-accent/10 border border-monjez-accent/30 rounded-lg text-[10px] font-bold text-white hover:bg-monjez-accent/20 transition-colors uppercase">
+                                                        AI Personal Outreach
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        ))}
+                        ) : (
+                            <CreativeAssetsView />
+                        )}
                     </div>
                 </div>
             </MacPopup>

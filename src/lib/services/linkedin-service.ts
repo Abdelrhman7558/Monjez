@@ -3,29 +3,76 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 export interface LinkedInPost {
     content: string;
     type: 'Post' | 'Video' | 'Photo';
+    category?: string;
+}
+
+export async function getLinkedInMemberId(accessToken: string): Promise<string> {
+    try {
+        const response = await fetch("https://api.linkedin.com/v2/userinfo", {
+            headers: { "Authorization": `Bearer ${accessToken}` }
+        });
+        if (!response.ok) {
+            // Fallback to older /me endpoint if userinfo fails
+            const meRes = await fetch("https://api.linkedin.com/v2/me", {
+                headers: { "Authorization": `Bearer ${accessToken}` }
+            });
+            const meData = await meRes.json();
+            return `urn:li:person:${meData.id}`;
+        }
+        const data = await response.json();
+        return `urn:li:person:${data.sub}`; // userinfo uses 'sub'
+    } catch (error) {
+        console.error("Failed to fetch LinkedIn Member ID:", error);
+        throw new Error("Could not retrieve LinkedIn Member ID automatically.");
+    }
 }
 
 export async function generateSocialPostsForDay(): Promise<LinkedInPost[]> {
-    // This will eventually call an AI service to generate content
-    return [
-        { content: "Exploring the future of automation in the MENA region. #Monjez #AI #SaudiVision2030", type: 'Post' },
-        { content: "How we're helping 100+ founders automate their lead gen every single day.", type: 'Post' },
-        { content: "Check out our new LinkedIn Agent in action!", type: 'Video' },
+    const categories = [
+        "Daily Life",
+        "Client Success/Problem Solved",
+        "Professional Tips",
+        "Behind the Scenes/Work Culture"
     ];
+
+    // In a real scenario, this would call an LLM (MiniMax) to generate professional Arabic/EN storytelling hooks
+    return categories.map((cat, idx) => ({
+        content: generateMockProfessionalContent(cat),
+        type: idx === 2 ? 'Photo' : 'Post',
+        category: cat
+    }));
+}
+
+function generateMockProfessionalContent(category: string): string {
+    const hooks = {
+        "Daily Life": "مفيش حاجة بتوقف الشغف.. يومي بيبدأ الساعة 5 الصبح بقهوة وتخطيط للمستقبل. ☕✨",
+        "Client Success/Problem Solved": "أكبر مشكلة واجهت عميل لينا الأسبوع ده كانت ضياع 40 ساعة شغل يدوي. الحل؟ أتمتة بسيطة غيرت كل حاجة. 🚀",
+        "Professional Tips": "نصيحة النهاردة لكل رائد أعمال في السعودية: الذكاء الاصطناعي مش هيستبدلك، بس اللي بيستخدمه هيسبقك بمسافات. 💡",
+        "Behind the Scenes/Work Culture": "كواليس شغلنا في 'منجز' مش بس كود وبرمجة، دي روح فريق بتعشق التحدي. 🤝🦾"
+    };
+
+    const content = hooks[category as keyof typeof hooks] || "Exploring new horizons in automation.";
+    const hashtags = "\n\n#منجز #ذكاء_اصطناعي #ريادة_الأعمال #السعودية #Monjez #AI #SuccessStory #Automation";
+
+    return `${content}${hashtags}`;
 }
 
 export async function postToLinkedIn(post: LinkedInPost) {
     const ACCESS_TOKEN = process.env.LINKEDIN_ACCESS_TOKEN;
-    const MEMBER_ID = process.env.LINKEDIN_MEMBER_ID;
+    let MEMBER_ID = process.env.LINKEDIN_MEMBER_ID;
 
-    if (!ACCESS_TOKEN || !MEMBER_ID) {
-        console.warn("LinkedIn credentials missing. Logging post to DB only.");
-        return await logPostToDatabase(post, 'failed', { error: 'Credentials missing' });
+    if (!ACCESS_TOKEN) {
+        console.warn("LinkedIn Access Token missing.");
+        return await logPostToDatabase(post, 'failed', { error: 'Access Token missing' });
     }
 
     try {
-        // LinkedIn API implementation for text posts
-        // For Photos/Videos, it requires a multi-step upload process
+        // Auto-fetch Member ID if not provided in Env
+        if (!MEMBER_ID || MEMBER_ID === 'your_member_id_here') {
+            console.log("Fetching Member ID automatically...");
+            MEMBER_ID = await getLinkedInMemberId(ACCESS_TOKEN);
+        }
+
         const response = await fetch("https://api.linkedin.com/v2/ugcPosts", {
             method: "POST",
             headers: {
