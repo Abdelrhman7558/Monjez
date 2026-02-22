@@ -16,36 +16,47 @@ export async function fetchLeadsFromApify(count: number = 20): Promise<ApifyLead
     }
 
     try {
-        // Using 'harvestapi/linkedin-profile-search' which is known for not requiring cookies
-        const response = await fetch(`https://api.apify.com/v2/acts/harvestapi~linkedin-profile-search/run-sync-get-dataset-items?token=${API_KEY}`, {
+        // Using Google Search Scraper to find LinkedIn profiles
+        // This is much more robust and doesn't require session cookies
+        const response = await fetch(`https://api.apify.com/v2/acts/apify~google-search-scraper/run-sync-get-dataset-items?token=${API_KEY}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                keyword: "Founder OR CEO Saudi Arabia",
-                location: "Saudi Arabia",
-                limit: count,
-                proxy: { useApifyProxy: true }
+                queries: "site:linkedin.com/in Saudi Arabia Founder CEOs",
+                maxPagesPerQuery: 1,
+                resultsPerPage: count,
+                proxyConfig: { useApifyProxy: true }
             })
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error("Apify Error Response:", errorText);
-            throw new Error(`Apify request failed: ${response.statusText} - ${errorText.substring(0, 100)}`);
+            throw new Error(`Apify Google Search failed: ${response.statusText} - ${errorText.substring(0, 50)}`);
         }
 
         const data = await response.json();
-        return data.map((item: any) => ({
-            name: item.fullName || item.name || "Real Professional",
-            title: item.occupation || item.title || "Executive",
-            company: item.company || "Leading Enterprise",
-            email: item.email,
-            phone: item.phone,
-            linkedinUrl: item.linkedinUrl || item.url || "#",
-            location: item.location || "MENA Region"
-        }));
+        // Google Search Scraper returns results in 'organicResults'
+        const results = data[0]?.organicResults || [];
+
+        return results.map((item: any) => {
+            // Title usually looks like: "Name - Title - Company | LinkedIn"
+            const parts = item.title?.split('-') || [];
+            const name = parts[0]?.trim() || "Professional";
+            const title = parts[1]?.trim() || "Executive";
+            const company = parts[2]?.split('|')[0]?.trim() || "Leading Company";
+
+            return {
+                name: name,
+                title: title,
+                company: company,
+                linkedinUrl: item.url,
+                location: "Saudi Arabia",
+                email: undefined,
+                phone: undefined
+            };
+        });
     } catch (error: any) {
         console.error("Apify Fetch Error:", error.message);
         throw error; // Let leads-actions handle it

@@ -24,7 +24,7 @@ import {
 
 export default function ConsultantPage() {
     const [messages, setMessages] = useState([
-        { role: "assistant", content: "أهلاً بك يا بطل! أنا مستشارك الشخصي. قبل ما نبدأ نظبط البزنس، محتاج أعرفك أكتر عشان نصايحي تكون مفصلة عليك بالظبط. مستعد نبدأ رحلة الاكتشاف؟" }
+        { role: "assistant", content: "أهلاً بيك يا بطل في مكتبك الجديد! أنا منجز، مستشارك الشخصي وسندك في البزنس. قبل ما نشمر ونبدأ شغل، محتاج أعرفك أكتر عشان ردي يكون مظبوط على مقاسك. قولي كدة.. جاهز نبدأ رحلة الاكتشاف؟" }
     ]);
     const [input, setInput] = useState("");
     const [isDiscoveryMode, setIsDiscoveryMode] = useState(true);
@@ -63,20 +63,16 @@ export default function ConsultantPage() {
     const handleSend = async () => {
         if (!input.trim() || isLoading) return;
 
-        const userMsg = input;
-        const newMessages = [...messages, { role: "user", content: userMsg }];
+        const userMsgContent = input;
+        const newMessages = [...messages, { role: "user", content: userMsgContent }];
         setMessages(newMessages);
         setInput("");
         setIsLoading(true);
 
         try {
-            // 1. Save user message
-            await saveConsultantChatMessage('user', userMsg);
+            await saveConsultantChatMessage('user', userMsgContent);
 
-            // 2. Generate AI Response
             const assistantResponse = await generateConsultantResponse(newMessages);
-
-            // 3. Save assistant response
             await saveConsultantChatMessage('assistant', assistantResponse);
 
             setMessages(prev => [...prev, {
@@ -84,20 +80,31 @@ export default function ConsultantPage() {
                 content: assistantResponse
             }]);
 
-            // Scroll to bottom after new message
+            // Scroll to bottom
             setTimeout(() => {
                 chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
             }, 100);
 
+            // Natural discovery flow: Ask next question if in discovery mode
             if (isDiscoveryMode) {
                 if (discoveryStep < discoveryQuestions.length) {
-                    setDiscoveryStep(prev => prev + 1);
-                } else {
-                    setIsDiscoveryMode(false);
+                    const nextStep = discoveryStep + 1;
+                    setDiscoveryStep(nextStep);
+
+                    if (nextStep < discoveryQuestions.length) {
+                        const nextQuestion = discoveryQuestions[nextStep];
+                        // Small delay for natural feeling
+                        setTimeout(async () => {
+                            setMessages(prev => [...prev, { role: "assistant", content: nextQuestion }]);
+                            await saveConsultantChatMessage('assistant', nextQuestion);
+                        }, 1000);
+                    } else {
+                        setIsDiscoveryMode(false);
+                    }
                 }
             }
         } catch (error) {
-            console.error(error);
+            console.error("Consultant Page Error:", error);
         } finally {
             setIsLoading(false);
         }

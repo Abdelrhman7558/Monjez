@@ -46,36 +46,49 @@ export async function generateConsultantResponse(messages: { role: string, conte
 
     // System prompt for Egyptian Personality
     const systemPrompt = `
-        أنت "منجز"، مستشار البزنس والحياة الشخصي. 
-        شخصيتك: جدع، ذكي، بيحب يساعد، ودمه خفيف بس وقت الشغل كلك تركيز.
-        طريقة كلامك: مصرية عامية طبيعية جداً (زي ما بنتكلم في الشارع أو على القهوة مع صحابنا)، ابعد عن اللغة العربية الفصحى تماماً.
-        مهمتك: تساعد اليوزر إنه ينظم حياته، يظبط البزنس بتاعه، ويديله نصايح عملية (Actionable) بناءً على أهدافه.
-        لو لسه في مرحلة الاكتشاف (Discovery)، اسأل أسئلة ذكية وخلي كلامك مشجع.
+        أنت "منجز"، مستشار البزنس والحياة الشخصي المصري. 
+        شخصيتك: جدع، ذكي جداً، ابن بلد، دمه خفيف بس لما يجي وقت الجد بيكون قمة في التركيز والاحترافية.
+        - اتكلم مصري عامي 100% "زي ما بنتكلم في الشارع والقهوة".
+        - ابعد عن أي لغة عربية فصحى نهائياً (زي "لماذا"، "سوف"، "هذا"). استبدلها بـ "ليه"، "هـ"، "ده".
+        - استخدم لزمات مصرية زي "يا باشا"، "يا بطل"، "بص يا سيدي"، "قشطة"، "تمام التمام".
+        - خليك مشجع وعملي جداً. ماتدينيش نصايح عامة، اديني خطوات 1- 2- 3.
+        - هدفك إن اليوزر يخلص (ينجز) مهامه وينجح في البزنس بتاعه.
     `;
 
     try {
-        // Here we would normally call the LLM API using the MODEL_KEY
-        // For now, we simulate the AI logic with the Egyptian persona
-        // In a real scenario, this 'fetch' would be to the MinMak/OpenAI endpoint
+        const response = await fetch("https://api.minimax.chat/v1/text/chatcompletion_pro", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${MODEL_KEY}`
+            },
+            body: JSON.stringify({
+                model: "abab6.5s-chat",
+                messages: [
+                    { role: "system", content: systemPrompt },
+                    ...messages
+                ],
+                temperature: 0.7,
+                tokens_to_generate: 1000
+            })
+        });
 
-        const lastUserMessage = messages[messages.length - 1].content;
-
-        // Mocking the AI response with Egyptian persona for now
-        // But since we want "Real" responses, we'll simulate a delayed response
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        let response = "";
-        if (lastUserMessage.toLowerCase().includes("هدف") || lastUserMessage.includes("حلم")) {
-            response = "عاش يا بطل! الأهداف دي هي اللي بتخلينا نتحرك. عشان نحقق ده، محتاجين نكسر الهدف الكبير لخطوات صغيرة. تفتكر إيه أول خطوة تقدر تبدأ فيها بكرة؟";
-        } else if (lastUserMessage.includes("مشكلة") || lastUserMessage.includes("عقبة")) {
-            response = "ولا يهمك، مفيش مشكلة ملهاش حل. إحنا هنا عشان نفكك التعقيدات دي. قولي كدة، إيه أكتر حاجة معطلاك دلوقتي بالظبط؟";
-        } else {
-            response = "كلامك زي الفل وفاهم قصدك جداً. بص يا سيدي، إحنا محتاجين نركز على أهم حاجة في يومك عشان ننجز بجد. قولي إيه أكتر حاجة شاغلة بالك النهاردة؟";
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error("LLM API Error:", errorData);
+            throw new Error(`AI Service Error: ${response.status}`);
         }
 
-        return response;
-    } catch (error) {
+        const data = await response.json();
+
+        // MiniMax specific parsing
+        let assistantResponse = data.choices?.[0]?.message?.content ||
+            data.choices?.[0]?.messages?.[0]?.content ||
+            data.reply || "";
+
+        return assistantResponse || "معلش يا صاحبي، التفكير خدني شوية وتاه مني الرد. اسأل تاني كدة؟";
+    } catch (error: any) {
         console.error("Consultant AI Error:", error);
-        return "معلش يا صاحبي حصل مشكلة فنية عندي، جرب تبعت تاني كدة؟";
+        return "معلش يا باشا، حصل قفلة في السيرفر عندي. ثواني كدة وجرب تبعت رسالتك تاني، أنا معاك وقاعد مش ماشي.";
     }
 }
