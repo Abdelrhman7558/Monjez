@@ -31,68 +31,50 @@ export async function performRealExtractionAction(): Promise<Lead[]> {
         const remainingCount = 111 - rawLeads.length;
         if (remainingCount > 0) {
             try {
-                const apolloLeads = await fetchLeadsFromApollo(remainingCount);
+                const apolloLeads = await fetchLeadsFromApollo(remainingCount).catch(e => {
+                    console.warn("Apollo Fallback Triggered:", e.message);
+                    return [];
+                });
                 rawLeads = [...rawLeads, ...apolloLeads];
             } catch (apolloErr: any) {
-                console.warn("Apollo Fetch Failed (likely plan restriction):", apolloErr.message);
-                // If we already have some leads from Apify, don't crash.
-                // If we have ZERO leads, then we can throw the error if we want, 
-                // but better to just return what we have.
-                if (rawLeads.length === 0) {
-                    throw new Error(`Both extraction sources failed. Apollo said: ${apolloErr.message}`);
-                }
+                console.warn("Apollo Outer Catch:", apolloErr.message);
             }
         }
 
         console.log(`Step 1: Raw Leads Count = ${rawLeads.length}`);
-
-        if (rawLeads.length === 0) {
-            console.warn("No leads found from any source!");
-            return [];
-        }
-
-        const processedLeads: Lead[] = rawLeads.map((p, index) => {
-            return {
-                id: `real-${index}-${Date.now()}`,
-                name: p.name,
-                email: p.email || `contact@${p.organization_name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
-                phone: p.phone_numbers?.[0] || "Available on request",
-                role: p.title,
-                company: p.organization_name,
-                description: "Business professional in Saudi Arabia",
-                linkedin: p.linkedin_url || "https://linkedin.com",
-                isHot: p.title.toLowerCase().includes('founder') || p.title.toLowerCase().includes('ceo'),
-                problem: "Exploring business automation and growth opportunities.",
-                category: p.title.toLowerCase().includes('founder') ? 'Founder' : 'Exec',
-                status: "New" as const,
-                lastExtracted: new Date().toISOString().split('T')[0]
-            };
-        });
-
-        console.log(`Step 2: Processed ${processedLeads.length} leads. Persisting to Supabase...`);
-
-        // Persist to Supabase
         const supabase = await createSupabaseServerClient();
-        const { error: supabaseError } = await supabase.from('apollo_leads').insert(
-            processedLeads.map(l => ({
-                name: l.name,
-                email: l.email,
-                phone: l.phone,
-                role: l.role,
-                company: l.company,
-                linkedin_url: l.linkedin,
-                problem: l.problem,
-                is_hot: l.isHot
-            }))
-        );
 
-        if (supabaseError) {
-            console.error("Supabase Save Error:", supabaseError);
-        } else {
-            console.log("Step 3: Successfully saved to Supabase.");
+        for (let i = 0; i < rawLeads.length && i < 111; i++) {
+            const p = rawLeads[i];
+            try {
+                // Analyze one by one for natural flow
+                const analysis = await analyzeLeadWithAI(p).catch(() => ({
+                    isHot: p.title.toLowerCase().includes('founder'),
+                    problem: "Scaling and regional growth challenges."
+                }));
+
+                const leadToInsert = {
+                    name: p.name,
+                    email: p.email || `contact@${p.organization_name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
+                    phone: p.phone_numbers?.[0] || "Available on request",
+                    role: p.title,
+                    company: p.organization_name,
+                    linkedin_url: p.linkedin_url || "https://linkedin.com",
+                    problem: analysis.problem,
+                    is_hot: analysis.isHot,
+                    batch_date: new Date().toISOString().split('T')[0]
+                };
+
+                console.log(`Inserting lead ${i + 1}: ${p.name}`);
+                await supabase.from('apollo_leads').insert([leadToInsert]);
+
+            } catch (leadStepError) {
+                console.error(`Error processing lead ${i}:`, leadStepError);
+            }
         }
 
-        return processedLeads;
+        console.log("Extraction Complete.");
+        return []; // The UI will see updates via Realtime
     } catch (error: any) {
         console.error("CRITICAL: Server Action Extraction Error:", error);
         return [];

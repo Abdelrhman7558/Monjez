@@ -26,67 +26,81 @@ import { performRealExtractionAction } from "@/lib/actions/leads-actions";
 export default function LeadsPage() {
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
     const [extractionLogs, setExtractionLogs] = useState<any[]>([]);
-
     const [leads, setLeads] = useState<Lead[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterHot, setFilterHot] = useState(false);
     const [isExtracting, setIsExtracting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const supabase = createSupabaseClient();
+
     useEffect(() => {
+        // 1. Initial Load
         const fetchLeads = async () => {
-            const supabase = createSupabaseClient();
             const { data, error } = await supabase
                 .from('apollo_leads')
                 .select('*')
                 .order('created_at', { ascending: false });
 
-            if (data && data.length > 0) {
-                const mappedLeads: Lead[] = data.map(l => ({
-                    id: l.id,
-                    name: l.name,
-                    email: l.email || "N/A",
-                    phone: l.phone || "N/A",
-                    role: l.role || "Professional",
-                    company: l.company || "Private Entity",
-                    description: `${l.role} at ${l.company}`,
-                    linkedin: l.linkedin_url || "#",
-                    isHot: l.is_hot,
-                    problem: l.problem || "Checking for automation needs.",
-                    category: l.role?.includes('Founder') ? 'Founder' : 'CEO',
-                    status: "New",
-                    lastExtracted: l.batch_date ? new Date(l.batch_date).toISOString().split('T')[0] : 'Today'
-                }));
+            if (data) {
+                const mappedLeads = mapDbLeadsToLeads(data);
                 setLeads(mappedLeads);
-
-                // Update logs based on real data
-                const batches = Array.from(new Set(mappedLeads.map(l => l.lastExtracted)));
-                const newLogs = batches.map((date, idx) => {
-                    const count = mappedLeads.filter(l => l.lastExtracted === date).length;
-                    const hotCount = mappedLeads.filter(l => l.lastExtracted === date && l.isHot).length;
-                    return { id: `real-${idx}`, date, time: "07:00 AM", status: "Success", count, hotCount };
-                });
-                if (newLogs.length > 0) setExtractionLogs(newLogs);
-            } else {
-                // If no leads exist, trigger AUTO extraction immediately upon landing
-                console.log("No leads found, triggering auto-extraction...");
-                handleManualExtraction();
+                updateLogs(mappedLeads);
             }
         };
 
         fetchLeads();
+
+        // 2. Real-time Subscription
+        const channel = supabase
+            .channel('realtime_leads')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'apollo_leads' }, (payload) => {
+                console.log('Real-time Lead Received:', payload.new);
+                const newLead = mapDbLeadsToLeads([payload.new])[0];
+                setLeads(prev => [newLead, ...prev]);
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, []);
+
+    const mapDbLeadsToLeads = (data: any[]): Lead[] => {
+        return data.map(l => ({
+            id: l.id,
+            name: l.name,
+            email: l.email || "N/A",
+            phone: l.phone || "N/A",
+            role: l.role || "Professional",
+            company: l.company || "Private Entity",
+            description: `${l.role} at ${l.company}`,
+            linkedin: l.linkedin_url || "#",
+            isHot: l.is_hot,
+            problem: l.problem || "Checking for automation needs.",
+            category: l.role?.includes('Founder') ? 'Founder' : 'Exec',
+            status: "New",
+            lastExtracted: l.batch_date ? new Date(l.batch_date).toISOString().split('T')[0] : new Date(l.created_at).toISOString().split('T')[0]
+        }));
+    };
+
+    const updateLogs = (mappedLeads: Lead[]) => {
+        const batches = Array.from(new Set(mappedLeads.map(l => l.lastExtracted)));
+        const newLogs = batches.map((date, idx) => {
+            const dayLeads = mappedLeads.filter(l => l.lastExtracted === date);
+            const count = dayLeads.length;
+            const hotCount = dayLeads.filter(l => l.isHot).length;
+            return { id: `real-${idx}`, date, time: "07:00 AM", status: "Success", count, hotCount };
+        });
+        setExtractionLogs(newLogs);
+    };
 
     const handleManualExtraction = async () => {
         setIsExtracting(true);
         setError(null);
         try {
-            const realLeads = await performRealExtractionAction();
-            if (realLeads.length > 0) {
-                setLeads(realLeads);
-            } else {
-                setError("No real leads found at this moment. Please try again later.");
-            }
+            // We only trigger the action; the real-time listener will handle the UI updates as leads are added
+            await performRealExtractionAction();
         } catch (err: any) {
             console.error(err);
             setError(err.message || "Something went wrong during extraction.");
@@ -161,7 +175,7 @@ export default function LeadsPage() {
                                 </h3>
                                 <p className="text-sm text-gray-500 flex items-center gap-2">
                                     <CheckCircle2 className="w-4 h-4 text-green-500" />
-                                    Agent performed 111 captures at {log.time}
+                                    Agent captured {log.count} profiles on this day
                                 </p>
                             </div>
                         </div>
@@ -220,7 +234,7 @@ export default function LeadsPage() {
                             className="flex items-center gap-2 px-6 py-2 bg-monjez-accent text-black rounded-lg text-sm font-bold hover:bg-monjez-accent/90 transition-colors"
                         >
                             <Download className="w-4 h-4" />
-                            Download Batch (111)
+                            Download Batch ({filteredLeads.length})
                         </button>
                     </div>
 
