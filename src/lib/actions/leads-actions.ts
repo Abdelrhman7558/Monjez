@@ -141,21 +141,81 @@ export async function saveSingleLeadAction(p: any): Promise<Lead | null> {
     }
 }
 
-export async function performRealExtractionAction(): Promise<Lead[]> {
+export async function getJobStatusAction(jobType: string) {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+        .from('job_status')
+        .select('*')
+        .eq('job_type', jobType)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+    if (error && error.code !== 'PGRST116') {
+        console.error("error fetching job status", error);
+    }
+    return data;
+}
+
+export async function updateJobStatusAction(jobId: string, updates: any) {
+    const supabase = await createSupabaseServerClient();
+    await supabase
+        .from('job_status')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', jobId);
+}
+
+export async function createJobAction(jobType: string, total: number) {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+        .from('job_status')
+        .insert([{
+            job_type: jobType,
+            status: 'running',
+            progress: 0,
+            total
+        }])
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+export async function performRealExtractionAction(jobId?: string): Promise<Lead[]> {
     try {
         console.log("Starting full autonomous extraction sequence...");
+
         const rawLeads = await getRawLeadsAction();
+        const total = Math.min(rawLeads.length, 111);
+
+        if (jobId) {
+            await updateJobStatusAction(jobId, { total });
+        }
+
         const savedLeads: Lead[] = [];
 
-        for (const raw of rawLeads) {
-            const saved = await saveSingleLeadAction(raw);
-            if (saved) savedLeads.push(saved);
+        for (let i = 0; i < rawLeads.length && i < 111; i++) {
+            const saved = await saveSingleLeadAction(rawLeads[i]);
+            if (saved) {
+                savedLeads.push(saved);
+                if (jobId) {
+                    await updateJobStatusAction(jobId, { progress: i + 1 });
+                }
+            }
+        }
+
+        if (jobId) {
+            await updateJobStatusAction(jobId, { status: 'completed', progress: savedLeads.length });
         }
 
         console.log(`Autonomous extraction complete. Saved ${savedLeads.length} leads.`);
         return savedLeads;
-    } catch (error) {
+    } catch (error: any) {
         console.error("performRealExtractionAction Error:", error);
+        if (jobId) {
+            await updateJobStatusAction(jobId, { status: 'failed', error_message: error.message });
+        }
         return [];
     }
 }

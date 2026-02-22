@@ -45,14 +45,32 @@ const navigation = [
     { name: "Finance", href: "/dashboard/finance", icon: DollarSign },
     { name: "Leads", href: "/dashboard/leads", icon: Users },
     { name: "Social Media", href: "/dashboard/social", icon: Share2 },
+    {
+        name: "Meta",
+        icon: Megaphone,
+        children: [
+            { name: "Campaigns", href: "/dashboard/meta/campaigns" },
+            { name: "Ads", href: "/dashboard/meta/ads" },
+            { name: "Optimization & Scaling", href: "/dashboard/meta/optimization-scaling" },
+        ]
+    },
     { name: "Website Analyzer", href: "/dashboard/website-analyzer", icon: Search },
     { name: "AI Consultant", href: "/dashboard/consultant", icon: Sparkles },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [openDropdowns, setOpenDropdowns] = useState<string[]>([]);
     const pathname = usePathname();
     const router = useRouter();
+
+    const toggleDropdown = (name: string) => {
+        setOpenDropdowns(prev =>
+            prev.includes(name)
+                ? prev.filter(i => i !== name)
+                : [...prev, name]
+        );
+    };
 
     const handleSignOut = async () => {
         // Clear cookie for hardcoded auth
@@ -91,11 +109,60 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     data-lenis-prevent
                 >
                     {navigation.map((item) => {
-                        const isActive = pathname === item.href;
+                        const hasChildren = 'children' in item && item.children;
+                        const isDropdownOpen = openDropdowns.includes(item.name);
+                        const isActive = item.href ? pathname === item.href : item.children?.some(child => pathname === child.href);
+
+                        if (hasChildren) {
+                            return (
+                                <div key={item.name} className="space-y-1">
+                                    <button
+                                        onClick={() => toggleDropdown(item.name)}
+                                        className={cn(
+                                            "flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200 group relative",
+                                            isActive
+                                                ? "bg-monjez-blue/20 text-monjez-accent"
+                                                : "text-gray-400 hover:bg-white/5 hover:text-white"
+                                        )}
+                                    >
+                                        <item.icon className={cn("w-5 h-5 shrink-0", isActive ? "text-monjez-accent" : "text-gray-500 group-hover:text-white")} />
+                                        {isSidebarOpen && (
+                                            <>
+                                                <span className="font-medium text-sm whitespace-nowrap flex-1 text-left">{item.name}</span>
+                                                <ChevronLeft className={cn("w-4 h-4 transition-transform duration-200", isDropdownOpen ? "-rotate-90" : "rotate-0")} />
+                                            </>
+                                        )}
+                                    </button>
+
+                                    {isSidebarOpen && isDropdownOpen && (
+                                        <div className="pl-10 space-y-1">
+                                            {item.children.map((child) => {
+                                                const isChildActive = pathname === child.href;
+                                                return (
+                                                    <Link
+                                                        key={child.name}
+                                                        href={child.href}
+                                                        className={cn(
+                                                            "block px-3 py-2 rounded-lg text-sm transition-all duration-200",
+                                                            isChildActive
+                                                                ? "text-monjez-accent"
+                                                                : "text-gray-500 hover:text-white hover:bg-white/5"
+                                                        )}
+                                                    >
+                                                        {child.name}
+                                                    </Link>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        }
+
                         return (
                             <Link
                                 key={item.name}
-                                href={item.href}
+                                href={item.href!}
                                 className={cn(
                                     "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative",
                                     isActive

@@ -29,7 +29,10 @@ import { Lead } from "@/lib/mock-leads";
 import {
     clearAllLeadsAction,
     getRawLeadsAction,
-    saveSingleLeadAction
+    saveSingleLeadAction,
+    getJobStatusAction,
+    createJobAction,
+    performRealExtractionAction
 } from "@/lib/actions/leads-actions";
 import {
     generateLeadHTML,
@@ -55,22 +58,6 @@ export default function LeadsPage() {
     const [error, setError] = useState<string | null>(null);
 
     const supabase = createSupabaseClient();
-
-    useEffect(() => {
-        const fetchLeads = async () => {
-            const { data } = await supabase
-                .from('apollo_leads')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (data) {
-                const mappedLeads = mapDbLeadsToLeads(data);
-                setLeads(mappedLeads);
-                updateLogs(mappedLeads);
-            }
-        };
-        fetchLeads();
-    }, []);
 
     const mapDbLeadsToLeads = (data: any[]): Lead[] => {
         return data.map(l => ({
@@ -106,46 +93,77 @@ export default function LeadsPage() {
         setExtractionLogs(newLogs);
     };
 
+    useEffect(() => {
+        let pollInterval: NodeJS.Timeout;
+
+        const checkJobStatus = async () => {
+            try {
+                const job = await getJobStatusAction("lead_extraction");
+                if (job && job.status === "running") {
+                    setIsExtracting(true);
+                    setProgress({ current: job.progress, total: job.total });
+
+                    if (!pollInterval) {
+                        pollInterval = setInterval(checkJobStatus, 2000);
+                    }
+                } else if (job && (job.status === "completed" || job.status === "failed")) {
+                    setIsExtracting(false);
+                    setProgress({ current: job.progress, total: job.total });
+                    if (job.status === "failed") setError(job.error_message);
+                    if (pollInterval) {
+                        clearInterval(pollInterval);
+                        pollInterval = null as any;
+                    }
+
+                    // Refresh leads list if just completed
+                    if (job.status === "completed") {
+                        const { data } = await supabase.from('apollo_leads').select('*').order('created_at', { ascending: false });
+                        if (data) {
+                            const mapped = mapDbLeadsToLeads(data);
+                            setLeads(mapped);
+                            updateLogs(mapped);
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error("Polling error:", err);
+            }
+        };
+
+        const fetchInitialLeads = async () => {
+            const { data } = await supabase.from('apollo_leads').select('*').order('created_at', { ascending: false });
+            if (data) {
+                const mapped = mapDbLeadsToLeads(data);
+                setLeads(mapped);
+                updateLogs(mapped);
+            }
+        };
+
+        fetchInitialLeads();
+        checkJobStatus();
+
+        return () => {
+            if (pollInterval) clearInterval(pollInterval);
+        };
+    }, []);
+
     const handleManualExtraction = async () => {
         setIsExtracting(true);
         setError(null);
-        setProgress({ current: 0, total: 0 });
+        setProgress({ current: 0, total: 111 });
 
         try {
             await clearAllLeadsAction();
             setLeads([]);
 
-            const rawList = await getRawLeadsAction();
-            if (!rawList || rawList.length === 0) {
-                setError("No leads found. Check API logs.");
-                return;
-            }
+            const job = await createJobAction("lead_extraction", 111);
 
-            setProgress({ current: 0, total: Math.min(rawList.length, 111) });
+            // Trigger background extraction
+            // We await here just to start it, but the job tracking handles it
+            performRealExtractionAction(job.id);
 
-            const savedLeads: Lead[] = [];
-            for (let i = 0; i < rawList.length && i < 111; i++) {
-                const newLead = await saveSingleLeadAction(rawList[i]);
-                if (newLead) {
-                    savedLeads.push(newLead);
-                    setLeads(prev => [newLead, ...prev]);
-                    setProgress(prev => ({ ...prev, current: i + 1 }));
-                    updateLogs([...savedLeads]);
-                }
-            }
-
-            if (savedLeads.length >= 1) {
-                if ("Notification" in window && Notification.permission === "granted") {
-                    new Notification("Monjez: Extraction Complete", {
-                        body: `Successfully extracted ${savedLeads.length} leads!`
-                    });
-                } else if ("Notification" in window && Notification.permission !== "denied") {
-                    Notification.requestPermission();
-                }
-            }
         } catch (err: any) {
             setError(err.message || "Extraction crashed.");
-        } finally {
             setIsExtracting(false);
         }
     };

@@ -3,17 +3,18 @@ const ACCESS_TOKEN = "EAAMq7S6ZBgJsBQtlqWjeTWr58MFBehbHFMUVfQZAZCFJefJGcDFueQUAB
 const AD_ACCOUNT_ID = "act_1178710537127710";
 
 async function createCampaign() {
-    console.log("Starting Meta Campaign Creation...");
+    console.log("Final attempt at Meta Campaign Creation...");
     try {
-        const response = await fetch(`https://graph.facebook.com/v19.0/${AD_ACCOUNT_ID}/campaigns`, {
+        const url = `https://graph.facebook.com/v19.0/${AD_ACCOUNT_ID}/campaigns?access_token=${ACCESS_TOKEN}`;
+        const response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 name: "Monjez Test Campaign (PAUSED)",
                 objective: "OUTCOME_AWARENESS",
                 status: "PAUSED",
-                special_ad_categories: [],
-                access_token: ACCESS_TOKEN
+                daily_budget: 10000, // 100 units (e.g., $100 if USD, or 100 LE)
+                special_ad_categories: ["NONE"]
             }),
         });
 
@@ -21,7 +22,7 @@ async function createCampaign() {
         if (response.ok) {
             console.log("SUCCESS! Campaign ID:", data.id);
         } else {
-            console.error("FAILED:", data.error?.message || data);
+            console.log("FAILED Object:", JSON.stringify(data, null, 2));
         }
     } catch (e) {
         console.error("NETWORK ERROR:", e.message);
