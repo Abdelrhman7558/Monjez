@@ -45,7 +45,10 @@ export function MacPopup({ isOpen, onClose, title, children }: MacPopupProps) {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
+                <div
+                    className="flex-1 overflow-y-auto custom-scrollbar p-6"
+                    data-lenis-prevent
+                >
                     {children}
                 </div>
             </div>

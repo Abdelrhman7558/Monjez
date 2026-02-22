@@ -24,4 +24,25 @@
     text-shadow: 0 0 10px rgba(155, 89, 182, 0.6);
     /* Electric Purple Glow */
   }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+  }
+}
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  @apply overflow-x-hidden;
 }

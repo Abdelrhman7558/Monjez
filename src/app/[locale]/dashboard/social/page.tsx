@@ -16,7 +16,8 @@ import {
     Linkedin,
     Unlink,
     CheckCircle2,
-    AlertCircle
+    AlertCircle,
+    Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createSupabaseClient } from "@/lib/supabase/client";
@@ -26,18 +27,12 @@ export default function SocialPage() {
     const [isConnected, setIsConnected] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
 
-    const [postHistory, setPostHistory] = useState([
-        {
-            id: "day-1",
-            date: "Feb 22, 2026",
-            posts: [
-                { id: "p1", time: "09:00 AM", platform: "LinkedIn", type: "Video", content: "Architecture of Modern SaaS", likes: 1240, comments: 88, views: "12.4k" },
-                { id: "p2", time: "12:30 PM", platform: "LinkedIn", type: "Post", content: "Why Arab Founders are winning in 2026", likes: 890, comments: 145, views: "8.2k" },
-                { id: "p3", time: "05:00 PM", platform: "LinkedIn", type: "Photo", content: "Sunset at Monjez HQ", likes: 2100, comments: 24, views: "15.0k" },
-                { id: "p4", time: "08:00 PM", platform: "LinkedIn", type: "Post", content: "Nightly Productivity Tips", likes: 560, comments: 12, views: "3.4k" },
-            ]
-        }
-    ]);
+    const [postHistory, setPostHistory] = useState<any[]>([]);
+    const [metrics, setMetrics] = useState({
+        reach: 0,
+        engagement: 0,
+        comments: 0
+    });
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -48,6 +43,27 @@ export default function SocialPage() {
                 .order('created_at', { ascending: false });
 
             if (data && data.length > 0) {
+                // Calculate metrics
+                let totalReach = 0;
+                let totalEngagement = 0;
+                let totalComments = 0;
+
+                data.forEach(p => {
+                    const reach = parseInt(p.analytics?.views || "0");
+                    const eng = (p.analytics?.likes || 0) + (p.analytics?.comments || 0);
+                    const comm = p.analytics?.comments || 0;
+
+                    totalReach += reach;
+                    totalEngagement += eng;
+                    totalComments += comm;
+                });
+
+                setMetrics({
+                    reach: totalReach,
+                    engagement: totalEngagement,
+                    comments: totalComments
+                });
+
                 // Group by day
                 const groups: { [key: string]: any[] } = {};
                 data.forEach(p => {
@@ -87,6 +103,13 @@ export default function SocialPage() {
 
     const handleDisconnect = () => {
         setIsConnected(false);
+    };
+
+    // Format numbers
+    const formatNum = (num: number) => {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+        return num.toString();
     };
 
     return (
@@ -148,9 +171,9 @@ export default function SocialPage() {
             {/* Global Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                    { label: "Total Reach", value: "1.2M", icon: Eye, color: "text-blue-500", bg: "bg-blue-500/10" },
-                    { label: "Engagement", value: "85.4k", icon: ThumbsUp, color: "text-monjez-accent", bg: "bg-monjez-accent/10" },
-                    { label: "Comments", value: "12.2k", icon: MessageSquare, color: "text-purple-500", bg: "bg-purple-500/10" },
+                    { label: "Total Reach", value: formatNum(metrics.reach), icon: Eye, color: "text-blue-500", bg: "bg-blue-500/10" },
+                    { label: "Engagement", value: formatNum(metrics.engagement), icon: ThumbsUp, color: "text-monjez-accent", bg: "bg-monjez-accent/10" },
+                    { label: "Comments", value: formatNum(metrics.comments), icon: MessageSquare, color: "text-purple-500", bg: "bg-purple-500/10" },
                 ].map((stat, i) => (
                     <div key={i} className="bg-white/5 border border-white/10 p-6 rounded-2xl">
                         <div className="flex justify-between items-start mb-4">
@@ -158,7 +181,7 @@ export default function SocialPage() {
                                 <stat.icon className={cn("w-6 h-6", stat.color)} />
                             </div>
                             <span className="text-green-500 text-sm font-bold flex items-center gap-1">
-                                +12% <ArrowUpRight className="w-3 h-3" />
+                                Live <Activity className="w-3 h-3 animate-pulse" />
                             </span>
                         </div>
                         <div className="text-2xl font-bold text-white">{stat.value}</div>
@@ -185,7 +208,7 @@ export default function SocialPage() {
                                 <span className="text-xs text-monjez-accent font-medium uppercase tracking-widest">{day.posts.length} Posts Distributed</span>
                             </div>
                             <div className="divide-y divide-white/5">
-                                {day.posts.map((post) => (
+                                {day.posts.map((post: any) => (
                                     <div key={post.id} className="p-4 hover:bg-white/[0.02] flex items-center justify-between transition-colors">
                                         <div className="flex items-center gap-6">
                                             <div className="flex flex-col items-center">

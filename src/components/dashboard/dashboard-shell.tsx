@@ -86,7 +86,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     </button>
                 </div>
 
-                <nav className="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">
+                <nav
+                    className="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar"
+                    data-lenis-prevent
+                >
                     {navigation.map((item) => {
                         const isActive = pathname === item.href;
                         return (
