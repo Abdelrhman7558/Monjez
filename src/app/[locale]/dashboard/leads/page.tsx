@@ -1,0 +1,222 @@
+"use client";
+
+import { useState } from "react";
+import {
+    Users,
+    Calendar,
+    ArrowUpRight,
+    Search,
+    Filter,
+    Download,
+    CheckCircle2,
+    Flame,
+    ExternalLink,
+    Mail,
+    Phone,
+    Linkedin
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { MacPopup } from "@/components/dashboard/leads/mac-popup";
+import { Lead, generateMockLeads } from "@/lib/mock-leads";
+
+export default function LeadsPage() {
+    const [selectedDay, setSelectedDay] = useState<string | null>(null);
+    const [leads] = useState<Lead[]>(generateMockLeads());
+    const [searchQuery, setSearchQuery] = useState("");
+    const [filterHot, setFilterHot] = useState(false);
+
+    const extractionLogs = [
+        { id: "day-1", date: "Feb 22, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
+        { id: "day-2", date: "Feb 21, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
+        { id: "day-3", date: "Feb 20, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
+    ];
+
+    const filteredLeads = leads.filter(lead => {
+        const matchesSearch = lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            lead.company.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesFilter = filterHot ? lead.isHot : true;
+        return matchesSearch && matchesFilter;
+    });
+
+    const handleDownload = () => {
+        const csvContent = "data:text/csv;charset=utf-8,"
+            + ["Name,Email,Phone,Role,Company,Status"].join(",") + "\n"
+            + filteredLeads.map(l => `${l.name},${l.email},${l.phone},${l.role},${l.company},${l.isHot ? 'Hot' : 'Warm'}`).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `leads_${selectedDay || 'export'}.csv`);
+        document.body.appendChild(link);
+        link.click();
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="flex justify-between items-end">
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+                        <Users className="w-8 h-8 text-monjez-accent" />
+                        Arab Leads Agent
+                    </h1>
+                    <p className="text-gray-400">Daily 7:00 AM extractions of high-quality LinkedIn leads.</p>
+                </div>
+                <div className="flex gap-4">
+                    <div className="bg-monjez-accent/10 border border-monjez-accent/20 px-4 py-2 rounded-xl flex items-center gap-2">
+                        <Flame className="w-4 h-4 text-orange-500" />
+                        <span className="text-sm font-medium text-white">99% Hot Leads Target</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Daily Extraction Logs */}
+            <div className="grid gap-4">
+                {extractionLogs.map((log) => (
+                    <div
+                        key={log.id}
+                        onClick={() => setSelectedDay(log.date)}
+                        className="group bg-white/5 border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between"
+                    >
+                        <div className="flex items-center gap-6">
+                            <div className="w-12 h-12 rounded-xl bg-monjez-blue/20 flex items-center justify-center">
+                                <Calendar className="w-6 h-6 text-monjez-accent" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-white group-hover:text-monjez-accent transition-colors">
+                                    Extractions for {log.date}
+                                </h3>
+                                <p className="text-sm text-gray-500 flex items-center gap-2">
+                                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                    Scheduled task completed at {log.time}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-12">
+                            <div className="text-right">
+                                <div className="text-xl font-bold text-white">{log.count}</div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wider">Total Leads</div>
+                            </div>
+                            <div className="text-right">
+                                <div className="text-xl font-bold text-orange-500">{log.hotCount}</div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wider">Hot Leads</div>
+                            </div>
+                            <div className="p-2 rounded-full bg-white/5 group-hover:bg-monjez-accent group-hover:text-black transition-all">
+                                <ArrowUpRight className="w-5 h-5" />
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Leads Modal (Mac Web Style) */}
+            <MacPopup
+                isOpen={!!selectedDay}
+                onClose={() => setSelectedDay(null)}
+                title={`LinkedIn Leads Explorer - ${selectedDay}`}
+            >
+                <div className="space-y-6 h-full">
+                    {/* Toolbar */}
+                    <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/5">
+                        <div className="flex items-center gap-4 flex-1">
+                            <div className="relative flex-1 max-w-md">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                                <input
+                                    type="text"
+                                    placeholder="Search by name or company..."
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-monjez-accent transition-colors"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
+                            <button
+                                onClick={() => setFilterHot(!filterHot)}
+                                className={cn(
+                                    "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all border",
+                                    filterHot
+                                        ? "bg-orange-500/20 border-orange-500 text-orange-500"
+                                        : "bg-white/5 border-white/10 text-gray-400 hover:text-white"
+                                )}
+                            >
+                                <Flame className="w-4 h-4" />
+                                Hot Leads
+                            </button>
+                        </div>
+                        <button
+                            onClick={handleDownload}
+                            className="flex items-center gap-2 px-6 py-2 bg-monjez-accent text-black rounded-lg text-sm font-bold hover:bg-monjez-accent/90 transition-colors"
+                        >
+                            <Download className="w-4 h-4" />
+                            Download Selected (100)
+                        </button>
+                    </div>
+
+                    {/* Leads Grid/List */}
+                    <div className="grid gap-4">
+                        {filteredLeads.map((lead) => (
+                            <div
+                                key={lead.id}
+                                className="bg-[#242424] border border-white/5 rounded-xl p-5 hover:border-white/20 transition-all group"
+                            >
+                                <div className="flex justify-between items-start">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-monjez-blue to-monjez-accent flex items-center justify-center text-xl font-bold text-white shadow-lg">
+                                            {lead.name[0]}
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-3">
+                                                <h4 className="text-lg font-bold text-white">{lead.name}</h4>
+                                                {lead.isHot && (
+                                                    <span className="px-2 py-0.5 rounded bg-orange-500/10 text-orange-500 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                                                        <Flame className="w-3 h-3" />
+                                                        Hot
+                                                    </span>
+                                                )}
+                                                <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-wider">
+                                                    {lead.category}
+                                                </span>
+                                            </div>
+                                            <p className="text-sm text-gray-400 font-medium">{lead.role} at <span className="text-white">{lead.company}</span></p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <a href={lead.linkedin} target="_blank" className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-[#0a66c2] transition-colors">
+                                            <Linkedin className="w-4 h-4" />
+                                        </a>
+                                        <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors">
+                                            <ExternalLink className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 grid grid-cols-3 gap-6">
+                                    <div className="space-y-3 col-span-2">
+                                        <div className="p-4 rounded-lg bg-black/40 border border-white/5 h-full">
+                                            <div className="text-[10px] uppercase tracking-wider text-monjez-accent font-bold mb-2">Owner Analysis & Problems</div>
+                                            <p className="text-sm text-gray-300 leading-relaxed italic">
+                                                "{lead.problem}"
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex items-center gap-2 text-xs text-gray-500 italic">
+                                                <Mail className="w-3 h-3" />
+                                                {lead.email}
+                                            </div>
+                                            <div className="flex items-center gap-2 text-xs text-gray-500 italic">
+                                                <Phone className="w-3 h-3" />
+                                                {lead.phone}
+                                            </div>
+                                        </div>
+                                        <button className="w-full mt-2 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-bold text-white hover:bg-white/10 transition-colors">
+                                            Study Deep History
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </MacPopup>
+        </div>
+    );
+}

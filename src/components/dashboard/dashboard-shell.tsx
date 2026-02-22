@@ -23,7 +23,10 @@ import {
     Megaphone,
     Share2,
     Search,
-    BookOpen
+    BookOpen,
+    Users,
+    MessageSquare,
+    Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -40,9 +43,10 @@ const navigation = [
     { name: "Identity", href: "/dashboard/identity", icon: UserCircle },
     { name: "Companies", href: "/dashboard/companies", icon: Building2 },
     { name: "Finance", href: "/dashboard/finance", icon: DollarSign },
-    { name: "Ads & Clients", href: "/dashboard/ads", icon: Megaphone },
+    { name: "Leads", href: "/dashboard/leads", icon: Users },
     { name: "Social Media", href: "/dashboard/social", icon: Share2 },
     { name: "Website Analyzer", href: "/dashboard/website-analyzer", icon: Search },
+    { name: "AI Consultant", href: "/dashboard/consultant", icon: Sparkles },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
