@@ -4,7 +4,7 @@ import { fetchLeadsFromApollo } from "@/lib/services/apollo-service";
 import { analyzeLeadWithAI } from "@/lib/services/ai-analysis-service";
 import { Lead } from "@/lib/mock-leads";
 
-import { createClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function performRealExtractionAction(): Promise<Lead[]> {
     try {
@@ -34,7 +34,7 @@ export async function performRealExtractionAction(): Promise<Lead[]> {
         );
 
         // Persist to Supabase
-        const supabase = await createClient();
+        const supabase = await createSupabaseServerClient();
         await supabase.from('apollo_leads').insert(
             processedLeads.map(l => ({
                 name: l.name,

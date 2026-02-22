@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export interface LinkedInPost {
     content: string;
@@ -60,7 +60,7 @@ export async function postToLinkedIn(post: LinkedInPost) {
 }
 
 async function logPostToDatabase(post: LinkedInPost, status: string, analytics: any) {
-    const supabase = await createClient();
+    const supabase = await createSupabaseServerClient();
     const { error } = await supabase.from('social_posts').insert({
         content: post.content,
         post_type: post.type,

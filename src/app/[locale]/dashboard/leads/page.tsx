@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Users,
     Calendar,
@@ -19,22 +19,63 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MacPopup } from "@/components/dashboard/leads/mac-popup";
+import { createSupabaseClient } from "@/lib/supabase/client";
 import { Lead, generateMockLeads } from "@/lib/mock-leads";
 import { performRealExtractionAction } from "@/lib/actions/leads-actions";
 
 export default function LeadsPage() {
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
+    const [extractionLogs, setExtractionLogs] = useState([
+        { id: "day-1", date: "Feb 22, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
+        { id: "day-2", date: "Feb 21, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
+        { id: "day-3", date: "Feb 20, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
+    ]);
+
     const [leads, setLeads] = useState<Lead[]>(generateMockLeads());
     const [searchQuery, setSearchQuery] = useState("");
     const [filterHot, setFilterHot] = useState(false);
     const [isExtracting, setIsExtracting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const extractionLogs = [
-        { id: "day-1", date: "Feb 22, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
-        { id: "day-2", date: "Feb 21, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
-        { id: "day-3", date: "Feb 20, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
-    ];
+    useEffect(() => {
+        const fetchLeads = async () => {
+            const supabase = createSupabaseClient();
+            const { data, error } = await supabase
+                .from('apollo_leads')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (data && data.length > 0) {
+                const mappedLeads: Lead[] = data.map(l => ({
+                    id: l.id,
+                    name: l.name,
+                    email: l.email || "N/A",
+                    phone: l.phone || "N/A",
+                    role: l.role || "Professional",
+                    company: l.company || "Private Entity",
+                    description: `${l.role} at ${l.company}`,
+                    linkedin: l.linkedin_url || "#",
+                    isHot: l.is_hot,
+                    problem: l.problem || "Checking for automation needs.",
+                    category: l.role?.includes('Founder') ? 'Founder' : 'CEO',
+                    status: "New",
+                    lastExtracted: l.batch_date ? new Date(l.batch_date).toISOString().split('T')[0] : 'Today'
+                }));
+                setLeads(mappedLeads);
+
+                // Update logs based on real data
+                const batches = Array.from(new Set(mappedLeads.map(l => l.lastExtracted)));
+                const newLogs = batches.map((date, idx) => {
+                    const count = mappedLeads.filter(l => l.lastExtracted === date).length;
+                    const hotCount = mappedLeads.filter(l => l.lastExtracted === date && l.isHot).length;
+                    return { id: `real-${idx}`, date, time: "07:00 AM", status: "Success", count, hotCount };
+                });
+                if (newLogs.length > 0) setExtractionLogs(newLogs);
+            }
+        };
+
+        fetchLeads();
+    }, []);
 
     const handleManualExtraction = async () => {
         setIsExtracting(true);

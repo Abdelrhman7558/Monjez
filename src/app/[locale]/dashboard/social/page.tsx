@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Share2,
     Calendar,
@@ -19,13 +19,14 @@ import {
     AlertCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createSupabaseClient } from "@/lib/supabase/client";
 
 export default function SocialPage() {
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
 
-    const postHistory = [
+    const [postHistory, setPostHistory] = useState([
         {
             id: "day-1",
             date: "Feb 22, 2026",
@@ -35,16 +36,46 @@ export default function SocialPage() {
                 { id: "p3", time: "05:00 PM", platform: "LinkedIn", type: "Photo", content: "Sunset at Monjez HQ", likes: 2100, comments: 24, views: "15.0k" },
                 { id: "p4", time: "08:00 PM", platform: "LinkedIn", type: "Post", content: "Nightly Productivity Tips", likes: 560, comments: 12, views: "3.4k" },
             ]
-        },
-        {
-            id: "day-2",
-            date: "Feb 21, 2026",
-            posts: [
-                { id: "p5", time: "09:00 AM", platform: "LinkedIn", type: "Post", content: "Growth Mindset: A Guide", likes: 450, comments: 34, views: "5.1k" },
-                { id: "p6", time: "03:00 PM", platform: "LinkedIn", type: "Video", content: "Demo: New Leads Agent", likes: 3200, comments: 450, views: "45.2k" },
-            ]
         }
-    ];
+    ]);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            const supabase = createSupabaseClient();
+            const { data, error } = await supabase
+                .from('social_posts')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (data && data.length > 0) {
+                // Group by day
+                const groups: { [key: string]: any[] } = {};
+                data.forEach(p => {
+                    const dateStr = new Date(p.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    if (!groups[dateStr]) groups[dateStr] = [];
+                    groups[dateStr].push({
+                        id: p.id,
+                        time: new Date(p.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                        platform: p.platform,
+                        type: p.post_type,
+                        content: p.content,
+                        likes: p.analytics?.likes || 0,
+                        comments: p.analytics?.comments || 0,
+                        views: p.analytics?.views || "0"
+                    });
+                });
+
+                const history = Object.keys(groups).map(date => ({
+                    id: date.replace(/ /g, '-'),
+                    date,
+                    posts: groups[date]
+                }));
+                setPostHistory(history);
+            }
+        };
+
+        fetchPosts();
+    }, []);
 
     const handleConnect = () => {
         setIsConnecting(true);
