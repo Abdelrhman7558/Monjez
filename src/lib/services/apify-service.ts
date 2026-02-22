@@ -18,18 +18,25 @@ export async function fetchLeadsFromApify(count: number = 20): Promise<ApifyLead
     try {
         // Using Google Search Scraper to find LinkedIn profiles
         // This is much more robust and doesn't require session cookies
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+        console.log(`Calling Apify Google Search Scraper... URL: https://api.apify.com/v2/acts/apify~google-search-scraper/run-sync-get-dataset-items?token=${API_KEY.substring(0, 5)}...`);
+
         const response = await fetch(`https://api.apify.com/v2/acts/apify~google-search-scraper/run-sync-get-dataset-items?token=${API_KEY}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
+            signal: controller.signal,
             body: JSON.stringify({
-                queries: "site:linkedin.com/in Saudi Arabia Founder",
+                queries: "LinkedIn Saudi Arabia Founder",
                 maxPagesPerQuery: 1,
-                resultsPerPage: 20,
+                resultsPerPage: 10, // Even smaller for testing
                 proxyConfig: { useApifyProxy: true }
             })
         });
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
             const errorText = await response.text();

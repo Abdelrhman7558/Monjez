@@ -44,79 +44,57 @@ export async function performRealExtractionAction(): Promise<Lead[]> {
             }
         }
 
-        console.log(`Found ${rawLeads.length} raw leads. Starting AI analysis in batches...`);
+        console.log(`Step 1: Raw Leads Count = ${rawLeads.length}`);
 
-        // Process in batches of 5 to avoid timeouts and rate limits
-        const processedLeads: Lead[] = [];
-        const batchSize = 5;
-
-        for (let i = 0; i < rawLeads.length && i < 111; i += batchSize) {
-            const batch = rawLeads.slice(i, i + batchSize);
-            console.log(`Processing batch ${Math.floor(i / batchSize) + 1}...`);
-
-            const analyzedBatch = await Promise.all(
-                batch.map(async (p, index) => {
-                    try {
-                        const analysis = await analyzeLeadWithAI(p);
-                        return {
-                            id: `real-${i + index}-${Date.now()}`,
-                            name: p.name,
-                            email: p.email || `contact@${p.organization_name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
-                            phone: p.phone_numbers?.[0] || "Available on request",
-                            role: p.title,
-                            company: p.organization_name,
-                            description: p.headline || "Business professional",
-                            linkedin: p.linkedin_url || "https://linkedin.com",
-                            isHot: analysis.isHot,
-                            problem: analysis.problem,
-                            category: p.title.toLowerCase().includes('founder') ? 'Founder' : 'Exec',
-                            status: "New" as const,
-                            lastExtracted: new Date().toISOString().split('T')[0]
-                        };
-                    } catch (err) {
-                        console.error("AI Analysis failed for lead, using fallback:", err);
-                        return {
-                            id: `real-${i + index}-${Date.now()}`,
-                            name: p.name,
-                            email: p.email || "info@monjez.com",
-                            phone: "Request access",
-                            role: p.title,
-                            company: p.organization_name,
-                            description: "Ready to scale",
-                            linkedin: p.linkedin_url || "#",
-                            isHot: false,
-                            problem: "Needs better business automation.",
-                            category: 'Exec' as any,
-                            status: "New" as const,
-                            lastExtracted: new Date().toISOString().split('T')[0]
-                        };
-                    }
-                })
-            );
-            processedLeads.push(...analyzedBatch);
+        if (rawLeads.length === 0) {
+            console.warn("No leads found from any source!");
+            return [];
         }
 
-        // Persist to Supabase only if we have any
-        if (processedLeads.length > 0) {
-            const supabase = await createSupabaseServerClient();
-            await supabase.from('apollo_leads').insert(
-                processedLeads.map(l => ({
-                    name: l.name,
-                    email: l.email,
-                    phone: l.phone,
-                    role: l.role,
-                    company: l.company,
-                    linkedin_url: l.linkedin,
-                    problem: l.problem,
-                    is_hot: l.isHot
-                }))
-            );
+        const processedLeads: Lead[] = rawLeads.map((p, index) => {
+            return {
+                id: `real-${index}-${Date.now()}`,
+                name: p.name,
+                email: p.email || `contact@${p.organization_name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
+                phone: p.phone_numbers?.[0] || "Available on request",
+                role: p.title,
+                company: p.organization_name,
+                description: "Business professional in Saudi Arabia",
+                linkedin: p.linkedin_url || "https://linkedin.com",
+                isHot: p.title.toLowerCase().includes('founder') || p.title.toLowerCase().includes('ceo'),
+                problem: "Exploring business automation and growth opportunities.",
+                category: p.title.toLowerCase().includes('founder') ? 'Founder' : 'Exec',
+                status: "New" as const,
+                lastExtracted: new Date().toISOString().split('T')[0]
+            };
+        });
+
+        console.log(`Step 2: Processed ${processedLeads.length} leads. Persisting to Supabase...`);
+
+        // Persist to Supabase
+        const supabase = await createSupabaseServerClient();
+        const { error: supabaseError } = await supabase.from('apollo_leads').insert(
+            processedLeads.map(l => ({
+                name: l.name,
+                email: l.email,
+                phone: l.phone,
+                role: l.role,
+                company: l.company,
+                linkedin_url: l.linkedin,
+                problem: l.problem,
+                is_hot: l.isHot
+            }))
+        );
+
+        if (supabaseError) {
+            console.error("Supabase Save Error:", supabaseError);
+        } else {
+            console.log("Step 3: Successfully saved to Supabase.");
         }
 
         return processedLeads;
     } catch (error: any) {
-        console.error("Server Action Extraction Error:", error);
-        // Return empty instead of throwing to prevent UI crash
+        console.error("CRITICAL: Server Action Extraction Error:", error);
         return [];
     }
 }

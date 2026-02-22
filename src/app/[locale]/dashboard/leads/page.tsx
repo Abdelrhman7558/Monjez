@@ -25,11 +25,7 @@ import { performRealExtractionAction } from "@/lib/actions/leads-actions";
 
 export default function LeadsPage() {
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
-    const [extractionLogs, setExtractionLogs] = useState([
-        { id: "day-1", date: "Feb 22, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
-        { id: "day-2", date: "Feb 21, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
-        { id: "day-3", date: "Feb 20, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
-    ]);
+    const [extractionLogs, setExtractionLogs] = useState<any[]>([]);
 
     const [leads, setLeads] = useState<Lead[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
