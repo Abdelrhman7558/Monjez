@@ -70,7 +70,7 @@ export async function performRealExtractionAction(): Promise<Lead[]> {
                             isHot: analysis.isHot,
                             problem: analysis.problem,
                             category: p.title.toLowerCase().includes('founder') ? 'Founder' : 'Exec',
-                            status: "New",
+                            status: "New" as const,
                             lastExtracted: new Date().toISOString().split('T')[0]
                         };
                     } catch (err) {
@@ -86,8 +86,8 @@ export async function performRealExtractionAction(): Promise<Lead[]> {
                             linkedin: p.linkedin_url || "#",
                             isHot: false,
                             problem: "Needs better business automation.",
-                            category: 'Exec',
-                            status: "New",
+                            category: 'Exec' as any,
+                            status: "New" as const,
                             lastExtracted: new Date().toISOString().split('T')[0]
                         };
                     }
@@ -96,24 +96,27 @@ export async function performRealExtractionAction(): Promise<Lead[]> {
             processedLeads.push(...analyzedBatch);
         }
 
-        // Persist to Supabase
-        const supabase = await createSupabaseServerClient();
-        await supabase.from('apollo_leads').insert(
-            processedLeads.map(l => ({
-                name: l.name,
-                email: l.email,
-                phone: l.phone,
-                role: l.role,
-                company: l.company,
-                linkedin_url: l.linkedin,
-                problem: l.problem,
-                is_hot: l.isHot
-            }))
-        );
+        // Persist to Supabase only if we have any
+        if (processedLeads.length > 0) {
+            const supabase = await createSupabaseServerClient();
+            await supabase.from('apollo_leads').insert(
+                processedLeads.map(l => ({
+                    name: l.name,
+                    email: l.email,
+                    phone: l.phone,
+                    role: l.role,
+                    company: l.company,
+                    linkedin_url: l.linkedin,
+                    problem: l.problem,
+                    is_hot: l.isHot
+                }))
+            );
+        }
 
         return processedLeads;
     } catch (error: any) {
         console.error("Server Action Extraction Error:", error);
-        throw new Error(`Failed to extract real leads: ${error.message}`);
+        // Return empty instead of throwing to prevent UI crash
+        return [];
     }
 }

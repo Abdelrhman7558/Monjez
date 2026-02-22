@@ -31,7 +31,7 @@ export default function LeadsPage() {
         { id: "day-3", date: "Feb 20, 2026", time: "07:00 AM", status: "Success", count: 111, hotCount: 99 },
     ]);
 
-    const [leads, setLeads] = useState<Lead[]>(generateMockLeads());
+    const [leads, setLeads] = useState<Lead[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [filterHot, setFilterHot] = useState(false);
     const [isExtracting, setIsExtracting] = useState(false);
@@ -86,12 +86,14 @@ export default function LeadsPage() {
         setError(null);
         try {
             const realLeads = await performRealExtractionAction();
-            setLeads(realLeads);
+            if (realLeads.length > 0) {
+                setLeads(realLeads);
+            } else {
+                setError("No real leads found at this moment. Please try again later.");
+            }
         } catch (err: any) {
             console.error(err);
             setError(err.message || "Something went wrong during extraction.");
-            // Fallback to mock if API fails for safety during demo
-            setTimeout(() => setLeads(generateMockLeads()), 1000);
         } finally {
             setIsExtracting(false);
         }

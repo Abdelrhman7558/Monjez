@@ -24,9 +24,9 @@ export async function fetchLeadsFromApify(count: number = 20): Promise<ApifyLead
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                queries: "site:linkedin.com/in Saudi Arabia Founder CEOs",
+                queries: "site:linkedin.com/in Saudi Arabia Founder",
                 maxPagesPerQuery: 1,
-                resultsPerPage: count,
+                resultsPerPage: 20,
                 proxyConfig: { useApifyProxy: true }
             })
         });
