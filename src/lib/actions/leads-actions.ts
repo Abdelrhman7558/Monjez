@@ -44,27 +44,57 @@ export async function performRealExtractionAction(): Promise<Lead[]> {
             }
         }
 
-        const processedLeads: Lead[] = await Promise.all(
-            rawLeads.slice(0, 111).map(async (p, index) => {
-                const analysis = await analyzeLeadWithAI(p);
+        console.log(`Found ${rawLeads.length} raw leads. Starting AI analysis in batches...`);
 
-                return {
-                    id: `real-${index}-${Date.now()}`,
-                    name: p.name,
-                    email: p.email || `contact@${p.organization_name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
-                    phone: p.phone_numbers?.[0] || "Available on request",
-                    role: p.title,
-                    company: p.organization_name,
-                    description: p.headline || "Business professional",
-                    linkedin: p.linkedin_url || "https://linkedin.com",
-                    isHot: analysis.isHot,
-                    problem: analysis.problem,
-                    category: p.title.toLowerCase().includes('founder') ? 'Founder' : 'Exec',
-                    status: "New",
-                    lastExtracted: new Date().toISOString().split('T')[0]
-                };
-            })
-        );
+        // Process in batches of 5 to avoid timeouts and rate limits
+        const processedLeads: Lead[] = [];
+        const batchSize = 5;
+
+        for (let i = 0; i < rawLeads.length && i < 111; i += batchSize) {
+            const batch = rawLeads.slice(i, i + batchSize);
+            console.log(`Processing batch ${Math.floor(i / batchSize) + 1}...`);
+
+            const analyzedBatch = await Promise.all(
+                batch.map(async (p, index) => {
+                    try {
+                        const analysis = await analyzeLeadWithAI(p);
+                        return {
+                            id: `real-${i + index}-${Date.now()}`,
+                            name: p.name,
+                            email: p.email || `contact@${p.organization_name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
+                            phone: p.phone_numbers?.[0] || "Available on request",
+                            role: p.title,
+                            company: p.organization_name,
+                            description: p.headline || "Business professional",
+                            linkedin: p.linkedin_url || "https://linkedin.com",
+                            isHot: analysis.isHot,
+                            problem: analysis.problem,
+                            category: p.title.toLowerCase().includes('founder') ? 'Founder' : 'Exec',
+                            status: "New",
+                            lastExtracted: new Date().toISOString().split('T')[0]
+                        };
+                    } catch (err) {
+                        console.error("AI Analysis failed for lead, using fallback:", err);
+                        return {
+                            id: `real-${i + index}-${Date.now()}`,
+                            name: p.name,
+                            email: p.email || "info@monjez.com",
+                            phone: "Request access",
+                            role: p.title,
+                            company: p.organization_name,
+                            description: "Ready to scale",
+                            linkedin: p.linkedin_url || "#",
+                            isHot: false,
+                            problem: "Needs better business automation.",
+                            category: 'Exec',
+                            status: "New",
+                            lastExtracted: new Date().toISOString().split('T')[0]
+                        };
+                    }
+                })
+            );
+            processedLeads.push(...analyzedBatch);
+        }
 
         // Persist to Supabase
         const supabase = await createSupabaseServerClient();
