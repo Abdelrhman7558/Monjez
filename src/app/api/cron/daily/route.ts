@@ -62,10 +62,11 @@ export async function GET(req: NextRequest) {
         if (pendingPosts && pendingPosts.length > 0) {
             console.log(`Found ${pendingPosts.length} posts to publish.`);
             for (const p of pendingPosts) {
+                // Pass the existing ID to update instead of insert new record
                 await postToLinkedIn({
                     content: p.content,
                     type: p.post_type as any
-                });
+                }, p.id); // Assuming we update postToLinkedIn signature next or p.id is handled
 
                 await supabase
                     .from('social_posts')

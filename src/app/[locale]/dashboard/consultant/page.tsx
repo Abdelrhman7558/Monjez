@@ -64,47 +64,48 @@ export default function ConsultantPage() {
         if (!input.trim() || isLoading) return;
 
         const userMsgContent = input;
-        const newMessages = [...messages, { role: "user", content: userMsgContent }];
-        setMessages(newMessages);
+        const newMessagesForLLM = [...messages, { role: "user", content: userMsgContent }];
+
+        setMessages(prev => [...prev, { role: "user", content: userMsgContent }]);
         setInput("");
         setIsLoading(true);
 
         try {
             await saveConsultantChatMessage('user', userMsgContent);
 
-            const assistantResponse = await generateConsultantResponse(newMessages);
+            const assistantResponse = await generateConsultantResponse(newMessagesForLLM);
             await saveConsultantChatMessage('assistant', assistantResponse);
 
-            setMessages(prev => [...prev, {
+            const updatedMessages = [...newMessagesForLLM, {
                 role: "assistant",
                 content: assistantResponse
-            }]);
+            }];
 
-            // Scroll to bottom
-            setTimeout(() => {
-                chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-            }, 100);
+            setMessages(updatedMessages);
 
             // Natural discovery flow: Ask next question if in discovery mode
-            if (isDiscoveryMode) {
-                if (discoveryStep < discoveryQuestions.length) {
-                    const nextStep = discoveryStep + 1;
-                    setDiscoveryStep(nextStep);
+            if (isDiscoveryMode && discoveryStep < discoveryQuestions.length) {
+                const nextStep = discoveryStep + 1;
+                setDiscoveryStep(nextStep);
 
-                    if (nextStep < discoveryQuestions.length) {
-                        const nextQuestion = discoveryQuestions[nextStep];
-                        // Small delay for natural feeling
-                        setTimeout(async () => {
-                            setMessages(prev => [...prev, { role: "assistant", content: nextQuestion }]);
-                            await saveConsultantChatMessage('assistant', nextQuestion);
-                        }, 1000);
-                    } else {
-                        setIsDiscoveryMode(false);
-                    }
+                if (nextStep < discoveryQuestions.length) {
+                    const nextQuestion = discoveryQuestions[nextStep];
+                    // Small delay for natural feeling
+                    setTimeout(async () => {
+                        const finalMessages = [...updatedMessages, { role: "assistant", content: nextQuestion }];
+                        setMessages(finalMessages);
+                        await saveConsultantChatMessage('assistant', nextQuestion);
+                    }, 1500);
+                } else {
+                    setIsDiscoveryMode(false);
                 }
             }
         } catch (error) {
             console.error("Consultant Page Error:", error);
+            setMessages(prev => [...prev, {
+                role: "assistant",
+                content: "معلش يا باشا، حصلت مشكلة فنية بسيطة. جرب تبعت كلامك تاني كدة؟"
+            }]);
         } finally {
             setIsLoading(false);
         }

@@ -57,7 +57,7 @@ function generateMockProfessionalContent(category: string): string {
     return `${content}${hashtags}`;
 }
 
-export async function postToLinkedIn(post: LinkedInPost) {
+export async function postToLinkedIn(post: LinkedInPost, existingId?: string) {
     const supabase = await createSupabaseServerClient();
     const { data: config } = await supabase.from('linkedin_config').select('*').single();
 
@@ -66,7 +66,7 @@ export async function postToLinkedIn(post: LinkedInPost) {
 
     if (!ACCESS_TOKEN) {
         console.warn("LinkedIn Access Token missing.");
-        return await logPostToDatabase(post, 'failed', { error: 'Access Token missing' });
+        return await logPostToDatabase(post, 'failed', { error: 'Access Token missing' }, existingId);
     }
 
     try {
@@ -103,22 +103,31 @@ export async function postToLinkedIn(post: LinkedInPost) {
         if (!response.ok) {
             const errorData = await response.json();
             const msg = errorData.message || JSON.stringify(errorData);
-            await logPostToDatabase(post, 'failed', { error: msg });
+            await logPostToDatabase(post, 'failed', { error: msg }, existingId);
             throw new Error(`LinkedIn API Error: ${msg}`);
         }
 
         const data = await response.json();
-        await logPostToDatabase(post, 'posted', data);
+        await logPostToDatabase(post, 'posted', data, existingId);
         return { success: true, data };
     } catch (error: any) {
         console.error("LinkedIn Post Error:", error);
-        await logPostToDatabase(post, 'failed', { error: error.message });
+        await logPostToDatabase(post, 'failed', { error: error.message }, existingId);
         throw error;
     }
 }
 
-async function logPostToDatabase(post: LinkedInPost, status: string, analytics: any) {
+async function logPostToDatabase(post: LinkedInPost, status: string, analytics: any, existingId?: string) {
     const supabase = await createSupabaseServerClient();
+
+    if (existingId) {
+        const { error } = await supabase.from('social_posts')
+            .update({ status, analytics })
+            .eq('id', existingId);
+        if (error) console.error("Database update error:", error);
+        return;
+    }
+
     const { error } = await supabase.from('social_posts').insert({
         content: post.content,
         post_type: post.type,

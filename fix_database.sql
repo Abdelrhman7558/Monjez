@@ -49,7 +49,11 @@ CREATE TABLE IF NOT EXISTS public.apollo_leads (
     headline TEXT,
     description TEXT,
     is_hot BOOLEAN DEFAULT false,
-    batch_date DATE
+    batch_date DATE,
+    outreach_status TEXT DEFAULT 'pending',
+    -- 'pending', 'email_sent', 'linkedin_sent', 'failed'
+    last_outreach_at TIMESTAMPTZ,
+    outreach_logs JSONB DEFAULT '[]'::jsonb
 );
 -- 5. LinkedIn Configuration
 CREATE TABLE IF NOT EXISTS public.linkedin_config (
@@ -108,9 +112,53 @@ CREATE TABLE IF NOT EXISTS public.consultant_chats (
     content TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now()
 );
--- Indexes for consultant_chats performance
+-- 10. Planner Tasks
+CREATE TABLE IF NOT EXISTS public.tasks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    description TEXT,
+    priority TEXT DEFAULT 'Medium',
+    -- 'Low', 'Medium', 'High'
+    status TEXT DEFAULT 'todo',
+    -- 'todo', 'in_progress', 'completed'
+    due_date DATE,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+-- 11. Habits Tracking
+CREATE TABLE IF NOT EXISTS public.habits (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    frequency TEXT DEFAULT 'daily',
+    -- 'daily', 'weekly'
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS public.habit_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    habit_id UUID REFERENCES public.habits(id) ON DELETE CASCADE,
+    completed_at DATE DEFAULT current_date,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+-- 12. Industry News
+CREATE TABLE IF NOT EXISTS public.industry_news (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    summary TEXT,
+    url TEXT,
+    source TEXT,
+    category TEXT,
+    -- 'AI', 'Automation', 'Meta', 'LinkedIn'
+    published_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+-- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_consultant_chats_user_id ON public.consultant_chats(user_id);
 CREATE INDEX IF NOT EXISTS idx_consultant_chats_created_at ON public.consultant_chats(created_at);
+CREATE INDEX IF NOT EXISTS idx_tasks_user_id ON public.tasks(user_id);
+CREATE INDEX IF NOT EXISTS idx_habits_user_id ON public.habits(user_id);
+CREATE INDEX IF NOT EXISTS idx_habit_logs_habit_id ON public.habit_logs(habit_id);
 -- ============================================================
 -- Seed Data
 -- ============================================================
@@ -142,6 +190,10 @@ ALTER TABLE public.social_assets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.social_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.strategy_call_leads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.consultant_chats ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.tasks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.habits ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.habit_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.industry_news ENABLE ROW LEVEL SECURITY;
 EXCEPTION
 WHEN OTHERS THEN NULL;
 END $$;
@@ -175,3 +227,15 @@ CREATE POLICY "Allow All Strategy Leads" ON public.strategy_call_leads FOR ALL U
 -- Consultant Chats
 DROP POLICY IF EXISTS "Allow All Consultant Chats" ON public.consultant_chats;
 CREATE POLICY "Allow All Consultant Chats" ON public.consultant_chats FOR ALL USING (true) WITH CHECK (true);
+-- Tasks
+DROP POLICY IF EXISTS "Allow All Tasks" ON public.tasks;
+CREATE POLICY "Allow All Tasks" ON public.tasks FOR ALL USING (true) WITH CHECK (true);
+-- Habits
+DROP POLICY IF EXISTS "Allow All Habits" ON public.habits;
+CREATE POLICY "Allow All Habits" ON public.habits FOR ALL USING (true) WITH CHECK (true);
+-- Habit Logs
+DROP POLICY IF EXISTS "Allow All Habit Logs" ON public.habit_logs;
+CREATE POLICY "Allow All Habit Logs" ON public.habit_logs FOR ALL USING (true) WITH CHECK (true);
+-- Industry News
+DROP POLICY IF EXISTS "Allow All Industry News" ON public.industry_news;
+CREATE POLICY "Allow All Industry News" ON public.industry_news FOR ALL USING (true) WITH CHECK (true);

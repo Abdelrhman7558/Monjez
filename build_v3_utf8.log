@@ -1,0 +1,71 @@
+﻿
+> monjez@0.1.0 build
+> next build
+
+  Γû▓ Next.js 14.2.23
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ Γ£ô Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/14) ...
+   Generating static pages (3/14) 
+   Generating static pages (6/14) 
+   Generating static pages (10/14) 
+ Γ£ô Generating static pages (14/14)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                        Size     First Load JS
+Γöî Γùï /_not-found                                    880 B          88.4 kB
+Γö£ ╞Æ /[locale]                                      44.5 kB         252 kB
+Γö£ ╞Æ /[locale]/case-studies                         1.45 kB         175 kB
+Γö£ ╞Æ /[locale]/dashboard                            180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/ads                        180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/companies                  180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/competitors                180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/consultant                 4.39 kB        99.1 kB
+Γö£ ╞Æ /[locale]/dashboard/education                  180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/finance                    180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/goals                      180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/habits                     179 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/identity                   180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/investments                180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/leads                      10.2 kB         134 kB
+Γö£ ╞Æ /[locale]/dashboard/meta/ads                   2.57 kB        97.3 kB
+Γö£ ╞Æ /[locale]/dashboard/meta/campaigns             3.68 kB        98.4 kB
+Γö£ ╞Æ /[locale]/dashboard/meta/optimization-scaling  2.59 kB        97.3 kB
+Γö£ ╞Æ /[locale]/dashboard/news                       180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/planner                    3.68 kB         128 kB
+Γö£ ╞Æ /[locale]/dashboard/projects                   180 B          87.7 kB
+Γö£ ╞Æ /[locale]/dashboard/social                     5.99 kB         130 kB
+Γö£ ╞Æ /[locale]/dashboard/website-analyzer           180 B          87.7 kB
+Γö£ ╞Æ /[locale]/login                                2.07 kB         131 kB
+Γö£ ╞Æ /[locale]/privacy                              3.07 kB         173 kB
+Γö£ ╞Æ /[locale]/revenue-audit                        2.47 kB         172 kB
+Γö£ ╞Æ /[locale]/terms                                3.71 kB         173 kB
+Γö£ ╞Æ /[locale]/thank-you                            2.07 kB         155 kB
+Γö£ ╞Æ /[locale]/workflows                            5.37 kB         180 kB
+Γö£ ╞Æ /api/cron/daily                                0 B                0 B
+Γö£ ╞Æ /api/cron/news                                 0 B                0 B
+Γö£ ╞Æ /api/log-purchase                              0 B                0 B
+Γö£ Γùï /api/meta/ads/list                             0 B                0 B
+Γö£ Γùï /api/meta/campaigns/list                       0 B                0 B
+Γö£ ╞Æ /api/meta/stats                                0 B                0 B
+Γö£ ╞Æ /api/meta/wallet                               0 B                0 B
+Γö£ ╞Æ /api/strategy-call                             0 B                0 B
+Γö£ ╞Æ /api/webhooks/incoming                         0 B                0 B
+Γö£ Γùï /robots.txt                                    0 B                0 B
+Γöö Γùï /sitemap.xml                                   0 B                0 B
++ First Load JS shared by all                      87.5 kB
+  Γö£ chunks/2117-6daec65704012039.js                31.8 kB
+  Γö£ chunks/fd9d1056-2b46f05df2b7277c.js            53.6 kB
+  Γöö other shared chunks (total)                    2.13 kB
+
+
+╞Æ Middleware                                       49.4 kB
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+
