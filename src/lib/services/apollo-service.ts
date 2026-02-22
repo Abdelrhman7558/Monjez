@@ -25,9 +25,10 @@ export async function fetchLeadsFromApollo(count: number = 111): Promise<ApolloL
                 "X-Api-Key": API_KEY as string
             },
             body: JSON.stringify({
-                q_keywords: "founder",
+                q_keywords: "founder, ceo, co-founder, owner, founder saudi, startup founder",
+                location_positions: ["Saudi Arabia", "Riyadh", "Jeddah", "Dammam", "Khobar"],
                 page: 1,
-                per_page: 5
+                per_page: 100
             })
         });
 
