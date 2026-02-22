@@ -18,17 +18,16 @@ export async function fetchLeadsFromApollo(count: number = 111): Promise<ApolloL
     }
 
     try {
-        const response = await fetch("https://api.apollo.io/v1/mixed_people/api_search", {
+        const response = await fetch("https://api.apollo.io/v1/people/search", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-Api-Key": API_KEY as string
             },
             body: JSON.stringify({
-                q_person_titles: ["founder", "ceo", "owner", "managing director", "marketing director", "digital officer"],
-                person_locations: ["Saudi Arabia", "United Arab Emirates", "Egypt", "Jordan", "Kuwait", "Qatar"],
+                q_keywords: "founder",
                 page: 1,
-                per_page: 50
+                per_page: 5
             })
         });
 

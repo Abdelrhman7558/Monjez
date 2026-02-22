@@ -16,31 +16,34 @@ export async function fetchLeadsFromApify(count: number = 20): Promise<ApifyLead
     }
 
     try {
-        // Using a verified Actor ID for LinkedIn People Search
-        const response = await fetch(`https://api.apify.com/v2/acts/lisenser~linkedin-people-search-scraper/run-sync-get-dataset-items?token=${API_KEY}`, {
+        // Using 'harvestapi/linkedin-profile-search' which is known for not requiring cookies
+        const response = await fetch(`https://api.apify.com/v2/acts/harvestapi~linkedin-profile-search/run-sync-get-dataset-items?token=${API_KEY}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                queries: ["Saudi Arabia Founder", "Dubai CEO", "Egypt Business Owner", "UAE Marketing Agency"],
-                limit: count, // Using 'limit' as some actors use this instead of 'count'
+                keyword: "Founder OR CEO Saudi Arabia",
+                location: "Saudi Arabia",
+                limit: count,
                 proxy: { useApifyProxy: true }
             })
         });
 
         if (!response.ok) {
-            throw new Error(`Apify request failed: ${response.statusText}`);
+            const errorText = await response.text();
+            console.error("Apify Error Response:", errorText);
+            throw new Error(`Apify request failed: ${response.statusText} - ${errorText.substring(0, 100)}`);
         }
 
         const data = await response.json();
         return data.map((item: any) => ({
             name: item.fullName || item.name || "Real Professional",
-            title: item.title || item.occupation || "Executive",
+            title: item.occupation || item.title || "Executive",
             company: item.company || "Leading Enterprise",
             email: item.email,
             phone: item.phone,
-            linkedinUrl: item.url || item.profileUrl || "#",
+            linkedinUrl: item.linkedinUrl || item.url || "#",
             location: item.location || "MENA Region"
         }));
     } catch (error: any) {

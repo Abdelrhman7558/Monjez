@@ -23,9 +23,8 @@ export async function performRealExtractionAction(): Promise<Lead[]> {
                 phone_numbers: l.phone ? [l.phone] : [],
                 linkedin_url: l.linkedinUrl
             }));
-        } catch (e) {
-            console.error("Apify integration failed, falling back fully to Apollo.");
-            throw e; // Rethrow to see the error in the main action logs
+        } catch (e: any) {
+            console.error("Apify integration failed, falling back to Apollo. Error:", e.message);
         }
 
         // Fill remaining with Apollo (Optional fallback)

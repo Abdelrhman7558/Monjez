@@ -6,7 +6,7 @@ async function trigger() {
         const leads = await performRealExtractionAction();
         console.log(`Success! Extracted ${leads.length} leads.`);
     } catch (e) {
-        console.error("Extraction failed during auto-trigger:", e.message);
+        console.error("Extraction failed during auto-trigger:", e);
     }
 }
 
