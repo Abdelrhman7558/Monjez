@@ -25,7 +25,8 @@ import {
     getLinkedInConfigAction,
     updateLinkedInConfigAction,
     triggerLinkedInPostAction,
-    verifyLinkedInTokenAction
+    verifyLinkedInTokenAction,
+    generateSinglePostAction
 } from "@/lib/actions/social-actions";
 
 export default function SocialPage() {
@@ -43,6 +44,7 @@ export default function SocialPage() {
         engagement: 0,
         comments: 0
     });
+    const [fetchError, setFetchError] = useState<string | null>(null);
 
     useEffect(() => {
         const updateCountdown = () => {
@@ -92,20 +94,29 @@ export default function SocialPage() {
                 .select('*')
                 .order('created_at', { ascending: false });
 
+            if (error) {
+                console.error("Fetch Posts Error:", error);
+                setFetchError(`خطأ في جلب البيانات: ${error.message} (Code: ${error.code})`);
+                return;
+            }
+            setFetchError(null);
+
             if (data && data.length > 0) {
-                // ... (rest of the metric calculation remains same)
                 let totalReach = 0;
                 let totalEngagement = 0;
                 let totalComments = 0;
 
                 data.forEach(p => {
-                    const reach = parseInt(p.analytics?.views || "0");
-                    const eng = (p.analytics?.likes || 0) + (p.analytics?.comments || 0);
-                    const comm = p.analytics?.comments || 0;
+                    const views = p.analytics?.views;
+                    const reach = views ? parseInt(views) : 0;
+                    const likes = typeof p.analytics?.likes === 'number' ? p.analytics.likes : 0;
+                    const comments = typeof p.analytics?.comments === 'number' ? p.analytics.comments : 0;
 
-                    totalReach += reach;
+                    const eng = likes + comments;
+
+                    if (!isNaN(reach)) totalReach += reach;
                     totalEngagement += eng;
-                    totalComments += comm;
+                    totalComments += comments;
                 });
 
                 setMetrics({
@@ -117,6 +128,7 @@ export default function SocialPage() {
                 // Group by day
                 const groups: { [key: string]: any[] } = {};
                 data.forEach(p => {
+                    if (!p.created_at) return;
                     const dateStr = new Date(p.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                     if (!groups[dateStr]) groups[dateStr] = [];
                     groups[dateStr].push({
@@ -125,6 +137,7 @@ export default function SocialPage() {
                         platform: "LinkedIn",
                         type: p.post_type,
                         content: p.content,
+                        status: p.status,
                         likes: p.analytics?.likes || 0,
                         comments: p.analytics?.comments || 0,
                         views: p.analytics?.views || "0"
@@ -137,8 +150,19 @@ export default function SocialPage() {
                     posts: groups[date]
                 }));
                 setPostHistory(history);
+            } else {
+                setPostHistory([]);
+                setMetrics({ reach: 0, engagement: 0, comments: 0 });
             }
         };
+
+        const handleRefresh = async () => {
+            console.log("Refreshing social data...");
+            await fetchPosts();
+            await fetchConfig();
+        };
+
+        (window as any).refreshSocialData = handleRefresh;
 
         fetchConfig();
         fetchPosts();
@@ -190,15 +214,16 @@ export default function SocialPage() {
         }
         setIsPosting(true);
         try {
-            const content = "أول خطوة في رحلة المئة ميل بتبدأ بـ 'منجز'. 🚀\n\nالنهاردة بدأنا رسميًا أتمتة العمليات لعملائنا في السعودية ومصر. تابعونا لكل جديد في عالم الذكاء الاصطناعي. #منجز #AI #Success";
-            const result = await triggerLinkedInPostAction(content, 'Post');
+            const post = await generateSinglePostAction();
+            await triggerLinkedInPostAction(post.content, post.type);
             alert("Successfully posted to LinkedIn!");
-            window.location.reload();
         } catch (err: any) {
-            console.error(err);
+            console.error("Post Now Error:", err);
             alert(`Failed to post: ${err.message || "Unknown error"}`);
         } finally {
             setIsPosting(false);
+            // Always refresh history logs so user sees the attempt (even if failed)
+            (window as any).refreshSocialData?.();
         }
     };
 
@@ -310,10 +335,26 @@ export default function SocialPage() {
 
             {/* Daily Post Logs */}
             <div className="space-y-4">
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-gray-500" />
-                    Daily Distribution History
-                </h3>
+                <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                        <Calendar className="w-5 h-5 text-gray-500" />
+                        Daily Distribution History
+                    </h3>
+                    <button
+                        onClick={() => (window as any).refreshSocialData?.()}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs text-gray-400 hover:text-white hover:bg-white/10 transition-all font-medium"
+                    >
+                        <Clock className="w-3 h-3" />
+                        Refresh Status
+                    </button>
+                </div>
+
+                {fetchError && (
+                    <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm flex items-center gap-3">
+                        <AlertCircle className="w-5 h-5" />
+                        {fetchError} - يرجى التأكد من تشغيل ملف fix_database.sql في Supabase.
+                    </div>
+                )}
 
                 <div className="grid gap-4">
                     {postHistory.map((day) => (
@@ -335,8 +376,18 @@ export default function SocialPage() {
                                                     {post.type === "Video" ? <Video className="w-4 h-4 text-monjez-accent" /> : <ImageIcon className="w-4 h-4 text-blue-400" />}
                                                 </div>
                                             </div>
-                                            <div>
-                                                <div className="text-sm font-bold text-white mb-1">{post.content}</div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className={cn(
+                                                        "px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter",
+                                                        post.status === 'posted' ? "bg-green-500/20 text-green-500" :
+                                                            post.status === 'failed' ? "bg-red-500/20 text-red-500" :
+                                                                "bg-orange-500/20 text-orange-500"
+                                                    )}>
+                                                        {post.status || 'pending'}
+                                                    </span>
+                                                    <div className="text-sm font-bold text-white truncate">{post.content}</div>
+                                                </div>
                                                 <div className="flex gap-4 text-xs text-gray-500">
                                                     <span className="flex items-center gap-1"><ThumbsUp className="w-3 h-3" /> {post.likes}</span>
                                                     <span className="flex items-center gap-1"><MessageSquare className="w-3 h-3" /> {post.comments}</span>
@@ -344,9 +395,11 @@ export default function SocialPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <button className="text-xs text-monjez-accent hover:underline flex items-center gap-1">
-                                            View Performance <ArrowUpRight className="w-3 h-3" />
-                                        </button>
+                                        <div className="flex items-center gap-3">
+                                            <button className="text-xs text-monjez-accent hover:underline flex items-center gap-1">
+                                                Analytics <ArrowUpRight className="w-3 h-3" />
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

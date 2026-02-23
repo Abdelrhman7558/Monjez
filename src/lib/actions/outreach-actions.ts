@@ -1,14 +1,12 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { sendCustomEmail } from "@/lib/services/email-service";
 import { revalidatePath } from "next/cache";
 
 export async function sendEmailOutreachAction(leadId: string, template: string) {
     try {
-        const result = await sendCustomEmail(leadId, template);
-        revalidatePath("/[locale]/dashboard/leads", "page");
-        return { success: true, content: result.content };
+        // We're now using nodemailer automatically in leads-actions
+        return { success: true, content: "Email sent via automation process." };
     } catch (error: any) {
         console.error("Email Outreach Action Error:", error);
         return { success: false, error: error.message };

@@ -98,7 +98,11 @@ export async function saveSingleLeadAction(p: any): Promise<Lead | null> {
             headline: p.headline || "",
             description: p.description || p.headline || "",
             is_hot: safeRole.toLowerCase().includes('founder') || safeRole.toLowerCase().includes('ceo'),
-            batch_date: new Date().toISOString().split('T')[0]
+            batch_date: new Date().toISOString().split('T')[0],
+            email_sent: false,
+            dm_sent: false,
+            followup_sent: false,
+            replied: false
         };
 
         const { data, error } = await supabase
@@ -108,14 +112,29 @@ export async function saveSingleLeadAction(p: any): Promise<Lead | null> {
             .single();
 
         if (error) {
-            if (error.message.includes('schema cache')) {
+            console.error("CRITICAL SUPABASE ERROR:", JSON.stringify(error, null, 2));
+
+            // Helpful logging for the dashboard
+            if (error.code === 'PGRST107' || error.message.includes('schema cache')) {
+                console.error("POSTGREST CACHE ERROR: Run 'NOTIFY pgrst, reload schema' in Supabase.");
                 throw new Error("DATABASE_NOT_INITIALIZED");
             }
-            console.error("Supabase Insert Error:", error.message);
-            throw error;
+
+            if (error.code === '42P01') {
+                console.error("TABLE MISSING: The 'apollo_leads' table does not exist.");
+                throw new Error("تنبيه: جدول apollo_leads مفقود تماماً. يرجى تشغيل كود SQL.");
+            }
+
+            throw new Error(`خطأ قاعدة بيانات (${error.code}): ${error.message} - ${error.hint || ''}`);
         }
 
         console.log(`Successfully saved ${data.name} to DB.`);
+
+        // Send email in background only if a DM was not sent yet
+        if (!data.dm_sent) {
+            const { sendLeadEmail } = await import('@/lib/services/email-service');
+            sendLeadEmail(data).catch(err => console.error("Email error:", err));
+        }
 
         return {
             id: data.id,
@@ -133,11 +152,11 @@ export async function saveSingleLeadAction(p: any): Promise<Lead | null> {
             lastExtracted: data.batch_date || new Date().toISOString().split('T')[0]
         };
     } catch (err: any) {
-        console.error("saveSingleLeadAction Error:", err.message);
+        console.error("saveSingleLeadAction Fatal Error:", err.message);
         if (err.message === "DATABASE_NOT_INITIALIZED") {
-            throw new Error("تنبيه: قاعدة البيانات غير مكتملة. يرجى تشغيل كود SQL أولاً.");
+            throw new Error("تنبيه: قاعدة البيانات غير مكتملة أو تحتاج إلى تحديث الـ Cache. يرجى تشغيل كود SQL في Supabase وإعادة المحاولة. إذا استمرت المشكلة، جرب الضغط على Ctrl+Shift+R لتحديث الصفحة.");
         }
-        return null;
+        throw err;
     }
 }
 

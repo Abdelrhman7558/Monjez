@@ -24,6 +24,33 @@ export async function GET(req: NextRequest) {
             // 1. Run full autonomous extraction
             const leads = await performRealExtractionAction();
 
+            // 1.5 Send Follow Up Emails (3 Days Later)
+            const threeDaysAgo = new Date();
+            threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+            const targetDate = threeDaysAgo.toISOString().split('T')[0];
+
+            console.log(`Checking for follow-ups from batch: ${targetDate}`);
+
+            const { data: followUps, error: followerr } = await supabase
+                .from('apollo_leads')
+                .select('*')
+                .eq('batch_date', targetDate)
+                .eq('email_sent', true)
+                .eq('replied', false)
+                .eq('followup_sent', false);
+
+            if (followerr) {
+                console.error("Error fetching follow-ups:", followerr);
+            }
+
+            if (followUps && followUps.length > 0) {
+                const { sendFollowUpEmail } = await import('@/lib/services/email-service');
+                console.log(`Found ${followUps.length} leads for follow-up.`);
+                for (const lead of followUps) {
+                    await sendFollowUpEmail(lead);
+                }
+            }
+
             // 2. Generate 4 varied social posts
             const posts = await generateSocialPostsForDay();
             const scheduledTimes = [9, 12, 15, 18]; // 9 AM, 12 PM, 3 PM, 6 PM

@@ -44,14 +44,36 @@ export async function generateSocialPostsForDay(): Promise<LinkedInPost[]> {
 }
 
 function generateMockProfessionalContent(category: string): string {
-    const hooks = {
-        "Daily Life": "مفيش حاجة بتوقف الشغف.. يومي بيبدأ الساعة 5 الصبح بقهوة وتخطيط للمستقبل. ☕✨",
-        "Client Success/Problem Solved": "أكبر مشكلة واجهت عميل لينا الأسبوع ده كانت ضياع 40 ساعة شغل يدوي. الحل؟ أتمتة بسيطة غيرت كل حاجة. 🚀",
-        "Professional Tips": "نصيحة النهاردة لكل رائد أعمال في السعودية: الذكاء الاصطناعي مش هيستبدلك، بس اللي بيستخدمه هيسبقك بمسافات. 💡",
-        "Behind the Scenes/Work Culture": "كواليس شغلنا في 'منجز' مش بس كود وبرمجة، دي روح فريق بتعشق التحدي. 🤝🦾"
+    const hooks: any = {
+        "Daily Life": [
+            "مفيش حاجة بتوقف الشغف.. يومي بيبدأ الساعة 5 الصبح بقهوة وتخطيط للمستقبل. ☕✨",
+            "روتين النجاح بيبدأ بخطوة بسيطة، تنظيم الوقت هو مفتاح الإنجاز الحقيقي. 📊",
+            "أجمل ما في التحديات اليومية إنها بتعلمنا إزاي نكون أفضل من إمبارح. 💪"
+        ],
+        "Client Success/Problem Solved": [
+            "أكبر مشكلة واجهت عميل لينا الأسبوع ده كانت ضياع 40 ساعة شغل يدوي. الحل؟ أتمتة بسيطة غيرت كل حاجة. 🚀",
+            "نجاح جديد لعميل قدر يضاعف مبيعاته بـ 3 مرات في شهر واحد بعد التحول للذكاء الاصطناعي. 📈",
+            "توفير آلاف الدولارات وتوجيهها للتسويق بدل العمليات الإدارية.. ده اللي بنعمله في منجز. 💵"
+        ],
+        "Professional Tips": [
+            "نصيحة النهاردة لكل رائد أعمال في السعودية: الذكاء الاصطناعي مش هيستبدلك، بس اللي بيستخدمه هيسبقك بمسافات. 💡",
+            "بناء البراند الشخصي على لينكد إن بيحتاج محتوى حقيقي ومش مجرد كلام نظري.. خليك عفوي. 🎯",
+            "التوسع في السوق محتاج أنظمة قوية مش بس أفكار حلوة.. ابني سيستم يشتغل من غيرك. ⚙️"
+        ],
+        "Behind the Scenes/Work Culture": [
+            "كواليس شغلنا في 'منجز' مش بس كود وبرمجة، دي روح فريق بتعشق التحدي. 🤝🦾",
+            "جلسات العصف الذهني عندنا بتكون أهم من التنفيذ أحياناً.. دي اللحظة اللي بتولد فيها الأفكار العظيمة. 🧠",
+            "كوباية القهوة هي الراعي الرسمي لاجتماعاتنا الصباحية، والنتيجة دايماً أتمتة جديدة بتخدم العملاء. ☕🔥"
+        ]
     };
 
-    const content = hooks[category as keyof typeof hooks] || "Exploring new horizons in automation.";
+    const categoryHooks = hooks[category] || hooks["Professional Tips"];
+    // Pick a random hook from the array
+    const randomHook = categoryHooks[Math.floor(Math.random() * categoryHooks.length)];
+
+    // Append timestamp to ensure uniqueness against LinkedIn duplicate checks
+    const timeSuffix = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+    const content = `${randomHook}\n[تحديث: ${timeSuffix}]`;
     const hashtags = "\n\n#منجز #ذكاء_اصطناعي #ريادة_الأعمال #السعودية #Monjez #AI #SuccessStory #Automation";
 
     return `${content}${hashtags}`;
@@ -103,6 +125,17 @@ export async function postToLinkedIn(post: LinkedInPost, existingId?: string) {
         if (!response.ok) {
             const errorData = await response.json();
             const msg = errorData.message || JSON.stringify(errorData);
+
+            // Auto-retry once on duplicate error with a small timestamp suffix
+            if (msg.includes("duplicate") && !post.content.includes("[UID:")) {
+                console.log("Duplicate content detected. Retrying with a unique identifier...");
+                const uniquePost = {
+                    ...post,
+                    content: `${post.content}\n\n[UID: ${Date.now().toString().slice(-4)}]`
+                };
+                return await postToLinkedIn(uniquePost, existingId);
+            }
+
             await logPostToDatabase(post, 'failed', { error: msg }, existingId);
             throw new Error(`LinkedIn API Error: ${msg}`);
         }

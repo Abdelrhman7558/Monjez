@@ -1,7 +1,8 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { postToLinkedIn, LinkedInPost } from "@/lib/services/linkedin-service";
+import { postToLinkedIn, LinkedInPost, getLinkedInMemberId } from "@/lib/services/linkedin-service";
+import { revalidatePath } from "next/cache";
 
 // LinkedIn Connection
 export async function getLinkedInConfigAction() {
@@ -65,11 +66,12 @@ export async function deleteSocialAssetAction(id: string) {
 // Posting
 export async function triggerLinkedInPostAction(content: string, type: 'Post' | 'Video' | 'Photo') {
     const post: LinkedInPost = { content, type };
-    return await postToLinkedIn(post);
+    const result = await postToLinkedIn(post);
+    revalidatePath("/[locale]/dashboard/social", "page");
+    return result;
 }
 
 // Token Verification
-import { getLinkedInMemberId } from "@/lib/services/linkedin-service";
 
 export async function verifyLinkedInTokenAction(token: string) {
     try {
@@ -117,4 +119,10 @@ export async function refinePostAction(postId: string, feedback: string) {
 
     if (error) throw error;
     return data;
+}
+
+export async function generateSinglePostAction() {
+    const { generateSocialPostsForDay } = await import('@/lib/services/linkedin-service');
+    const posts = await generateSocialPostsForDay();
+    return posts[Math.floor(Math.random() * posts.length)];
 }
