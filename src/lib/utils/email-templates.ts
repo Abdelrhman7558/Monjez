@@ -85,64 +85,82 @@ style="background-color:#0f1428; border-radius:14px; padding:50px; box-shadow:0 
 <!-- LOGO -->
 <tr>
 <td align="center" style="padding-bottom:30px;">
-<div style="color: white; font-weight: 900; font-size: 28px; letter-spacing: 2px;">MONJEZ.AI</div>
+<img src="https://monjez.ai/logo.png"
+alt="MONJEZ.AI"
+width="160"
+style="display:block; margin:auto;">
 </td>
 </tr>
 
 <!-- HEADLINE -->
 <tr>
 <td align="center" style="padding-bottom:30px;">
-<h1 style="color:#ffffff; margin:0; font-size:26px; font-weight:600; letter-spacing:0.5px;">
-نمو متوقع ومضمون.
-<br/>هندسة مدروسة — وليست ارتجالاً.
+<h1 style="color:#ffffff; margin:0; font-size:26px; font-weight:600; letter-spacing:0.5px; text-align: center;">
+اكتساب عملاء متوقع ومضمون.<br/>
+هندسة مدروسة — وليست ارتجالاً.
 </h1>
 </td>
 </tr>
 
 <!-- BODY -->
 <tr>
-<td style="color:#c9d2ff; font-size:16px; line-height:1.8;">
+<td style="color:#c9d2ff; font-size:16px; line-height:1.8; text-align: right;">
 
 <p style="margin-top:0;">
 أهلاً <strong style="color:#ffffff;">${data.name}</strong>،<br><br>
-في <strong style="color:#ffffff;">MONJEZ.AI</strong>، نصمم أنظمة استحواذ هيكلية للشركات الطموحة مثل <strong style="color:#ffffff;">${data.company}</strong> الجاهزة للتوسع بدقة والتغلب على تحديات <strong style="color:#ffffff;">${data.problem}</strong>.
+في <strong style="color:#ffffff;">MONJEZ.AI</strong>، نصمم أنظمة استحواذ وهيكلة نمو للشركات الطموحة مثل <strong style="color:#ffffff;">${data.company}</strong> الملتزمة بالتوسع وحل تحديات <strong style="color:#ffffff;">${data.problem}</strong>.
 </p>
 
 <p>
-هذه ليست مجرد إدارة حملات عادية.<br>
-هذه <strong>هندسة للنمو والتوسع</strong>.
+هذه ليست إدارة حملات إعلانية اعتيادية.<br>
+هذه <strong>هندسة متكاملة للنمو والتوسع المضمون</strong>.
 </p>
 
 <hr style="border:0; border-top:1px solid #1e2550; margin:30px 0;">
 
 <h2 style="color:#ffffff; font-size:20px; margin-bottom:10px;">
-التزامنا الخارق بالأداء
+الالتزام بالأداء (الضمان)
 </h2>
 
 <p>
-نحن نلتزم التزاماً كاملاً بتحقيق:
+نحن نلتزم بشكل قاطع بتحقيق:
 <br/><strong style="color:#00e5ff; font-size: 18px;">${data.result}</strong>.
 </p>
 
 <p>
-إذا لم نحقق هذا الهدف خلال الإطار الزمني المتفق عليه، سنستمر في العمل <strong style="color:#00e5ff;">بدون أي تكلفة إضافية</strong> (مجانًا تماماً) حتى نصل إلى النتيجة الموعودة. نجاحك هو شرطنا الوحيد.
+إذا لم نحقق هذا الهدف في الوقت المحدد، فإننا 
+سنستمر في العمل <strong style="color:#00e5ff;">مجانًا وبدون أي تكلفة إضافية</strong>
+حتى نصل للنتيجة. نجاحك هو شرطنا الوحيد.
 </p>
 
 <hr style="border:0; border-top:1px solid #1e2550; margin:30px 0;">
 
 <h2 style="color:#ffffff; font-size:20px; margin-bottom:10px;">
-إطار التنفيذ (الآلية الفريدة)
+الآلية الفريدة: نظام "MONJEZ AI Automated System"
 </h2>
 
+<p style="color:#aeb8ff;">
+بدون إهدار الوقت في المتابعة اليدوية المتأخرة، بناءً على تحليلنا، نعتمد على <strong>"المتابعة الآلية والإغلاق المباشر"</strong> الذي يضمن جذب العملاء الملتزمين وتحويل مسارك بالكامل ليعمل بشكل مستقل.
+</p>
+
+<hr style="border:0; border-top:1px solid #1e2550; margin:30px 0;">
+
+<h2 style="color:#ffffff; font-size:20px; margin-bottom:10px;">
+متطلبات النجاح المشترك (شروط الضمان)
+</h2>
+
+<p>الضمان القوي يتطلب التزاماً متبادلاً. لكي تتأهل لهذا الضمان، نتوقع من <strong style="color:#ffffff;">${data.company}</strong> الالتزام بالآتي:</p>
 <ul style="padding-right:20px; line-height:1.9; color:#aeb8ff;">
-<li><strong>تحسين التموضع:</strong> إبراز عرض شركتك بشكل لا يقاوم.</li>
-<li><strong>هندسة مسار التحويل:</strong> تحويل النقرات إلى عملاء بشكل تلقائي.</li>
-<li><strong>نظام المتابعة الآلي:</strong> متابعة مستمرة للعملاء (Click → Close) بالذكاء الاصطناعي.</li>
-<li><strong>محاذاة المبيعات والعمليات:</strong> تحسين الكفاءة التشغيلية لفريقك.</li>
+<li>الاتصال بكل عميل محتمل يتم استقطابه خلال <strong>أول 24 ساعة</strong> لتأكيد الموعد.</li>
+<li>تحديث النظام وحالة العملاء يومياً لتتبع مؤشرات الأداء.</li>
+<li>تشغيل الإعلانات واستخدام العروض التي نوصي بها تحديداً (النظام المجرب).</li>
+<li>المرونة التامة في تنفيذ مقترحاتنا لتحسين جودة المسار التسويقي.</li>
+<li>توفير ميزانية إعلانية كافية (حد أدنى يضمن تدفق البيانات).</li>
+<li>توفير مساحات متاحة أسبوعياً في جدولك لاستيعاب العملاء الجدد.</li>
 </ul>
 
 <p style="margin-top:30px;">
-لقد قمت بإعداد خريطة طريق مخصصة توضح مراحل التنفيذ، مؤشرات الأداء، والجدول الزمني بشفافية تامة لتطبيقها في <strong>${data.company}</strong>.
+لقد قمت بإعداد خريطة طريق مخصصة توضح مراحل التنفيذ، مؤشرات الأداء، والجدول الزمني بشفافية تامة لتطبيقها.
 </p>
 
 </td>
@@ -165,7 +183,7 @@ font-size:15px;
 letter-spacing:0.5px;
 box-shadow:0 0 20px rgba(0,229,255,0.3);
 ">
-احجز مكالمة اكتشاف استراتيجية
+تحديد موعد مكالمة استراتيجية
 </a>
 
 </td>
