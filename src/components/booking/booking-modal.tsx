@@ -100,30 +100,25 @@ export function BookingModal({
                     {
                         full_name: data.fullName,
                         email: data.email,
-                        phone_number: data.phoneNumber,
-                        company_name: data.companyName,
-                        website_url: data.websiteUrl,
-                        industry: data.industry,
-                        client_type: data.clientType,
-                        primary_goal: data.primaryGoal, // Supabase Array
-                        team_size: data.teamSize,
-                        monthly_revenue: data.monthlyRevenue,
-                        current_challenges: data.currentChallenges,
-                        interested_services: data.interestedServices, // Supabase Array
-                        previous_experience: data.previousExperience,
+                        company_type: data.industry,
+                        role: data.clientType,
+                        monthly_revenue: data.monthlyRevenue || "Not provided",
                         referral_source: data.referralSource,
-                        preferred_time: data.preferredTime,
-                        additional_notes: data.additionalNotes,
+                        main_problem: `Phone: ${data.phoneNumber}\nCompany: ${data.companyName || 'N/A'}\nWebsite: ${data.websiteUrl || 'N/A'}\nGoals: ${data.primaryGoal.join(', ')}\nServices: ${data.interestedServices.join(', ')}\nTeam Size: ${data.teamSize}\nExperience: ${data.previousExperience}\nPreferred Time: ${data.preferredTime}\nChallenges: ${data.currentChallenges}\nNotes: ${data.additionalNotes || 'N/A'}`,
                         status: "new"
                     }
                 ]);
 
-            if (dbError) throw dbError;
+            if (dbError) {
+                console.error("Supabase Error:", dbError);
+                throw dbError;
+            }
 
             setIsSuccess(true);
             setTimeout(() => {
-                window.location.href = redirectUrl;
-            }, 2000);
+                setIsSuccess(false);
+                setStep(6);
+            }, 1000);
 
         } catch (err: any) {
             console.error("Submission error:", err);
@@ -157,7 +152,7 @@ export function BookingModal({
                         <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/5">
                             <div>
                                 <h2 className="text-xl font-bold text-white text-start">{t("title")}</h2>
-                                <p className="text-sm text-gray-400 text-start">{t("step", { step })}</p>
+                                {step < 6 && <p className="text-sm text-gray-400 text-start">{t("step", { step })}</p>}
                             </div>
                             <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
                                 <X className="w-6 h-6" />
@@ -165,7 +160,7 @@ export function BookingModal({
                         </div>
 
                         {/* Body */}
-                        <div className="p-6 md:p-8 overflow-y-auto max-h-[calc(100vh-80px)] md:max-h-[75vh] custom-scrollbar">
+                        <div className={`p-6 md:p-8 overflow-y-auto max-h-[calc(100vh-80px)] md:max-h-[75vh] custom-scrollbar ${step === 6 ? '!p-0 h-[600px]' : ''}`}>
                             {isSuccess ? (
                                 <div className="text-center py-12">
                                     <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -176,6 +171,16 @@ export function BookingModal({
                                         {t("success_subtitle")}
                                     </p>
                                     <Loader2 className="w-6 h-6 text-monjez-accent animate-spin mx-auto" />
+                                </div>
+                            ) : step === 6 ? (
+                                <div className="w-full h-full bg-white relative">
+                                    <iframe 
+                                        src={`${redirectUrl}?hide_gdpr_banner=1&hide_landing_page_details=1`}
+                                        width="100%" 
+                                        height="100%" 
+                                        frameBorder="0"
+                                        className="absolute inset-0 w-full h-full"
+                                    />
                                 </div>
                             ) : (
                                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

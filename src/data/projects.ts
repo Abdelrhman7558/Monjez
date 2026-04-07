@@ -2,8 +2,8 @@ export const projects = [
     {
         id: "1",
         slug: "ad_agent",
-        client: "The Ad Agent",
-        projectUrl: "https://www.the-adagent.com",
+        client: "Marketpl7ce",
+        projectUrl: "",
         coverImage: "/images/case-studies/ad-agent/landing-hero.png",
         gallery: [
             "/images/case-studies/ad-agent/complex-workflow.png",
@@ -12,9 +12,9 @@ export const projects = [
             "/images/case-studies/ad-agent/workflow-automation.png"
         ],
         resultsKeys: [
-            { labelKey: "saved", value: "30+" },
-            { labelKey: "accuracy", value: "100%" },
-            { labelKey: "speed", value: "4x Faster" }
+            { labelKey: "saved", value: "3-4 hrs" },
+            { labelKey: "accuracy", value: "24/7" },
+            { labelKey: "speed", value: "< 3m" }
         ]
     },
     {
