@@ -9,6 +9,8 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+.npm_cache/
+.npm_local/
 
 # testing
 /coverage
@@ -23,6 +25,7 @@
 # misc
 .DS_Store
 *.pem
+*.bak
 
 # debug
 npm-debug.log*

@@ -3,46 +3,156 @@
 @tailwind utilities;
 
 :root {
-  --background: #0B0B0B;
-  --foreground: #E5E5E5;
+  --background: #080808;
+  --foreground: #EDEDEC;
+  /* Design tokens */
+  --surface: #101010;
+  --card: #141414;
+  --border: #1E1E1E;
+  --accent: #D97706;
+  --accent-warm: #F59E0B;
+  --muted: #64645E;
+  /* Motion */
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply overflow-x-hidden antialiased;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Consistent selection color */
+  ::selection {
+    background-color: rgba(217, 119, 6, 0.25);
+    color: #F59E0B;
+  }
+
+  /* Smooth scroll for anchors */
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
+
+  /* Skip to content — accessibility */
+  .skip-to-content {
+    position: absolute;
+    left: -9999px;
+    top: 1rem;
+    z-index: 9999;
+    background: var(--accent);
+    color: #080808;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  .skip-to-content:focus {
+    left: 1rem;
+  }
 }
 
 @layer utilities {
+  /* Typography helpers */
   .text-balance {
     text-wrap: balance;
   }
+  .text-pretty {
+    text-wrap: pretty;
+  }
 
+  /* Premium glass panel — amber-tinted, not purple */
   .glass-panel {
-    @apply border border-[#9B59B6]/20;
-    /* Electric Purple border */
-    background-color: rgba(91, 44, 111, 0.3);
-    /* Deep Purple tint */
-    backdrop-filter: blur(12px);
+    background-color: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 4px 24px rgba(0, 0, 0, 0.4);
   }
 
-  .glow-text {
-    text-shadow: 0 0 10px rgba(155, 89, 182, 0.6);
-    /* Electric Purple Glow */
+  /* Spotlight border cards */
+  .card-spotlight {
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: border-color 0.3s var(--ease-premium), box-shadow 0.3s var(--ease-premium);
+  }
+  .card-spotlight:hover {
+    border-color: rgba(217, 119, 6, 0.3);
+    box-shadow: 0 0 0 1px rgba(217, 119, 6, 0.1), 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  /* Noise grain overlay — fixed, never scrolling */
+  .grain::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-transparent;
+  /* Amber glow utility */
+  .glow-amber {
+    box-shadow: 0 0 24px rgba(217, 119, 6, 0.4);
   }
 
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+    background: rgba(255,255,255,0.08);
+    border-radius: 9999px;
   }
-}
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(217, 119, 6, 0.3);
+  }
 
-html {
-  overflow-y: scroll;
-}
+  /* Number tabular figures */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
 
-body {
-  @apply overflow-x-hidden;
+  /* Eyebrow tag */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1;
+    background: rgba(217, 119, 6, 0.1);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #F59E0B;
+  }
+
+  /* Double-bezel card outer shell */
+  .bezel-outer {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 1.5px;
+    border-radius: 1.5rem;
+  }
+
+  /* Double-bezel card inner core */
+  .bezel-inner {
+    background: var(--card);
+    border-radius: calc(1.5rem - 1.5px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    height: 100%;
+    width: 100%;
+  }
 }

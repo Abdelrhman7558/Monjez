@@ -1,6 +1,6 @@
 // email_test.ts
 import nodemailer from 'nodemailer';
-import { generateArabicLeadHTML } from './src/lib/utils/email-templates.ts';
+import { generateArabicLeadHTML } from './src/lib/utils/email-templates';
 
 async function testEmail() {
     console.log("Starting email test...");

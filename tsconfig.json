@@ -38,6 +38,8 @@
   ],
   "exclude": [
     "node_modules",
-    "vite.config.ts"
+    "vite.config.ts",
+    "email_test.ts",
+    "tailwind.config(1).ts"
   ]
 }

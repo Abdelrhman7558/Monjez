@@ -17,8 +17,7 @@ export default function ThankYouPage() {
     return (
         <main className="min-h-screen bg-monjez-dark flex items-center justify-center p-4 relative overflow-hidden">
             {/* Background elements */}
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-monjez-blue/10 blur-[120px] rounded-full" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-monjez-purple/10 blur-[120px] rounded-full" />
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-monjez-accent/5 blur-[140px] rounded-full" />
 
             <div className="container max-w-2xl relative z-10">
                 <motion.div
@@ -38,7 +37,7 @@ export default function ThankYouPage() {
                     <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
                         {t("success")}
                     </h1>
-                    <p className="text-monjez-highlight text-lg mb-8 font-medium">
+                    <p className="text-monjez-accent text-lg mb-8 font-medium">
                         {t("subtitle")}
                     </p>
 

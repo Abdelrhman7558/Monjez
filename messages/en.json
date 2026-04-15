@@ -3,8 +3,8 @@
         "badge": "Accepting New Partners for Q2",
         "title_part1": "We Build AI Systems That",
         "title_part2": "Replace Operational Bottlenecks.",
-        "subtitle": "Stop hiring more people to do repetitive work. We engineer custom AI Infrastructure that scales your revenue, reduces costs, and automates execution.",
-        "cta_primary": "Book Strategy Call",
+        "subtitle": "We work with a limited number of clients to ensure elite-level execution. Book your free AI Systems Audit and get a full map of where your business is leaking time and revenue.",
+        "cta_primary": "Book Free AI Audit",
         "cta_secondary": "Explore Our Systems"
     },
     "problem": {
@@ -230,7 +230,7 @@
         "pricing": "Pricing",
         "faq": "FAQ",
         "roi": "ROI",
-        "book_call": "Book Strategy Call"
+        "book_call": "Book Free AI Audit"
     },
     "case_studies": {
         "badge": "Proven Architecture",
@@ -248,42 +248,42 @@
         "per_month": "/mo",
         "tiers": {
             "starter": {
-                "name": "Starter AI System",
-                "price": "From $1,500",
-                "description": "For small teams looking to automate specific operational bottlenecks.",
+                "name": "AI Systems Audit",
+                "price": "Free",
+                "description": "A comprehensive deep dive into your business operations to identify high-impact AI opportunities.",
                 "features": [
-                    "Custom Automation Workflows",
-                    "Lead Qualification Agent",
-                    "CRM Integration",
-                    "Weekly Performance Report"
+                    "45-minute strategy session",
+                    "Full operations & workflow mapping",
+                    "Automation opportunities report",
+                    "90-day AI roadmap",
+                    "Zero commitment required"
                 ],
-                "cta": "Book Strategy Call"
+                "cta": "Book Free Audit"
             },
             "growth": {
-                "name": "Growth AI Infrastructure",
-                "price": "From $3,000",
-                "description": "For scaling agencies & businesses needing full-stack operational intelligence.",
+                "name": "Core Build",
+                "price": "Starting from $2,000",
+                "description": "Full end-to-end implementation of your core AI infrastructure and automated workflows.",
                 "features": [
-                    "Everything in Starter",
-                    "Autonomous Ad Operations",
-                    "Financial Reconciliation Engine",
-                    "Real-time Data Dashboard",
-                    "Priority Engineering Support"
+                    "Custom AI system architecture",
+                    "Full implementation & integrations",
+                    "Automated workflows (2-4 core flows)",
+                    "Dashboard & performance reporting",
+                    "30-day post-launch support"
                 ],
-                "cta": "Book Strategy Call"
+                "cta": "Book Free Audit"
             },
             "enterprise": {
-                "name": "Enterprise Architecture",
-                "price": "Custom",
-                "description": "Deep custom engineering for organizations with complex data requirements.",
+                "name": "Care Plan",
+                "price": "Starting from $300/month",
+                "description": "Ongoing management, optimization, and scaling of your AI systems for peak performance.",
                 "features": [
-                    "Full Custom LLM Training",
-                    "On-Premise / Private Cloud",
-                    "SLA & uptime Guarantees",
-                    "Dedicated Solutions Architect",
-                    "24/7 Monitoring & Optimization"
+                    "Monthly system monitoring",
+                    "Ongoing optimization & improvements",
+                    "Priority support channel",
+                    "Monthly performance review call"
                 ],
-                "cta": "Contact Sales"
+                "cta": "Book Free Audit"
             }
         },
         "support": {
@@ -424,7 +424,7 @@
             "Optimization"
         ],
         "cta_title": "If Your Company Is Scaling — Your Systems Should Too.",
-        "cta_button": "Book Your Revenue Strategy Call",
+        "cta_button": "Book Free AI Audit",
         "cta_audit": "Or Get an Instant Audit"
     },
     "booking": {

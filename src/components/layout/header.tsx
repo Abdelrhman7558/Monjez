@@ -1,9 +1,8 @@
 "use client";
 
-import { Link } from "@/navigation"; // Use locale-aware Link
+import { Link } from "@/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useTranslations } from "next-intl";
@@ -23,109 +22,143 @@ export function Header() {
     ];
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
-        };
-        window.addEventListener("scroll", handleScroll);
+        const handleScroll = () => setIsScrolled(window.scrollY > 40);
+        window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     return (
-        <header
-            className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                isScrolled
-                    ? "bg-monjez-dark/80 backdrop-blur-md border-b border-white/5 py-4"
-                    : "bg-transparent py-6"
-            )}
-        >
-            <div className="container mx-auto px-4 md:px-6 relative flex items-center">
-                {/* 1. Logo - Pushed to the start */}
-                <div className="flex-1">
-                    <Link href="/" className="z-20 inline-block flex items-center gap-2 group">
-                        <div className="relative w-8 h-8">
+        <>
+            {/* Floating glass pill — detached from top edge */}
+            <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-5 px-4">
+                <motion.div
+                    initial={{ opacity: 0, y: -16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    className={cn(
+                        "relative flex items-center justify-between gap-6 px-4 py-2.5 rounded-full w-full max-w-[860px]",
+                        "transition-all duration-500",
+                        isScrolled
+                            ? "bg-[#0E0E0E]/85 backdrop-blur-xl border border-white/[0.06] shadow-[0_4px_32px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)]"
+                            : "bg-transparent border border-transparent"
+                    )}
+                >
+                    {/* Logo */}
+                    <Link href="/" className="z-20 inline-flex items-center gap-2.5 group flex-shrink-0">
+                        <div className="relative w-7 h-7 rounded-md overflow-hidden">
                             <Image
                                 src="/logo.png"
-                                alt="Monjez Logo"
+                                alt="Monjez"
                                 fill
                                 className="object-contain"
                                 priority
                             />
                         </div>
-                        <span className="text-2xl font-bold tracking-tighter text-white transition-colors">
+                        <span className="text-[1.05rem] font-bold tracking-[-0.03em] text-monjez-text">
                             MONJEZ
-                            <span className="text-monjez-accent text-3xl leading-none">.</span>
+                            <span className="text-monjez-accent">.</span>
                         </span>
                     </Link>
-                </div>
 
-                {/* 2. Navigation (Desktop) - centered in the middle */}
-                <nav className="hidden md:flex items-center gap-8 z-10">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            className="text-sm font-medium text-gray-300 hover:text-white transition-colors whitespace-nowrap"
-                        >
-                            {link.name}
-                        </Link>
-                    ))}
-                </nav>
-
-                {/* 3. Actions - Pushed to the end */}
-                <div className="flex-1 flex justify-end items-center gap-4 z-20">
-                    <div className="hidden md:block">
-                        <LanguageSwitcher />
-                    </div>
-
-                    <Link
-                        href="/#book-call"
-                        className="hidden md:block bg-monjez-blue hover:bg-monjez-accent text-white hover:glow-text px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 shadow-[0_0_15px_rgba(29,40,139,0.3)] hover:shadow-[0_0_25px_rgba(59,79,228,0.5)]"
-                    >
-                        {t("book_call")}
-                    </Link>
-
-                    {/* Mobile Menu Toggle */}
-                    <button
-                        className="md:hidden text-white"
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    >
-                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
-                </div>
-            </div>
-
-            <AnimatePresence>
-                {isMobileMenuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="absolute top-full left-0 right-0 bg-monjez-dark border-b border-white/10 p-6 md:hidden flex flex-col gap-6 shadow-2xl"
-                    >
-                        <div className="flex justify-end">
-                            <LanguageSwitcher />
-                        </div>
+                    {/* Desktop nav — centered */}
+                    <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="text-gray-300 hover:text-white text-lg font-medium text-center"
-                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="px-3.5 py-1.5 text-sm font-medium text-monjez-muted hover:text-monjez-text rounded-full hover:bg-white/[0.05] transition-all duration-200 whitespace-nowrap"
                             >
                                 {link.name}
                             </Link>
                         ))}
+                    </nav>
+
+                    {/* Right — actions */}
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                        <div className="hidden md:block">
+                            <LanguageSwitcher />
+                        </div>
+
+                        {/* CTA — button-in-button */}
                         <Link
                             href="/#book-call"
-                            className="bg-monjez-blue text-white text-center py-3 rounded-xl font-semibold w-full"
-                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="hidden md:inline-flex items-center gap-2 pl-4 pr-1.5 py-1.5 rounded-full bg-monjez-accent hover:bg-monjez-accent-warm text-[#080808] text-sm font-semibold transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97] group"
                         >
                             {t("book_call")}
+                            <span className="w-6 h-6 rounded-full bg-[#080808]/15 flex items-center justify-center group-hover:translate-x-0.5 group-hover:-translate-y-[1px] transition-transform duration-200">
+                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                                    <path d="M2 8L8 2M8 2H3M8 2V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                            </span>
                         </Link>
+
+                        {/* Mobile toggle */}
+                        <button
+                            className="md:hidden w-8 h-8 flex flex-col items-center justify-center gap-[5px] text-monjez-text"
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+                        >
+                            <motion.span
+                                className="w-5 h-[1.5px] bg-current rounded-full block origin-center"
+                                animate={isMobileMenuOpen ? { rotate: 45, y: 6.5 } : { rotate: 0, y: 0 }}
+                                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                            />
+                            <motion.span
+                                className="w-5 h-[1.5px] bg-current rounded-full block origin-center"
+                                animate={isMobileMenuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+                                transition={{ duration: 0.2 }}
+                            />
+                            <motion.span
+                                className="w-5 h-[1.5px] bg-current rounded-full block origin-center"
+                                animate={isMobileMenuOpen ? { rotate: -45, y: -6.5 } : { rotate: 0, y: 0 }}
+                                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                            />
+                        </button>
+                    </div>
+                </motion.div>
+            </header>
+
+            {/* Mobile menu — full screen overlay */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="fixed inset-0 z-40 bg-[#080808]/95 backdrop-blur-2xl flex flex-col"
+                    >
+                        <div className="flex flex-col flex-1 justify-center px-8 gap-2">
+                            {navLinks.map((link, i) => (
+                                <motion.div
+                                    key={link.name}
+                                    initial={{ opacity: 0, y: 16 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.06 + 0.1, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                                >
+                                    <Link
+                                        href={link.href}
+                                        className="block text-2xl font-semibold text-monjez-text hover:text-monjez-accent py-3 transition-colors duration-200 border-b border-monjez-border"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                        {link.name}
+                                    </Link>
+                                </motion.div>
+                            ))}
+                        </div>
+                        <div className="px-8 pb-12 flex flex-col gap-4">
+                            <LanguageSwitcher />
+                            <Link
+                                href="/#book-call"
+                                className="w-full py-3.5 rounded-full bg-monjez-accent text-[#080808] font-bold text-center text-base"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                {t("book_call")}
+                            </Link>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </header>
+        </>
     );
 }

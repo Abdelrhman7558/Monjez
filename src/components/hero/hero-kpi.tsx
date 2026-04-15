@@ -71,16 +71,10 @@ export function HeroKPI() {
 
                 {/* Content Container */}
                 <div className="flex flex-col md:flex-row items-center justify-between divide-y md:divide-y-0 md:divide-x divide-white/5 p-6 md:p-10 relative z-10">
-                    <KPIMetric value={30} suffix="%" label="Avg. Cost Reduction" delay={0.1} />
-                    <KPIMetric value={24} suffix="/7" label="Operational Uptime" delay={0.3} />
-                    <KPIMetric value={10} suffix="x" label="Faster Execution" delay={0.5} />
-                    <div className="flex flex-col items-center justify-center px-4 md:px-8 py-2 min-w-[140px]">
-                        <div className="flex items-baseline justify-center gap-0.5 text-3xl md:text-4xl font-bold text-white mb-1 drop-shadow-[0_0_10px_rgba(30,144,255,0.5)]">
-                            <span>$10M</span>
-                            <span className="text-monjez-highlight">+</span>
-                        </div>
-                        <p className="text-xs md:text-sm text-gray-400 font-medium tracking-widest uppercase">Revenue Processed</p>
-                    </div>
+                    <KPIMetric value={25} suffix="+" label="PROJECTS DELIVERED" delay={0.1} />
+                    <KPIMetric value={5} label="FULL AI SYSTEMS BUILT" delay={0.3} />
+                    <KPIMetric value={90} suffix="%" label="WORKFLOW AUTOMATED" delay={0.5} />
+                    <KPIMetric value={3} label="INDUSTRIES SERVED" delay={0.7} />
                 </div>
             </div>
         </motion.div>
