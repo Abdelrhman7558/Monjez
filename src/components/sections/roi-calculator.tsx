@@ -75,7 +75,7 @@ export function ROICalculator() {
                             <div className="absolute inset-0 bg-monjez-accent/5 rounded-2xl animate-pulse group-hover:bg-monjez-accent/10 transition-colors" />
                             <Calculator className="w-12 h-12 text-monjez-accent mx-auto mb-4" />
                             <div className="text-sm text-gray-400 uppercase tracking-widest mb-2 font-semibold">Potential Annual Savings</div>
-                            <div className="text-4xl md:text-5xl font-bold text-white tracking-tight text-monjez-accent">
+                            <div className="text-4xl md:text-5xl font-bold text-white tracking-tight glow-text">
                                 ${annualSavings}
                             </div>
                             <p className="text-xs text-gray-500 mt-4">

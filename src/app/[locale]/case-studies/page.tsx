@@ -26,7 +26,7 @@ export default function CaseStudiesPage() {
                         className="text-center mb-16"
                     >
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                            Our <span className="text-monjez-accent">Work</span>
+                            Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-monjez-highlight to-monjez-accent">Work</span>
                         </h1>
                         <p className="text-gray-400 max-w-2xl mx-auto text-lg">
                             We don't just build demos. We deploy production-grade AI infrastructure that drives real ROI.

@@ -41,7 +41,7 @@ export default function RevenueAuditPage() {
                     className="text-4xl md:text-6xl font-bold text-white text-center mb-8 leading-tight max-w-4xl"
                 >
                     Get a Deep-Dive <br />
-                    <span className="text-monjez-accent">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-monjez-accent to-purple-500">
                         AI Revenue Infrastructure Audit
                     </span>
                 </motion.h1>
@@ -130,8 +130,8 @@ export default function RevenueAuditPage() {
                             className={cn(
                                 "w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all duration-300",
                                 isProcessing
-                                    ? "bg-monjez-surface cursor-not-allowed text-monjez-muted"
-                                    : "bg-monjez-accent hover:bg-monjez-accent-warm text-[#080808] shadow-[0_4px_20px_rgba(217,119,6,0.3)]"
+                                    ? "bg-monjez-blue/50 cursor-not-allowed text-gray-300"
+                                    : "bg-monjez-blue hover:bg-monjez-accent text-white shadow-[0_0_20px_rgba(59,79,228,0.4)] hover:shadow-[0_0_30px_rgba(59,79,228,0.6)]"
                             )}
                         >
                             {isProcessing ? (

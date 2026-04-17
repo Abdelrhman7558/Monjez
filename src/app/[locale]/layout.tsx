@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Inter } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { SmoothScroll } from "@/components/smooth-scroll";
 import Script from "next/script";
 
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-outfit",
-  weight: ["300", "400", "500", "600", "700", "800"],
-  display: "swap",
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.monjez-agency.com"),
@@ -70,14 +65,12 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale} dir={direction} suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${outfit.variable} font-sans bg-monjez-dark text-monjez-text`}
+        className={`${inter.variable} font-sans antialiased bg-monjez-dark text-white selection:bg-monjez-accent selection:text-white`}
       >
         <NextIntlClientProvider messages={messages} locale={locale}>
           <SmoothScroll>
-            {/* Ambient glow — single warm amber, not purple */}
-            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-              <div className="absolute top-[-15%] right-[-10%] w-[600px] h-[600px] rounded-full bg-monjez-accent/5 blur-[140px] animate-pulse-slow" />
-              <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-monjez-accent/3 blur-[160px] animate-pulse-slow" style={{ animationDelay: "2s" }} />
+            <div className="fixed inset-0 z-0 pointer-events-none">
+              <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-monjez-blue/20 blur-[120px] mix-blend-screen animate-pulse-slow" />
             </div>
             {children}
           </SmoothScroll>
