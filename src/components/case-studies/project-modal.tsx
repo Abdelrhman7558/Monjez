@@ -160,6 +160,16 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                                 <p className="text-gray-300 leading-relaxed whitespace-pre-line text-start">{t("outcome")}</p>
                                             </div>
                                         )}
+                                        
+                                        {t.has("phase2") && (
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-3 text-monjez-highlight">
+                                                    <Zap className="w-5 h-5" />
+                                                    <h3 className="text-xl font-bold uppercase tracking-widest">{t("phase2_title")}</h3>
+                                                </div>
+                                                <p className="text-gray-300 leading-relaxed whitespace-pre-line text-start">{t("phase2")}</p>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {t.has("finalNote") && (
@@ -167,6 +177,19 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                                             <p className="text-white text-lg italic font-light leading-relaxed whitespace-pre-line text-start">"{t("finalNote")}"</p>
                                         </div>
                                     )}
+
+                                    {/* Footer Arrow CTA */}
+                                    <div className="pt-12 border-t border-white/10 flex justify-end">
+                                        <button
+                                            onClick={onClose}
+                                            className="group inline-flex items-center gap-3 text-monjez-highlight hover:text-white transition-colors font-bold uppercase tracking-widest text-sm"
+                                        >
+                                            {useTranslations("case_studies")("see_more")}
+                                            <div className="w-10 h-10 rounded-full bg-monjez-highlight group-hover:bg-white text-black flex items-center justify-center transition-all rtl:rotate-180">
+                                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform rtl:group-hover:-translate-x-1" />
+                                            </div>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -18,6 +18,20 @@ export const projects = [
         ]
     },
     {
+        id: "2",
+        slug: "atlantis",
+        client: "Atlantis",
+        coverImage: "/images/case-studies/atlantis/atlantis-thumbnail.png",
+        gallery: [
+            "/images/case-studies/atlantis/atlantis-thumbnail.png"
+        ],
+        resultsKeys: [
+            { labelKey: "build", value: "Full-Stack" },
+            { labelKey: "timeline", value: "2 Months" },
+            { labelKey: "tech", value: "AI-Powered" }
+        ]
+    },
+    {
         id: "paynest",
         slug: "paynest",
         client: "Paynest",

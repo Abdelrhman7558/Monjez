@@ -343,6 +343,26 @@
                 "speed": "Campaign Setup"
             }
         },
+        "atlantis": {
+            "title": "Atlantis — B2B FMCG Marketplace Platform",
+            "tagline": "From concept to live platform in 2 months.",
+            "description": "Building a full-stack B2B marketplace for the FMCG sector, connecting suppliers with wholesale buyers while maintaining supplier anonymity and automating operations with AI.",
+            "challenge_title": "The Problem",
+            "challenge": "The FMCG distribution sector runs on relationships, phone calls, and scattered spreadsheets. Atlantis came to us with a clear problem: wholesale buyers — supermarkets, distributors, and retail chains — had no reliable digital channel to discover, compare, and order FMCG products in bulk. Suppliers, on the other hand, had no structured way to present their catalog online.\n\nThe goal was to build a controlled, invite-only B2B marketplace that digitized the entire wholesale buying process.",
+            "strategy_title": "Vision & Strategy",
+            "strategy": "Atlantis's vision wasn't to build another generic marketplace. The brief was precise:\n- A B2B-only platform serving supermarkets and distributors.\n- Full supplier anonymity — buyers interact with Atlantis as the brand.\n- No consumer-facing features.\n- AI-powered backend to eliminate manual product management.\n- A gated, invite-controlled ecosystem for verified users.",
+            "execution_title": "What We Built",
+            "execution": "We delivered a complete full-stack platform in two months, spanning three layers:\n1. The Marketplace (Buyer-Facing): A catalog-driven storefront with wholesale pricing and per-product documentation.\n2. The Admin Control Panel (Enterprise HQ): Operations layer for managing products, orders, users, and KYC verification.\n3. AI-Powered Automation Layer: Automated product upload from files, newsletter generation, and ad placement recommendations.",
+            "outcome_title": "Results & Outcome",
+            "outcome": "The platform launched into closed beta within two months of kickoff. We solved technical challenges like supplier anonymity at the data layer, reliable AI document parsing for inconsistent formats, and a frictionless KYC process.\n\nAtlantis chose to continue development under a monthly retainer model, with future features including AI-powered shipment tracking.",
+            "phase2_title": "Phase 2: Scaling & Advanced Automation",
+            "phase2": "Following the initial success, we moved into Phase 2, focusing on:\n- AI Shipment Tracking: Automated communication with buyers sourcing shipping updates.\n- AI Support Layer: Intelligent agents handling supplier and buyer inquiries.\n- Expanded payment infrastructure for digital-first markets.",
+            "results": {
+                "build": "Build Type",
+                "timeline": "Timeline",
+                "tech": "Technology"
+            }
+        },
         "paynest": {
             "title": "Designing a Financial Operating System for Scalable Digital Payments",
             "tagline": "From operational complexity to structured financial intelligence.",
