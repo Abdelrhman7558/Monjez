@@ -59,15 +59,38 @@ function newId() {
     );
 }
 
-function bookingUrl(base: string, name: string, email: string) {
-    const params = new URLSearchParams({ name, email, theme: "light" });
-    return `${base}/embed?${params.toString()}`;
+const CAL_ORIGIN = "https://app.cal.com";
+type CalFn = ((...args: unknown[]) => void) & { loaded?: boolean; ns?: Record<string, unknown>; q?: unknown[] };
+
+/** Cal.com's official embed loader (same as their snippet), loaded once on demand. */
+function loadCal(): CalFn {
+    const w = window as unknown as { Cal?: CalFn };
+    if (w.Cal) return w.Cal;
+    /* eslint-disable */
+    (function (C: any, A: string, L: string) {
+        const p = function (a: any, ar: any) { a.q.push(ar); };
+        const d = C.document;
+        C.Cal = C.Cal || function () {
+            const cal = C.Cal; const ar = arguments;
+            if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; }
+            if (ar[0] === L) {
+                const api: any = function () { p(api, arguments); };
+                const namespace = ar[1]; api.q = api.q || [];
+                if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar);
+                return;
+            }
+            p(cal, ar);
+        };
+    })(window, `${CAL_ORIGIN}/embed/embed.js`, "init");
+    /* eslint-enable */
+    w.Cal!("init", { origin: CAL_ORIGIN });
+    return w.Cal!;
 }
 
 /** Booking calendar in a popup over the page (not inline, not a new tab). */
-function BookingModal({ src, title, onClose }: { src: string; title: string; onClose: () => void }) {
+function BookingModal({ calLink, name, email, title, onClose }: { calLink: string; name: string; email: string; title: string; onClose: () => void }) {
     const t = useContent().UI.apply;
-    const [loaded, setLoaded] = useState(false);
+    const host = useRef<HTMLDivElement>(null);
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
         document.addEventListener("keydown", onKey);
@@ -78,6 +101,12 @@ function BookingModal({ src, title, onClose }: { src: string; title: string; onC
             document.body.style.overflow = prev;
         };
     }, [onClose]);
+    useEffect(() => {
+        if (!host.current) return;
+        const Cal = loadCal();
+        Cal("inline", { elementOrSelector: host.current, calLink, config: { name, email, layout: "month_view", theme: "light" } });
+        Cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
+    }, [calLink, name, email]);
     return (
         <div role="dialog" aria-modal="true" aria-label={title} className="fixed inset-0 z-[90] flex items-center justify-center bg-mj-ink/60 p-3 backdrop-blur-sm sm:p-6" onClick={onClose}>
             <div className="relative h-[88vh] w-full max-w-[1040px] overflow-hidden rounded-3xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()} data-lenis-prevent>
@@ -89,13 +118,11 @@ function BookingModal({ src, title, onClose }: { src: string; title: string; onC
                 >
                     <X className="h-5 w-5" aria-hidden />
                 </button>
-                {!loaded && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[14px] text-mj-muted" role="status">
-                        <Loader2 className="h-6 w-6 animate-spin text-mj-accent" aria-hidden />
-                        {t.loading}
-                    </div>
-                )}
-                <iframe src={src} title={title} onLoad={() => setLoaded(true)} className={cn("block h-full w-full border-0 transition-opacity duration-300", loaded ? "opacity-100" : "opacity-0")} />
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[14px] text-mj-muted" role="status">
+                    <Loader2 className="h-6 w-6 animate-spin text-mj-accent" aria-hidden />
+                    {t.loading}
+                </div>
+                <div ref={host} className="relative h-full w-full overflow-auto bg-white/0" dir="ltr" />
             </div>
         </div>
     );
@@ -105,13 +132,13 @@ function BookingStep({ tier, name, email }: { tier: Tier; name: string; email: s
     const t = useContent().UI.apply;
     const ref = useRef<HTMLDivElement>(null);
     const base = tier === "qualified" ? LANDING_CONFIG.calendlyQualified : LANDING_CONFIG.calendlyDiscovery;
-    const src = bookingUrl(base, name, email);
+    const calLink = base.replace(/^https:\/\/cal\.com\//, "");
     // Open the calendar as soon as the answers are in; the button reopens it if closed.
     const [open, setOpen] = useState(tier !== "not_fit");
     useEffect(() => {
         ref.current?.focus();
     }, []);
-    const modal = open && <BookingModal src={src} title={t.calendarTitle} onClose={() => setOpen(false)} />;
+    const modal = open && <BookingModal calLink={calLink} name={name} email={email} title={t.calendarTitle} onClose={() => setOpen(false)} />;
 
     if (tier === "not_fit") {
         return (
