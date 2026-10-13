@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useLenis } from "@studio-freight/react-lenis";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocale } from "./content-context";
 
 export const NAV_OFFSET = 96;
 
@@ -28,7 +29,7 @@ export function useScrollTo() {
 }
 
 export function Container({ children, className }: { children: ReactNode; className?: string }) {
-    return <div className={cn("mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8", className)}>{children}</div>;
+    return <div className={cn("mx-auto w-full max-w-[1160px] px-4 sm:px-6 lg:px-8", className)}>{children}</div>;
 }
 
 export function Section({
@@ -49,7 +50,7 @@ export function Section({
         ink: "bg-mj-ink text-white",
     } as const;
     return (
-        <section id={id} className={cn("relative scroll-mt-24 py-20 sm:py-24 lg:py-28", tones[tone], className)}>
+        <section id={id} className={cn("relative scroll-mt-24 py-16 sm:py-20 lg:py-24", tones[tone], className)}>
             {children}
         </section>
     );
@@ -91,7 +92,7 @@ export function SectionHead({
             <Eyebrow light={light}>{eyebrow}</Eyebrow>
             <h2
                 className={cn(
-                    "mt-4 text-balance font-display text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] sm:text-[38px] lg:text-[44px]",
+                    "mt-3.5 text-balance font-display text-[28px] font-semibold leading-[1.12] tracking-[-0.02em] sm:text-[34px] lg:text-[40px]",
                     light ? "text-white" : "text-mj-ink"
                 )}
             >
@@ -106,7 +107,7 @@ export function SectionHead({
             {sub && (
                 <p
                     className={cn(
-                        "mt-5 text-pretty text-[16.5px] leading-[1.65] sm:text-[17.5px]",
+                        "mt-4 text-pretty text-[15.5px] leading-[1.65] sm:text-[16.5px]",
                         align === "center" && "mx-auto max-w-[640px]",
                         light ? "text-white/70" : "text-mj-body"
                     )}
@@ -194,7 +195,10 @@ export function Button({
     );
 }
 
-/** Anchor that scrolls to an in-page section (works without JS via the plain hash). */
+/**
+ * Link to a home-page section. On the home page it smooth-scrolls; on other pages (system, resources)
+ * the target isn't in the DOM, so the browser follows the href to /{locale}#id. Works without JS.
+ */
 export function ScrollLink({
     to,
     children,
@@ -208,20 +212,23 @@ export function ScrollLink({
     onNavigate?: () => void;
 } & Omit<ButtonProps, "href" | "onClick" | "children">) {
     const scrollTo = useScrollTo();
+    const locale = useLocale();
+    const href = `/${locale}#${to}`;
     const handle = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
-        e.preventDefault();
         onNavigate?.();
+        if (!document.getElementById(to)) return; // let the browser navigate to the home page
+        e.preventDefault();
         scrollTo(to);
     };
     if (rest.variant || rest.arrow || rest.size) {
         return (
-            <Button href={`#${to}`} onClick={handle} className={className} {...rest}>
+            <Button href={href} onClick={handle} className={className} {...rest}>
                 {children}
             </Button>
         );
     }
     return (
-        <a href={`#${to}`} onClick={handle} className={className}>
+        <a href={href} onClick={handle} className={className}>
             {children}
         </a>
     );

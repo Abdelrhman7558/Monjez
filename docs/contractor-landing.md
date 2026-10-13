@@ -71,3 +71,33 @@ Evidence grades: V = verified, S = supported by 2+ sources, H = hypothesis.
 - **Deployment.** The Vercel project `monjez-platform-7ydv` serves a static `Monjez-Landing.html` from the `MonjezAgency/monjez-platform` repo, which this session could not access (private repo, GitHub CLI not signed in). This Next.js app is a different repository (`Abdelrhman7558/Monjez`). It needs to be connected to Vercel, or ported, before it can replace the live page.
 - **Linting.** `npm run lint` fails on `main` for a reason unrelated to this change: `eslint.config.mjs` needs ESLint 9, but 8.57 is installed. The new files were linted with `next/core-web-vitals` through a temporary legacy config, and it passed.
 - **Build environment.** `next build` needs `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` because of existing routes (`/api/log-purchase`).
+
+## Reference pass (13 Oct 2026, evening)
+
+### New routes
+
+| Route | Purpose | Key files |
+|---|---|---|
+| `/[locale]/system` | Concise system page. Opens with the "scattered work → one core" visual, then the knowledge map, the six workflows, and how to see the system working. | `system-page.tsx`, `system-map.tsx`, `operating-system.tsx` |
+| `/[locale]/resources` | Smart Free Resources library with filters, empty states and hover "Explore" cards. | `resources.tsx`, `resources-data.ts` |
+| `/[locale]/resources/[slug]` | Detail page for an article, case study or video. Unknown slugs return 404. | same |
+
+To add a resource, append an entry to `RESOURCES_LIST` in `resources-data.ts` with both `en` and `ar` text. The cards, filter counts, detail page and sitemap pick it up automatically. Only real, published material goes in. The "Checklists & templates" category stays visible with an empty state until something is published.
+
+### How each reference was used
+
+| Reference | Decision | Implementation |
+|---|---|---|
+| Recording: "AI that knows your business" | Adapted | `SystemMap`: Your operations → Company knowledge → six workflows. Clicking a workflow lights up the sources it draws on and shows a detail panel. The view auto-cycles until the visitor clicks, and the connectors mirror in RTL. |
+| Recording: chips converging into an AI core | Adapted | `Converge` at the top of `/system`. It loops only while on screen and is static when reduced motion is on. |
+| ROI calculator screenshot | Adapted | `calculator.tsx` is a compact two-column card. Hours and value are shown as one saving, never added together, and the formula is shown. |
+| "Strategy through to execution" | Combined | Merged with "how we implement" in `journey.tsx`. Five rows reveal strictly in order on scroll, slide from the inline start in both LTR and RTL, and are visible without JS or with reduced motion. |
+| Guarantee with three cards | Layout adapted | Three cards with process commitments taken from the SOP (baseline first, written success criteria, an honest no-go). No new commercial promise was added. |
+| Resources page and "Explore" hover overlay | Adapted | See the Resources route above. Covers are typographic, with no fake thumbnails. |
+| APG audit page (long document with a sidebar) | Rejected for now | Could become a separate "Workflow Review" explainer page later. |
+| APG join page | Rejected | Hiring page, not relevant to buyers. |
+| "40–80% less process time", "Real AI agents · Deployed" cards | Rejected | Unverified figures, and they imply delivered products. |
+
+### Needs approval
+- **The $50,000 guarantee headline.** It is unchanged and comes from the SOP. Confirm it before running paid traffic to the page.
+- **The new guide** "AI for takeoff and estimating: what the evidence says". It was written from cited public sources; review it before promoting it.

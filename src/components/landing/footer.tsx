@@ -4,7 +4,7 @@ import { Facebook, Instagram, Linkedin, Mail } from "lucide-react";
 import { Link } from "@/navigation";
 import { useContent } from "./content-context";
 import { LANDING_CONFIG } from "./config";
-import { Logo } from "./nav";
+import { Logo, NavItem } from "./nav";
 import { Container, ScrollLink } from "./primitives";
 
 export function LandingFooter() {
@@ -47,11 +47,9 @@ export function LandingFooter() {
                     <nav aria-label={F.nav}>
                         <p className="text-[13px] font-semibold text-white">{F.explore}</p>
                         <ul className="mt-4 space-y-3">
-                            {[...NAV_LINKS, { label: F.results, id: "results" }, { label: F.apply, id: "apply" }].map((l) => (
-                                <li key={l.id}>
-                                    <ScrollLink to={l.id} className="text-[14.5px] text-white/60 transition-colors hover:text-white">
-                                        {l.label}
-                                    </ScrollLink>
+                            {[...NAV_LINKS, { label: UI.nav.resources, href: "/resources" }, { label: F.results, id: "results" }, { label: F.apply, id: "apply" }].map((l) => (
+                                <li key={l.label}>
+                                    <NavItem link={l} className="text-[14px] text-white/60 transition-colors hover:text-white" activeClassName="text-white" />
                                 </li>
                             ))}
                         </ul>

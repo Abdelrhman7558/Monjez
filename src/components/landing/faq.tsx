@@ -15,7 +15,7 @@ export function Faq() {
                 <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
                     <Reveal className="lg:sticky lg:top-28 lg:self-start">
                         <Eyebrow>{FAQ.eyebrow}</Eyebrow>
-                        <h2 className="mt-4 text-balance font-display text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] text-mj-ink sm:text-[38px] lg:text-[44px]">
+                        <h2 className="mt-4 text-balance font-display text-[28px] font-semibold leading-[1.12] tracking-[-0.02em] text-mj-ink sm:text-[34px] lg:text-[40px]">
                             {FAQ.title} <span className="text-mj-accent">{FAQ.titleAccent}</span>
                         </h2>
                         <p className="mt-5 max-w-[420px] text-[16px] leading-[1.65] text-mj-body">{FAQ.sub}</p>

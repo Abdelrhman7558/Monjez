@@ -115,7 +115,7 @@ export function OperatingSystem() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.25 }}
                         >
-                            <h3 className="font-display text-[24px] font-semibold leading-snug tracking-[-0.015em] text-mj-ink sm:text-[28px]">
+                            <h3 className="font-display text-[22px] font-semibold leading-snug tracking-[-0.015em] text-mj-ink sm:text-[25px]">
                                 {isToday ? wf.todayHeadline : wf.headline}
                             </h3>
 

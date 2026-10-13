@@ -223,7 +223,7 @@ export function Apply() {
                 <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
                     <div className="lg:sticky lg:top-28 lg:self-start">
                         <Eyebrow>{APPLY.eyebrow}</Eyebrow>
-                        <h2 className="mt-4 text-balance font-display text-[32px] font-semibold leading-[1.08] tracking-[-0.02em] text-mj-ink sm:text-[40px] lg:text-[46px]">{APPLY.title}</h2>
+                        <h2 className="mt-4 text-balance font-display text-[28px] font-semibold leading-[1.1] tracking-[-0.02em] text-mj-ink sm:text-[34px] lg:text-[40px]">{APPLY.title}</h2>
                         <p className="mt-5 max-w-[460px] text-[16.5px] leading-[1.65] text-mj-body">{APPLY.sub}</p>
                         <ul className="mt-7 space-y-3">
                             {APPLY.points.map((p) => (

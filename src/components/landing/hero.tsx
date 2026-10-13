@@ -7,6 +7,7 @@ import { useContent } from "./content-context";
 import { LANDING_CONFIG } from "./config";
 import { Chip, Container, ScrollLink, WindowFrame } from "./primitives";
 import { VideoModal } from "./video-modal";
+import { Link } from "@/navigation";
 
 const DOCS = [
     { name: "ITT_Fitout_Tower-B.pdf", icon: FileText, meta: "62 pp" },
@@ -110,7 +111,7 @@ export function Hero() {
     const hasVideo = Boolean(LANDING_CONFIG.heroVideoEmbedUrl);
 
     return (
-        <section id="top" className="relative overflow-hidden bg-mj-cream pb-16 pt-32 sm:pb-20 sm:pt-36 lg:pt-40">
+        <section id="top" className="relative overflow-hidden bg-mj-cream pb-14 pt-28 sm:pb-16 sm:pt-32 lg:pt-36">
             {/* quiet architectural grid */}
             <div
                 aria-hidden
@@ -122,17 +123,20 @@ export function Hero() {
                         <span className="h-1.5 w-1.5 rounded-full bg-mj-accent" aria-hidden />
                         {HERO.badge}
                     </span>
-                    <h1 className="mt-6 text-balance font-display text-[34px] font-semibold leading-[1.08] tracking-[-0.03em] text-mj-ink sm:text-[48px] lg:text-[58px]">
+                    <h1 className="mt-5 text-balance font-display text-[32px] font-semibold leading-[1.08] tracking-[-0.03em] text-mj-ink sm:text-[44px] lg:text-[52px]">
                         {HERO.titleLead} <span className="text-mj-accent">{HERO.titleAccent}</span>
                     </h1>
-                    <p className="mx-auto mt-6 max-w-[700px] text-pretty text-[17px] leading-[1.65] text-mj-body sm:text-[18px]">{HERO.sub}</p>
+                    <p className="mx-auto mt-5 max-w-[680px] text-pretty text-[16px] leading-[1.65] text-mj-body sm:text-[17px]">{HERO.sub}</p>
                     <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
                         <ScrollLink to="apply" variant="primary" size="lg" arrow className="w-full sm:w-auto">
                             {HERO.ctaPrimary}
                         </ScrollLink>
-                        <ScrollLink to="system" variant="secondary" size="lg" className="w-full sm:w-auto">
+                        <Link
+                            href="/system"
+                            className="inline-flex h-[52px] w-full items-center justify-center rounded-full border border-mj-line bg-white px-6 text-[15.5px] font-semibold text-mj-ink transition-colors hover:border-mj-ink/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mj-accent sm:w-auto"
+                        >
                             {HERO.ctaSecondary}
-                        </ScrollLink>
+                        </Link>
                     </div>
                     <p className="mx-auto mt-5 flex max-w-[620px] items-start justify-center gap-2 text-[13.5px] leading-relaxed text-mj-muted">
                         <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-mj-accent" aria-hidden />
@@ -140,7 +144,7 @@ export function Hero() {
                     </p>
                 </div>
 
-                <div className="relative mx-auto mt-14 max-w-[1040px] sm:mt-16">
+                <div className="relative mx-auto mt-12 max-w-[980px] sm:mt-14">
                     <HeroMock />
                     {hasVideo && (
                         <button

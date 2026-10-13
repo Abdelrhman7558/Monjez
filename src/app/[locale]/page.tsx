@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans_Arabic, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { ContractorLanding } from "@/components/landing/landing";
 import { LandingTracking } from "@/components/landing/tracking";
+import { landingFontVars } from "@/components/landing/fonts";
 import type { Locale } from "@/components/landing/content";
-
-const display = Space_Grotesk({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-display", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono", display: "swap" });
-const arabic = IBM_Plex_Sans_Arabic({ subsets: ["arabic"], weight: ["400", "500", "600", "700"], variable: "--font-arabic", display: "swap" });
 
 const SITE = "https://www.monjez-agency.com";
 
@@ -60,7 +56,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
     const locale = toLocale((await params).locale);
     return (
-        <div className={`${display.variable} ${mono.variable} ${arabic.variable}`}>
+        <div className={landingFontVars}>
             <ContractorLanding locale={locale} />
             <LandingTracking />
         </div>

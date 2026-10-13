@@ -4,8 +4,10 @@
 //  - illustrative numbers are always labelled as illustrative
 //  - every workflow names where human review stays in place
 
-export const NAV_LINKS = [
-    { label: "System", id: "system" },
+export type NavLink = { label: string; id?: string; href?: string };
+
+export const NAV_LINKS: NavLink[] = [
+    { label: "System", href: "/system" },
     { label: "What We Build", id: "team" },
     { label: "Our Guarantee", id: "guarantee" },
     { label: "FAQ", id: "faq" },
@@ -55,9 +57,9 @@ export const IMPACT = {
         { kind: "potential", label: "Potential outcome", note: "Depends on your workflow, documents and volume." },
     ],
     calc: {
-        title: "What is the manual work costing you?",
-        sub: "Illustrative only. Change the inputs to match your team. In discovery we measure the real baseline before anyone signs anything.",
-        formula: "Hours released per year × loaded hourly cost",
+        title: "What is tender document work costing you?",
+        sub: "Drag the sliders. It’s the kind of time we measure in discovery, and the kind a workflow can take off your team.",
+        formula: "Tenders × hours × share assisted × 12 months × hourly cost",
     },
 };
 
@@ -343,35 +345,16 @@ export const TEAM = {
 };
 
 export const JOURNEY = {
-    eyebrow: "How we implement",
-    title: "From your current process",
-    titleAccent: "to a working workflow.",
-    sub: "Four steps, one workflow at a time.",
+    eyebrow: "How we work",
+    title: "From the first call",
+    titleAccent: "to a working system.",
+    sub: "Five steps, one workflow at a time.",
     stages: [
-        {
-            when: "Step 1",
-            title: "Understand the process",
-            body: "We map how the work runs today, identify the repetitive steps and record the baseline: time spent, frequency and the people involved.",
-            walk: "A mapped workflow and a measured baseline.",
-        },
-        {
-            when: "Step 2",
-            title: "Design the workflow",
-            body: "We define the inputs, business rules, integrations, outputs and approval points, and agree what success looks like.",
-            walk: "A written scope with clear approval points.",
-        },
-        {
-            when: "Step 3",
-            title: "Build and test",
-            body: "We implement the agreed workflow and validate it against representative company documents and scenarios, including the awkward ones.",
-            walk: "A workflow tested on your own documents.",
-        },
-        {
-            when: "Step 4",
-            title: "Deploy and improve",
-            body: "We introduce the workflow to your team, monitor how it behaves, handle exceptions and improve it based on observed results.",
-            walk: "A live workflow, measured against the baseline.",
-        },
+        { title: "We map how work moves through your team today and measure the baseline: time spent, frequency and the people involved." },
+        { title: "You get a scoped plan for the first workflow: its inputs, business rules, approval points and success criteria." },
+        { title: "We build inside the tools you already use, wherever integration is technically feasible, not around them." },
+        { title: "We test on your own documents, launch with your team and handle the exceptions that real work throws up." },
+        { title: "We stay on to monitor and improve it, and add the next workflow when the measured results justify it." },
     ],
     caveat: "Scope and timing depend on the complexity of the workflow, document quality, system access and integration requirements. A first workflow can be introduced within 7 days of kickoff when those are ready.",
 };
@@ -438,12 +421,12 @@ export const GUARANTEE = {
     titleAccent: "$50,000 a year",
     titleTail: "in validated capacity, you don’t pay.",
     sub: "We measure the value as payroll-equivalent hours your team gets back, against a baseline we agree with you before we build. The guarantee covers the outcome, not just the install.",
-    terms: [
-        "Offered once discovery confirms the value potential",
-        "Measured against an agreed baseline, over an agreed period",
-        "Set out in written terms before work starts",
+    tiles: [
+        { title: "Baseline first", body: "We measure the current workflow before we build, so results are compared with real numbers." },
+        { title: "Success criteria in writing", body: "Scope, measurement method and period are agreed in writing before work starts." },
+        { title: "An honest no-go", body: "If your numbers don’t justify the build, we say so, and propose a smaller guarantee or a paid pilot." },
     ],
-    honest: "If your numbers don’t support $50,000, we’ll say so and propose a smaller guarantee or a paid pilot instead.",
+    condition: "Offered once discovery confirms the value potential. Terms are set out in writing for each engagement.",
     ctaPrimary: "Review Your Workflow",
     ctaSecondary: "Explore the AI System",
 };
@@ -529,31 +512,100 @@ export const FOOTER = {
     ctaBtn: "Review Your Workflow",
 };
 
+export const SYSTEM_MAP = {
+    eyebrow: "The system",
+    title: "A system that knows",
+    titleAccent: "how your company works.",
+    sub: "When your processes are mapped and connected, each workflow works from your own documents and history (tender packs, BOQs, rate sheets, site updates), not generic templates.",
+    sourcesTitle: "Your operations",
+    sources: [
+        { id: "tenders", label: "Tender packs & drawings" },
+        { id: "boq", label: "BOQs" },
+        { id: "rates", label: "Rate sheets & past bids" },
+        { id: "quotes", label: "Supplier quotations" },
+        { id: "site", label: "Site updates & RFIs" },
+        { id: "trackers", label: "Project trackers & exports" },
+    ],
+    core: { title: "Company knowledge", sub: "Built from your documents" },
+    modules: [
+        { id: "tender", name: "Tender Management", status: "Building the requirements register", uses: ["tenders"], detail: "Reads each tender pack against your submission checklist and past tenders, so the register follows your format, not a generic one.", owner: "Bid manager" },
+        { id: "boq", name: "BOQ Analysis", status: "Checking BOQ lines against the specs", uses: ["boq", "tenders"], detail: "Structures the BOQ using your item codes and flags lines that don’t match the specification or drawings.", owner: "QS / estimator" },
+        { id: "pricing", name: "Estimating & Pricing", status: "Matching lines to your rate history", uses: ["boq", "rates", "quotes"], detail: "Drafts build-ups from your approved rates and past bids where available, with the source of every rate shown.", owner: "Commercial manager" },
+        { id: "procurement", name: "Procurement", status: "Comparing three ceiling quotations", uses: ["quotes", "boq"], detail: "Puts supplier quotations side by side against the BOQ, flagging exclusions, deviations and lead times.", owner: "Procurement manager" },
+        { id: "projects", name: "Project Operations", status: "Turning site notes into today’s report", uses: ["site", "trackers"], detail: "Turns site messages and notes into a structured daily report and keeps RFIs and actions up to date.", owner: "Project manager" },
+        { id: "reporting", name: "Management Reporting", status: "Preparing the weekly owner report", uses: ["trackers", "tenders", "quotes"], detail: "Pulls the agreed figures from connected trackers and exports into one weekly view, with sources.", owner: "Owner / GM" },
+    ],
+    labels: { uses: "Draws on", owner: "Approved by", hint: "Select a workflow to see what it draws on" },
+    note: "Illustrative demonstration. Which sources are connected, and which workflows are built, depends on your agreed scope and on integration feasibility.",
+    cta: "Explore the full system",
+};
+
+export const SYSTEM_PAGE = {
+    eyebrow: "The Monjez system",
+    title: "Scattered work,",
+    titleAccent: "one connected system.",
+    sub: "Tender packs in inboxes, rates in old spreadsheets, updates in WhatsApp groups. Monjez brings the work your team repeats every week into connected workflows built on one shared base of company knowledge.",
+    chips: ["Tender packs", "BOQs", "Rate sheets", "Supplier quotes", "Site reports", "RFIs", "Submittals", "Progress claims", "Weekly reports", "Follow-ups"],
+    core: "Your company’s AI workflows",
+    ctaPrimary: "Review Your Workflow",
+    ctaSecondary: "See the workflows",
+    accessTitle: "How to see it working",
+    accessBody:
+        "The system is built around each company’s own documents, so there’s no public login or one-size demo. In a workflow review we walk through it with examples close to your own work, and show what the first workflow would look like for you.",
+    metaTitle: "The Monjez System | Connected AI workflows for GCC contractors",
+    metaDescription: "How Monjez connects tender, BOQ, estimating, procurement, project and reporting workflows around your company’s own documents, with your team approving the results.",
+};
+
+export const RESOURCES = {
+    eyebrow: "Smart Free Resources",
+    title: "Practical resources for",
+    titleAccent: "construction & fit-out teams.",
+    sub: "Guides, case studies and videos on tendering, estimating and operations, and where AI genuinely helps. No fluff, no gatekeeping.",
+    filters: { all: "All", guide: "Guides", case: "Case studies", video: "Videos", checklist: "Checklists & templates" },
+    explore: "Explore",
+    watch: "Watch",
+    minRead: "min read",
+    minWatch: "min video",
+    empty: "Nothing published in this category yet. We’re adding resources as they’re ready.",
+    back: "All resources",
+    sources: "Sources",
+    ctaTitle: "Want this applied to your own workflow?",
+    ctaBody: "Book a workflow review and we’ll look at one real example from your team.",
+    ctaBtn: "Review Your Workflow",
+    metaTitle: "Smart Free Resources | Monjez",
+    metaDescription: "Free guides, case studies and videos for GCC construction and fit-out companies on tendering, estimating, operations and practical AI.",
+};
+
 // Interface strings that live inside components.
 export const UI = {
     langSwitch: { label: "العربية", aria: "التبديل إلى العربية", href: "ar" },
-    skip: "Skip to application",
-    nav: { home: "Monjez, back to top", open: "Open menu", close: "Close menu", apply: "Apply", main: "Main" },
+    skip: "Skip to content",
+    nav: { home: "Monjez, back to top", open: "Open menu", close: "Close menu", apply: "Apply", main: "Main", resources: "Smart Free Resources" },
     hero: { sample: "Illustrative demonstration · sample tender", watch: "Watch the 2-minute walkthrough", videoTitle: "Monjez walkthrough" },
     impact: {
         illustrative: "Illustrative example",
         potential: "Potential outcome",
         sliders: {
-            tenders: "Tenders & quotes priced per month",
-            hours: "Hours of document work per tender",
+            tenders: "Tenders priced per month",
+            hours: "Document hours per tender",
             hoursHint: "Reading the pack, re-keying BOQs, building comparison sheets",
-            share: "Share handed to the agent",
+            share: "Share a workflow could assist",
             shareHint: "After your team’s review time",
             rate: "Loaded hourly cost (USD)",
             hourUnit: "h",
         },
-        resultLabel: "Payroll-equivalent capacity / year",
-        hoursYear: "Hours released / year",
+        resultLabel: "Estimated labour value / year",
+        hoursMonth: "hrs / month released",
+        hoursYear: "Hours / year",
         equal: "Equal to",
         weeks: "work-weeks",
-        disclaimer: "This is arithmetic on your assumptions, not a quote, a client result or a guarantee. Hours only count as value once they’re actually released from the task.",
+        basedOn: (share: number) => `Based on ${share}% assisted`,
+        estimate: "Illustrative estimate",
+        noDouble: "Hours and value are the same saving, shown two ways. They are not added together.",
+        disclaimer: "Arithmetic on your own assumptions, not a quote, a client result or a guarantee. Hours only count once they’re actually released from the task.",
         cta: "Measure your real baseline",
     },
+
     os: { tablist: "Workflows", workflow: "Workflow", flowIn: "tender document in", flowOut: "management reporting", compare: "Compare process", sample: "Illustrative demonstration · not client data", goNext: "Go to next workflow" },
     team: {
         file: "Module",
@@ -565,7 +617,7 @@ export const UI = {
         worksInside: "Can connect with (subject to feasibility)",
         control: "Approval & control",
     },
-    journey: { stage: "Stage", walk: "You walk away with" },
+    journey: { stage: "Step", walk: "You walk away with" },
     gcc: {
         monjez: "Monjez",
         alternative: "Typical alternative",
@@ -652,6 +704,6 @@ export const UI = {
     },
 };
 
-export const EN = { NAV_LINKS, HERO, IMPACT, OS, TEAM, JOURNEY, TRUST, GCC, TESTIMONIAL, GUARANTEE, FAQ, APPLY, FOOTER, UI };
+export const EN = { NAV_LINKS, HERO, IMPACT, SYSTEM_MAP, SYSTEM_PAGE, RESOURCES, OS, TEAM, JOURNEY, TRUST, GCC, TESTIMONIAL, GUARANTEE, FAQ, APPLY, FOOTER, UI };
 export type Content = typeof EN;
 export type Locale = "en" | "ar";
