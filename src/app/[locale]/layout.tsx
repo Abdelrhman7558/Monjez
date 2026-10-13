@@ -45,9 +45,9 @@ export const metadata: Metadata = {
     images: ["/logo.png"],
   },
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
+    icon: [{ url: "/favicon.ico" }, { url: "/brand/monjez-icon.png", type: "image/png" }],
+    apple: "/brand/apple-icon.png",
+    shortcut: "/favicon.ico",
   },
 };
 

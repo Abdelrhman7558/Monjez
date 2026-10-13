@@ -444,7 +444,7 @@ const REVIEW_EN = {
 export type ReviewContent = typeof REVIEW_EN;
 
 const REVIEW_AR: ReviewContent = {
-    metaTitle: "مراجعة سير العمل | منجز",
+    metaTitle: "مراجعة سير العمل | Monjez",
     metaDescription: "كيف يراجع منجز سير العمل عند المقاول في الخليج: المناقصات، الـBOQ، المشتريات والتقارير. نقيس الـBaseline ونحدد أول AI Agent. مع نموذج مراجعة كامل.",
     entry: {
         eyebrow: "مراجعة سير العمل",

@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const t = localized(r, locale);
     const url = `${SITE}/${locale}/resources/${r.slug}`;
     return {
-        title: `${t.title} | ${locale === "ar" ? "منجز" : "Monjez"}`,
+        title: `${t.title} | Monjez`,
         description: t.excerpt,
         alternates: { canonical: url, languages: { en: `${SITE}/en/resources/${r.slug}`, ar: `${SITE}/ar/resources/${r.slug}` } },
         openGraph: { title: t.title, description: t.excerpt, url, siteName: "Monjez", type: "article", images: [{ url: "/brand/og-monjez.png", width: 1200, height: 630 }] },

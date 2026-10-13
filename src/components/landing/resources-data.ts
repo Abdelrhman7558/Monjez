@@ -1,3 +1,4 @@
+import { NEW_RESOURCES } from "./resources-extra";
 // Smart Free Resources — the library content.
 // Only real, published material goes here. To add a resource, append an entry; the page, filters and detail route pick it up.
 
@@ -25,6 +26,7 @@ export type Resource = {
 };
 
 export const RESOURCES_LIST: Resource[] = [
+    ...NEW_RESOURCES,
     {
         slug: "ai-takeoff-estimating-evidence",
         type: "guide",

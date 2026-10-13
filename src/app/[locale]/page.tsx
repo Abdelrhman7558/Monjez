@@ -8,13 +8,13 @@ const SITE = "https://www.monjez-agency.com";
 
 const META: Record<Locale, { title: string; description: string; ogLocale: string }> = {
     en: {
-        title: "Monjez | Custom AI Agents for GCC Fit-out & Construction Contractors",
+        title: "Monjez",
         description:
             "Monjez builds custom AI agents for GCC contractors: tender packs, BOQs, pricing, procurement and reporting, inside the tools you already use, with your team approving every number. First agent live within 7 days of kickoff.",
         ogLocale: "en_US",
     },
     ar: {
-        title: "منجز | وكلاء ذكاء اصطناعي مخصصين لشركات المقاولات والـFit-out في الخليج",
+        title: "Monjez",
         description:
             "منجز تبني وكلاء ذكاء اصطناعي لمقاولين الخليج: ملفات المناقصات والـBOQ والتسعير والمشتريات والتقارير، داخل نفس أدواتكم، وفريقكم يعتمد كل رقم. أول وكيل يشتغل خلال 7 أيام من البداية.",
         ogLocale: "ar_AE",

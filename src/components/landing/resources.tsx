@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowLeft, BookOpen, ClipboardCheck, FileText, Play, Sparkles, type LucideIcon } from "lucide-react";
+import { ArrowLeft, ClipboardCheck, Play, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "@/navigation";
 import { useContent, useLocale } from "./content-context";
@@ -10,19 +10,73 @@ import { LandingShell } from "./shell";
 import { RESOURCE_TYPES, RESOURCES_LIST, getResource, localized, type Resource, type ResourceType } from "./resources-data";
 import type { Locale } from "./content";
 
-const TYPE_ICON: Record<ResourceType, LucideIcon> = { guide: BookOpen, case: FileText, video: Play, checklist: ClipboardCheck };
 
-/** Typographic cover: no stock imagery or fake screenshots. */
+/** Illustrated cover per resource type: drawn in code, no stock imagery or fake client screenshots. */
+function CoverArt({ r }: { r: Resource }) {
+    if (r.type === "video")
+        return (
+            <div className="absolute inset-0 flex items-center justify-center">
+                <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 backdrop-blur-sm">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full bg-mj-accent-line text-mj-ink shadow-[0_0_40px_rgba(207,198,236,0.45)]">
+                        <Play className="h-6 w-6 translate-x-0.5 fill-current" aria-hidden />
+                    </span>
+                    <div className="space-y-1.5" dir="ltr">
+                        <span className="block h-2 w-28 rounded-full bg-white/50" />
+                        <span className="block h-2 w-20 rounded-full bg-white/25" />
+                        <span className="block font-mono text-[10px] text-white/60">{r.minutes}:36</span>
+                    </div>
+                </div>
+            </div>
+        );
+    if (r.type === "case")
+        return (
+            <div className="absolute inset-x-6 bottom-5 top-12 flex items-center gap-3" dir="ltr">
+                <div className="grid flex-1 grid-cols-3 gap-1.5">
+                    {["XLSX", "PDF", "SHEET"].map((f) => (
+                        <span key={f} className="rounded-md border border-white/15 bg-white/[0.06] py-2 text-center font-mono text-[9px] text-white/70">
+                            {f}
+                        </span>
+                    ))}
+                </div>
+                <span className="text-mj-accent-line">→</span>
+                <div className="flex-1 space-y-1 rounded-lg border border-mj-accent-line/40 bg-mj-accent/25 p-2">
+                    {[0, 1, 2, 3].map((i) => (
+                        <div key={i} className="flex gap-1">
+                            <span className="h-1.5 w-1/3 rounded-full bg-white/60" />
+                            <span className="h-1.5 w-1/4 rounded-full bg-white/30" />
+                            <span className="h-1.5 w-1/5 rounded-full bg-mj-accent-line/70" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    return (
+        <div className="absolute inset-x-6 bottom-5 top-12 overflow-hidden rounded-lg border border-white/15 bg-white/[0.05]" dir="ltr">
+            <div className="grid grid-cols-[28px_1fr_36px_44px] gap-2 border-b border-white/10 px-2.5 py-1.5 font-mono text-[8.5px] text-white/50">
+                <span>#</span>
+                <span>ITEM</span>
+                <span>UNIT</span>
+                <span>QTY</span>
+            </div>
+            {[0, 1, 2, 3, 4].map((i) => (
+                <div key={i} className={cn("grid grid-cols-[28px_1fr_36px_44px] items-center gap-2 px-2.5 py-1.5", i === 2 && "bg-mj-accent/35")}>
+                    <span className="font-mono text-[8.5px] text-white/40">{i + 1}.0{i + 2}</span>
+                    <span className="h-1.5 rounded-full bg-white/40" style={{ width: `${55 + ((i * 17) % 40)}%` }} />
+                    <span className="h-1.5 w-5 rounded-full bg-white/25" />
+                    <span className={cn("h-1.5 w-7 rounded-full", i === 2 ? "bg-mj-accent-line" : "bg-white/25")} />
+                </div>
+            ))}
+        </div>
+    );
+}
+
 function Cover({ r, label, big }: { r: Resource; label: string; big?: boolean }) {
-    const Icon = TYPE_ICON[r.type];
     return (
         <div className={cn("relative overflow-hidden bg-mj-ink", big ? "aspect-[21/9] rounded-3xl" : "aspect-[16/9]")}>
             <div aria-hidden className="absolute inset-0 opacity-70 [background-image:linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:28px_28px]" />
             <div aria-hidden className="absolute -end-10 -top-10 h-40 w-40 rounded-full bg-[#5A47B5]/40 blur-2xl" />
+            <CoverArt r={r} />
             <span className="absolute start-4 top-4 rounded-full bg-mj-accent-line px-3 py-1 font-mono text-[10.5px] font-medium uppercase tracking-[0.12em] text-mj-ink">{label}</span>
-            <span className={cn("absolute bottom-4 end-4 flex items-center justify-center rounded-2xl border border-white/15 bg-white/[0.06] text-white", big ? "h-16 w-16" : "h-12 w-12")}>
-                <Icon className={big ? "h-7 w-7" : "h-5 w-5"} aria-hidden />
-            </span>
         </div>
     );
 }

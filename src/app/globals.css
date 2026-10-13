@@ -156,3 +156,11 @@ body:has(.mj-landing) {
 .mj-typing-dot { animation: mj-typing-dot 1s ease-in-out infinite; }
 @keyframes mj-typing-dot { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-2px); } }
 @media (prefers-reduced-motion: reduce) { .mj-globe-glow, .mj-typing-dot { animation: none; } }
+
+/* System page core: soft violet glow that breathes slowly */
+.mj-core-glow { box-shadow: 0 0 0 10px rgba(77,59,155,0.10), 0 0 30px 6px rgba(124,99,214,0.35); animation: mj-core-glow 3s ease-in-out infinite; }
+@keyframes mj-core-glow {
+  0%, 100% { box-shadow: 0 0 0 10px rgba(77,59,155,0.10), 0 0 28px 4px rgba(124,99,214,0.30); }
+  50% { box-shadow: 0 0 0 16px rgba(77,59,155,0.14), 0 0 60px 18px rgba(124,99,214,0.55); }
+}
+@media (prefers-reduced-motion: reduce) { .mj-core-glow { animation: none; } }

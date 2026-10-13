@@ -32,6 +32,16 @@ function Converge() {
   }, [inView, reduce]);
 
   const chips = P.chips;
+  // One colour per work item, all light enough to keep the ink text readable.
+  const tones = [
+    ["#EEEAF8", "#CFC6EC", "#4D3B9B"],
+    ["#E6F1EA", "#BFDCCB", "#2F6B4F"],
+    ["#F8EBE3", "#EBC9B5", "#B5532A"],
+    ["#E5EEF9", "#BCD3EE", "#2A5C9A"],
+    ["#FBF1D9", "#EBD59C", "#9A6B12"],
+    ["#F6E6EF", "#E5BED3", "#9B3B6E"],
+    ["#E4F3F3", "#B7DDDD", "#1F6F70"],
+  ];
   return (
     <div
       ref={ref}
@@ -46,7 +56,8 @@ function Converge() {
         return (
           <motion.span
             key={c}
-            className="absolute left-1/2 top-1/2 whitespace-nowrap rounded-full border border-mj-line bg-white px-2.5 py-1 text-[11px] font-medium text-mj-ink shadow-sm sm:px-3 sm:text-[12.5px]"
+            style={{ backgroundColor: tones[i % tones.length][0], borderColor: tones[i % tones.length][1] }}
+            className="absolute left-1/2 top-1/2 whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-medium text-mj-ink shadow-sm sm:px-3 sm:text-[12.5px]"
             initial={false}
             animate={{
               left: out ? `${50 + px}%` : "50%",
@@ -62,14 +73,14 @@ function Converge() {
               delay: out ? i * 0.04 : (chips.length - i) * 0.03,
             }}
           >
-            <span className="me-1.5 inline-block h-1.5 w-1.5 rounded-full bg-mj-accent align-middle" />
+            <span className="me-1.5 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ backgroundColor: tones[i % tones.length][2] }} />
             {c}
           </motion.span>
         );
       })}
       <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
         <motion.span
-          className="relative flex h-20 w-20 items-center justify-center rounded-full bg-mj-ink shadow-[0_0_0_10px_rgba(77,59,155,0.08),0_0_0_22px_rgba(77,59,155,0.05)] sm:h-24 sm:w-24"
+          className="mj-core-glow relative flex h-20 w-20 items-center justify-center rounded-full bg-mj-ink sm:h-24 sm:w-24"
           animate={reduce ? undefined : { scale: gathered ? 1.08 : 1 }}
           transition={{ duration: 0.6 }}
         >
@@ -105,7 +116,10 @@ function SystemPageBody() {
       <section className="relative overflow-hidden bg-mj-cream pb-14 pt-28 sm:pt-32 lg:pb-16 lg:pt-36">
         <HeroFrame />
         <Container className="relative">
-          <Reveal className="mx-auto max-w-[720px] text-center">
+          <Reveal>
+            <Converge />
+          </Reveal>
+          <Reveal className="mx-auto mt-6 max-w-[720px] text-center">
             <Eyebrow>{P.eyebrow}</Eyebrow>
             <h1 className="mt-4 text-balance font-display text-[32px] font-semibold leading-[1.08] tracking-[-0.03em] text-mj-ink sm:text-[42px] lg:text-[50px]">
               {P.title} <span className="text-mj-accent">{P.titleAccent}</span>
@@ -132,9 +146,6 @@ function SystemPageBody() {
                 {P.ctaSecondary}
               </ScrollLink>
             </div>
-          </Reveal>
-          <Reveal className="mt-12">
-            <Converge />
           </Reveal>
         </Container>
       </section>

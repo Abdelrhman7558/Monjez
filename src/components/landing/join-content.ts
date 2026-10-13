@@ -9,7 +9,7 @@ export const JOIN = {
         cta: "Email us",
     },
     ar: {
-        metaTitle: "انضم للفريق | منجز",
+        metaTitle: "انضم للفريق | Monjez",
         metaDescription: "الوظائف في منجز. ما فيه وظائف معلنة حالياً.",
         eyebrow: "انضم للفريق",
         title: "ابنِ أنظمة AI للناس اللي يبنون الخليج.",
