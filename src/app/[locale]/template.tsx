@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 
-const LANDING = /^\/(en|ar)?\/?$|^\/(en|ar)\/(system|resources|review)(\/.*)?$/;
+const LANDING = /^\/(en|ar)?\/?$|^\/(en|ar)\/(system|resources|review|join)(\/.*)?$/;
 
 export default function Template({ children }: { children: React.ReactNode }) {
     // The contractor landing renders immediately: a server-rendered opacity:0 wrapper would hide the hero until hydration.

@@ -40,6 +40,12 @@ export const SAMPLE_ROWS = [
 const REVIEW_EN = {
     metaTitle: "Workflow Review | Monjez",
     metaDescription: "How Monjez reviews a GCC contractor's tender, BOQ, procurement and reporting workflows, measures a baseline, and scopes the first AI agent. With a full sample review.",
+    entry: {
+        eyebrow: "Workflow Review",
+        title: "See exactly what the review covers",
+        sub: "Walk through a full sample review of a fictional fit-out contractor: every stage, the value model, the agents we would build and how the rollout runs.",
+        cta: "Explore the review",
+    },
     banner: "No-fee Workflow Review for GCC construction and fit-out teams.",
     bannerCta: "Book a call",
     toc: "On this page",
@@ -440,6 +446,12 @@ export type ReviewContent = typeof REVIEW_EN;
 const REVIEW_AR: ReviewContent = {
     metaTitle: "مراجعة سير العمل | منجز",
     metaDescription: "كيف يراجع منجز سير العمل عند المقاول في الخليج: المناقصات، الـBOQ، المشتريات والتقارير. نقيس الـBaseline ونحدد أول AI Agent. مع نموذج مراجعة كامل.",
+    entry: {
+        eyebrow: "مراجعة سير العمل",
+        title: "شوف بالضبط وش تغطي المراجعة",
+        sub: "امشِ على نموذج مراجعة كامل لشركة Fit-out خيالية: كل مرحلة، ونموذج القيمة، والـAgents اللي نبنيها، وكيف يمشي التنفيذ.",
+        cta: "استكشف المراجعة",
+    },
     banner: "مراجعة سير عمل بدون رسوم لشركات المقاولات والـFit-out في الخليج.",
     bannerCta: "احجز مكالمة",
     toc: "في هذي الصفحة",

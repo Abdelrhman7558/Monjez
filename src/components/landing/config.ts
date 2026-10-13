@@ -17,8 +17,8 @@ export const LANDING_CONFIG = {
     // Existing public channels (from src/components/layout/footer.tsx).
     contactEmail: "support@monjez-agency.com",
     social: {
-        linkedin: "https://www.linkedin.com/company/monjez1/",
+        linkedin: "https://www.linkedin.com/company/monjezz/",
         instagram: "https://www.instagram.com/monjez41/",
-        facebook: "https://www.facebook.com/profile.php?id=61587799739627",
+        facebook: "https://www.facebook.com/profile.php?id=61595519932756",
     },
 } as const;

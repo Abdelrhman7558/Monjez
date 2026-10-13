@@ -11,6 +11,7 @@ export const AR: Content = {
         { label: "مراجعة سير العمل", href: "/review" },
         { label: "ضماننا", id: "guarantee" },
         { label: "الأسئلة", id: "faq" },
+        { label: "انضم للفريق", href: "/join" },
     ],
 
     HERO: {
@@ -638,6 +639,7 @@ export const AR: Content = {
         },
         footer: {
             explore: "استكشف",
+            company: "الشركة",
             results: "النتائج",
             apply: "قدّم",
             privacy: "الخصوصية",

@@ -12,6 +12,7 @@ export const NAV_LINKS: NavLink[] = [
     { label: "Workflow Review", href: "/review" },
     { label: "Our Guarantee", id: "guarantee" },
     { label: "FAQ", id: "faq" },
+    { label: "Join the Team", href: "/join" },
 ];
 
 export const HERO = {
@@ -693,6 +694,7 @@ export const UI = {
     },
     footer: {
         explore: "Explore",
+        company: "Company",
         results: "Results",
         apply: "Apply",
         privacy: "Privacy",

@@ -11,7 +11,7 @@ import type { NavLink } from "./content";
 
 export function Logo({ light, className }: { light?: boolean; className?: string }) {
     return (
-        <span dir="ltr" className={cn("flex items-center gap-2.5", className)}>
+        <span dir="ltr" className={cn("inline-flex items-center gap-2.5", className)}>
             <Image
                 src={light ? "/brand/monjez-mark-light.webp" : "/brand/monjez-mark.webp"}
                 alt=""

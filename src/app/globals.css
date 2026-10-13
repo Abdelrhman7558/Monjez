@@ -149,3 +149,10 @@ body:has(.mj-landing) {
 @media (prefers-reduced-motion: reduce) {
   .mj-flow-on, .mj-core-pulse, .mj-typing::after { animation: none; }
 }
+
+/* GCC map: country globes with a slow, restrained glow */
+.mj-globe-glow { transform-box: fill-box; transform-origin: center; animation: mj-globe-glow 3.2s ease-in-out infinite; }
+@keyframes mj-globe-glow { 0%, 100% { opacity: 0.18; transform: scale(1); } 50% { opacity: 0.42; transform: scale(1.45); } }
+.mj-typing-dot { animation: mj-typing-dot 1s ease-in-out infinite; }
+@keyframes mj-typing-dot { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-2px); } }
+@media (prefers-reduced-motion: reduce) { .mj-globe-glow, .mj-typing-dot { animation: none; } }
