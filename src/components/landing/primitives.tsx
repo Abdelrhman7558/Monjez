@@ -270,7 +270,7 @@ export function Chip({ children, tone = "neutral", className }: { children: Reac
 export function HeroFrame() {
     return (
         <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute inset-0 opacity-70 [background-image:linear-gradient(to_right,#E7E1D6_1px,transparent_1px),linear-gradient(to_bottom,#E7E1D6_1px,transparent_1px)] [background-size:48px_48px] [mask-image:linear-gradient(to_bottom,black_55%,transparent)]" />
+            <div className="absolute inset-0 opacity-70 [background-image:linear-gradient(to_right,#E7E1D6_1px,transparent_1px),linear-gradient(to_bottom,#E7E1D6_1px,transparent_1px)] [background-size:48px_48px] [mask-image:linear-gradient(to_bottom,black_38%,transparent_60%)]" />
             <div className="absolute inset-x-3 bottom-0 top-[84px] border-x border-t border-dashed border-mj-accent-line [mask-image:linear-gradient(to_bottom,black_60%,transparent)] sm:inset-x-6">
                 <span className="absolute -start-px -top-px h-8 w-8 border-s-2 border-t-2 border-mj-accent" />
                 <span className="absolute -end-px -top-px h-8 w-8 border-e-2 border-t-2 border-mj-accent" />
