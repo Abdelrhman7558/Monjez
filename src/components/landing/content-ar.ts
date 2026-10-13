@@ -8,6 +8,7 @@ export const AR: Content = {
     NAV_LINKS: [
         { label: "النظام", href: "/system" },
         { label: "وش نبني", id: "team" },
+        { label: "مراجعة سير العمل", href: "/review" },
         { label: "ضماننا", id: "guarantee" },
         { label: "الأسئلة", id: "faq" },
     ],

@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.8,
         },
         ...["en", "ar"].flatMap((l) =>
-            ["", "/system", "/resources", ...RESOURCES_LIST.map((r) => `/resources/${r.slug}`)].map((path) => ({
+            ["", "/system", "/review", "/resources", ...RESOURCES_LIST.map((r) => `/resources/${r.slug}`)].map((path) => ({
                 url: `https://www.monjez-agency.com/${l}${path}`,
                 lastModified: new Date(),
                 changeFrequency: "weekly" as const,
