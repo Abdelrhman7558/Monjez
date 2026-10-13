@@ -6,6 +6,7 @@ import { Impact } from "./impact";
 import { OperatingSystem } from "./operating-system";
 import { AiTeam } from "./ai-team";
 import { Journey } from "./journey";
+import { Trust } from "./trust";
 import { Gcc } from "./gcc";
 import { Testimonial } from "./testimonial";
 import { Guarantee } from "./guarantee";
@@ -41,6 +42,7 @@ function LandingBody({ locale }: { locale: Locale }) {
                 <OperatingSystem />
                 <AiTeam />
                 <Journey />
+                <Trust />
                 <Gcc />
                 <Testimonial />
                 <Guarantee />

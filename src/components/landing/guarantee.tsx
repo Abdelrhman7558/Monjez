@@ -39,7 +39,7 @@ export function Guarantee() {
                                 {G.ctaPrimary}
                             </ScrollLink>
                             <ScrollLink
-                                to="team"
+                                to="system"
                                 variant="secondary"
                                 size="lg"
                                 className="w-full border-white/20 bg-transparent text-white hover:border-white/50 sm:w-auto"

@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Check, Clock, Link2, Mic } from "lucide-react";
+import { AlertTriangle, Check, Clock, FileSpreadsheet, FileText, Link2, Mail, MessageCircle, Mic, Phone, StickyNote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { WorkflowVisual } from "./content";
 import { Chip, WindowFrame } from "./primitives";
@@ -61,7 +61,7 @@ function Register() {
                 <Footer>
                     <Chip tone="flag">Conflict: spec vs BOQ</Chip>
                     <Chip>Draft RFI prepared</Chip>
-                    <Chip tone="accent">Go / no-go → Tender Manager</Chip>
+                    <Chip tone="accent">Decision → Bid manager</Chip>
                 </Footer>
             </div>
         </WindowFrame>
@@ -299,4 +299,110 @@ export function WorkflowVisualView({ type }: { type: WorkflowVisual }) {
         case "report":
             return <Report />;
     }
+}
+
+// ---------- "How it works today": the manual starting point for each workflow (illustrative) ----------
+
+type Source = "email" | "excel" | "pdf" | "whatsapp" | "call" | "note";
+type TodayRow = { src: Source; label: string; meta: string; tag: string; warn?: boolean };
+
+const SOURCE_ICON = { email: Mail, excel: FileSpreadsheet, pdf: FileText, whatsapp: MessageCircle, call: Phone, note: StickyNote } as const;
+
+const TODAY: Record<WorkflowVisual, { label: string; rows: TodayRow[]; footer: string[] }> = {
+    register: {
+        label: "inbox / tenders · 14 unread",
+        rows: [
+            { src: "email", label: "RE: Tower B fit-out ITT, 6 attachments", meta: "62 MB zip", tag: "Downloaded by hand" },
+            { src: "excel", label: "Compliance_checklist_v7_FINAL(2).xlsx", meta: "edited by 3 people", tag: "Retyped", warn: true },
+            { src: "pdf", label: "Addendum_03.pdf", meta: "received yesterday", tag: "Not checked yet", warn: true },
+            { src: "whatsapp", label: "“Did anyone confirm the bid bond %?”", meta: "Tender team group", tag: "Unanswered", warn: true },
+        ],
+        footer: ["No single register", "Deadlines tracked from memory"],
+    },
+    boq: {
+        label: "estimating / BOQ_Rev02 (locked).pdf",
+        rows: [
+            { src: "pdf", label: "BOQ_Rev02.pdf, 31 pages", meta: "scanned, locked", tag: "Retyped line by line", warn: true },
+            { src: "excel", label: "Estimate_TowerB_draft.xlsx", meta: "418 rows", tag: "Copy-pasted" },
+            { src: "note", label: "“m2 vs sqm? check section 5”", meta: "estimator note", tag: "Manual check" },
+            { src: "email", label: "Missing qty on item 4.02?", meta: "to consultant, no reply", tag: "Found late", warn: true },
+        ],
+        footer: ["Errors found at pricing stage", "Depends on one estimator"],
+    },
+    pricing: {
+        label: "estimating / rates",
+        rows: [
+            { src: "excel", label: "Marina_Office_2025_FINAL.xlsx", meta: "last similar job", tag: "Rates copied" },
+            { src: "email", label: "Gypsum quote, Supplier B", meta: "PDF attachment", tag: "Re-keyed" },
+            { src: "call", label: "“What margin did we use last time?”", meta: "call with commercial", tag: "From memory", warn: true },
+            { src: "excel", label: "Rate_library_old.xlsx", meta: "updated 2023", tag: "Out of date", warn: true },
+        ],
+        footer: ["No source behind each rate", "Margin depends on who prices"],
+    },
+    procurement: {
+        label: "procurement / ceiling quotes",
+        rows: [
+            { src: "email", label: "Quotation_SupplierA.pdf", meta: "PDF, 6 pages", tag: "Retyped" },
+            { src: "whatsapp", label: "Supplier B: price in a voice note", meta: "WhatsApp", tag: "Transcribed by hand", warn: true },
+            { src: "excel", label: "Comparison_ceilings_v3.xlsx", meta: "built manually", tag: "Exclusions missed?", warn: true },
+            { src: "call", label: "Chasing Supplier C for revised quote", meta: "3rd follow-up", tag: "Manual chasing" },
+        ],
+        footer: ["Not like for like", "Follow-ups in personal chats"],
+    },
+    tracker: {
+        label: "project / tower-b · today",
+        rows: [
+            { src: "whatsapp", label: "Site group: 47 new messages", meta: "photos + voice notes", tag: "Read manually" },
+            { src: "excel", label: "RFI_log_TowerB.xlsx", meta: "last updated 9 days ago", tag: "Out of date", warn: true },
+            { src: "call", label: "PM calls foreman for progress", meta: "daily", tag: "Status chasing" },
+            { src: "email", label: "Submittal Rev B, consultant comments", meta: "unread", tag: "Missed", warn: true },
+        ],
+        footer: ["No single action list", "Overdue items noticed late"],
+    },
+    report: {
+        label: "owner / weekly meeting prep",
+        rows: [
+            { src: "whatsapp", label: "“Send me tender status before 9am”", meta: "to 5 people", tag: "Chasing updates" },
+            { src: "excel", label: "Weekly_report_w42.xlsx", meta: "rebuilt from scratch", tag: "Manual", warn: true },
+            { src: "email", label: "Procurement update (partial)", meta: "2 of 5 replied", tag: "Incomplete", warn: true },
+            { src: "excel", label: "Finance_export_Sept.xlsx", meta: "last month", tag: "Out of date" },
+        ],
+        footer: ["Numbers without sources", "Out of date by the meeting"],
+    },
+};
+
+export function TodayView({ type }: { type: WorkflowVisual }) {
+    const d = TODAY[type];
+    return (
+        <WindowFrame dir="ltr" label={d.label} right={<Chip>Manual today</Chip>}>
+            <div className="bg-mj-cream/40 p-4">
+                <ul className="space-y-2">
+                    {d.rows.map((r) => {
+                        const Icon = SOURCE_ICON[r.src];
+                        return (
+                            <li key={r.label} className="flex items-start gap-3 rounded-xl border border-mj-line bg-white px-3 py-2.5">
+                                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-mj-sand text-mj-muted">
+                                    <Icon className="h-3.5 w-3.5" aria-hidden />
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate text-[13px] font-medium text-mj-ink">{r.label}</p>
+                                    <p className="text-[11.5px] text-mj-muted">{r.meta}</p>
+                                </div>
+                                <Chip tone={r.warn ? "flag" : "neutral"} className="shrink-0">
+                                    {r.tag}
+                                </Chip>
+                            </li>
+                        );
+                    })}
+                </ul>
+                <Footer>
+                    {d.footer.map((f) => (
+                        <Chip key={f} tone="flag">
+                            {f}
+                        </Chip>
+                    ))}
+                </Footer>
+            </div>
+        </WindowFrame>
+    );
 }

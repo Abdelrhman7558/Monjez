@@ -12,41 +12,41 @@ export const NAV_LINKS = [
 ];
 
 export const HERO = {
-    badge: "Arab-built AI systems for GCC fit-out & construction",
-    titleLead: "AI agents built for",
-    titleAccent: "GCC contractors.",
-    sub: "Your estimators shouldn’t spend the tender window retyping BOQs. Monjez builds custom AI agents that read tender packs, structure BOQs and prepare first-draft pricing inside the tools you already use — and your team approves every number.",
-    subStrong: "Your first agent goes live within 7 days of kickoff.",
-    ctaPrimary: "Book a Free Call",
-    ctaSecondary: "See the AI Team We Build",
-    stats: [
-        { value: "7 days", label: "from kickoff to your first live agent*" },
-        { value: "Your tools", label: "Excel, email, shared drives & ERP — no rip-and-replace" },
-        { value: "Human sign-off", label: "on every price, quantity and commitment" },
+    badge: "Custom AI systems for GCC fit-out & construction",
+    titleLead: "Help your team handle more work",
+    titleAccent: "without increasing headcount at the same rate.",
+    sub: "Monjez designs and implements custom AI systems for construction and fit-out companies across the GCC. We connect the repetitive work across tendering, BOQ analysis, estimating, procurement and project operations, with workflows designed around your existing tools and processes.",
+    timeline:
+        "Your first operational workflow can be introduced within 7 days of kickoff, once the agreed scope, required documents, system access and dependencies are ready.",
+    ctaPrimary: "Review Your Workflow",
+    ctaSecondary: "Explore the AI System",
+    trust: [
+        "Designed around your existing tools, subject to integration feasibility",
+        "Outputs you can review and trace to their sources where available",
+        "Your team keeps control of sensitive commercial decisions and approvals",
     ],
-    footnote: "*Once scope is agreed and we have sample documents, system access and a named process owner.",
 };
 
 export const IMPACT = {
     eyebrow: "Business impact",
-    title: "Less retyping. Faster bids.",
-    titleAccent: "Numbers you can trace.",
-    sub: "Most of the hours in a bid aren’t spent on judgement. They go on reading, re-keying and cross-checking. That’s the work we hand to AI, so your people spend their time on decisions.",
+    title: "Less manual entry. Faster estimating.",
+    titleAccent: "Every number traceable to its source.",
+    sub: "Most of the hours in a tender go on reading, re-keying and cross-checking, not on judgement. Monjez takes the repetitive processing off your team, so qualified people spend their time on the decisions that need them.",
     outcomes: [
         {
-            title: "More tenders, same estimating team",
-            body: "The first pass on every tender pack is done for your team: deadlines, bonds, submission requirements and missing documents in one register, each linked to its source page. Your people get to go/no-go sooner.",
-            proof: "depends on your tender volume",
+            title: "Handle more tenders with your existing estimating team",
+            body: "Tender requirements, deadlines, missing documents and bid-preparation tasks are organised for your team, so each opportunity takes less effort to process.",
+            proof: "Extra capacity depends on your workload and implementation results",
         },
         {
-            title: "Estimators back on estimating",
-            body: "BOQ lines arrive structured and checked against your own rate history, so estimators spend their time on judgement instead of data entry.",
-            proof: "depends on your BOQ formats",
+            title: "Let estimators focus on estimating",
+            body: "BOQ information arrives structured and checked. Where your historical pricing data and integrations are available, lines can also be compared with past rates.",
+            proof: "Historical pricing comparison depends on your data and agreed scope",
         },
         {
-            title: "One view for the owner",
-            body: "Tender pipeline, project actions and procurement follow-ups collected into one weekly view, so nobody has to chase five people on WhatsApp.",
-            proof: "depends on your data sources",
+            title: "Give company leaders a clearer operational picture",
+            body: "Available tender, project and procurement information comes together in structured reporting, so owners can see delays, outstanding decisions and bottlenecks without chasing updates from several people.",
+            proof: "Depends on the data sources that are connected",
         },
     ],
     legend: [
@@ -68,57 +68,72 @@ export type Workflow = {
     name: string;
     short: string;
     headline: string;
+    todayHeadline: string;
     today: string[];
     withMonjez: string[];
     needs: string[];
     produces: string[];
+    exceptions: string[];
+    reviewer: string;
     human: string;
+    next: string;
+    nextId: string;
     visual: WorkflowVisual;
 };
 
 export const OS = {
     eyebrow: "The operating system",
-    title: "One connected system, from the tender pack",
-    titleAccent: "to the owner’s desk.",
-    sub: "Six workflows where contractors lose the most hours to manual work. Pick one to see how it runs today, what changes, and where your team stays in control.",
-    disclaimer: "These are capability examples. Each one is scoped and tested against your documents before it goes live, and not every workflow suits every company.",
+    title: "From the tender document to management reporting,",
+    titleAccent: "within one connected system.",
+    sub: "Monjez connects the workflows your company needs, from tender review and BOQ analysis to estimating, procurement, project operations and management reporting. Explore any workflow to see how the work is handled today, how a proposed AI-assisted process could change it, and where your team reviews and approves the results.",
+    disclaimer:
+        "These are proposed workflow categories shown with illustrative data. Which workflows are built, and how they connect to your systems, depends on the agreed implementation scope.",
     labels: {
-        today: "How it runs today",
+        today: "How It Works Today",
         withMonjez: "With Monjez",
-        needs: "What it needs from you",
-        produces: "What it hands back",
+        todaySteps: "The manual process",
+        withSteps: "What the system processes",
+        needs: "Information coming in",
+        produces: "Output",
+        exceptions: "Flagged for review",
+        reviewer: "Reviewed & approved by",
+        next: "Next step",
         human: "Where your team stays in control",
     },
     workflows: [
         {
             id: "tender",
-            name: "Tender & Bid Response",
+            name: "Tender Management",
             short: "Tender",
-            headline: "From a full tender pack to a reviewed requirements register.",
+            headline: "A structured requirements register, built from the tender pack.",
+            todayHeadline: "A tender pack read by hand, against the deadline.",
             today: [
                 "The tender pack lands by email or portal: ITT, specs, drawings, BOQ, addenda",
                 "Someone reads it end to end to find dates, bonds, insurances and submission rules",
-                "The compliance checklist gets built by hand in Excel",
+                "The compliance checklist is built by hand in Excel",
                 "Addenda are re-checked manually and gaps surface late",
-                "Go/no-go happens days into the tender window",
             ],
             withMonjez: [
                 "Every document in the pack is classified and indexed",
                 "Deadlines, site visits, bonds, insurances and submission requirements are extracted",
                 "A requirements register is drafted, each line referenced to its source page",
                 "Missing documents and conflicting clauses are flagged",
-                "Your tender manager reviews it and makes the go/no-go call",
             ],
-            needs: ["ITT / RFP and tender documents", "Specifications, drawing lists and addenda", "Your submission checklist template"],
-            produces: ["Tender summary", "Requirements & compliance register", "Deadline calendar", "Draft clarification (RFI) list"],
-            human: "Go/no-go, and every clarification sent to the client, stays with your tender manager.",
+            needs: ["ITT / RFP and instructions to tenderers", "Specifications, drawing lists and addenda", "Your submission checklist template"],
+            produces: ["Requirements register", "Deadline summary", "Draft clarification (RFI) list"],
+            exceptions: ["Conflicts between specification and BOQ", "Documents referenced but not issued", "Unclear submission requirements"],
+            reviewer: "Bid / tender manager",
+            human: "The go/no-go decision, and every clarification sent to the client, stays with your bid manager.",
+            next: "The BOQ moves to BOQ Analysis",
+            nextId: "boq",
             visual: "register",
         },
         {
             id: "boq",
             name: "BOQ Analysis",
             short: "BOQ",
-            headline: "A clean, checked BOQ before your estimator prices a single line.",
+            headline: "A clean, checked BOQ before anyone prices a line.",
+            todayHeadline: "BOQs retyped and cleaned by hand.",
             today: [
                 "The BOQ arrives as a PDF or a locked Excel file",
                 "Line items are retyped or cleaned into your estimating sheet",
@@ -129,42 +144,50 @@ export const OS = {
                 "Line items are extracted into a structured sheet",
                 "Units and descriptions are normalised to your rules",
                 "Missing quantities, duplicates and provisional sums are flagged",
-                "Items are cross-checked against spec and drawing references",
-                "Your estimator reviews only the flagged lines",
+                "Items are cross-checked against specification and drawing references",
             ],
             needs: ["BOQ (PDF or Excel)", "Relevant specification sections", "Your item codes and naming conventions"],
-            produces: ["Structured BOQ dataset", "Exceptions report", "Questions for the consultant"],
-            human: "Quantities used for pricing are checked by your QS or estimator. The agent never silently “fixes” a quantity.",
+            produces: ["Structured BOQ", "Exceptions report", "Questions for the consultant"],
+            exceptions: ["Missing quantities", "Possible duplicate lines", "Unit or description mismatches", "Provisional sums"],
+            reviewer: "Quantity surveyor / estimator",
+            human: "Quantities used for pricing are checked by your QS or estimator. The system never silently “fixes” a quantity.",
+            next: "The checked BOQ moves to Estimating & Pricing",
+            nextId: "pricing",
             visual: "boq",
         },
         {
             id: "pricing",
-            name: "Pricing Intelligence",
+            name: "Estimating & Pricing",
             short: "Pricing",
-            headline: "Draft rate build-ups from your own history, with a source behind every rate.",
+            headline: "Draft rate build-ups with a source behind every rate.",
+            todayHeadline: "Rates copied from the last similar job.",
             today: [
                 "Rates are copied from the last similar job’s spreadsheet",
                 "Supplier prices are re-keyed by hand",
-                "Margins are applied from memory, and it depends on who’s pricing",
+                "Margins depend on who is pricing",
                 "Nobody can easily trace where a number came from",
             ],
             withMonjez: [
-                "BOQ lines are matched to your approved rate library and past priced jobs",
-                "The latest supplier quotations are pulled in where available",
+                "BOQ lines are matched to your approved rate library",
+                "Where historical pricing data is available, lines are compared with past rates",
                 "A draft build-up is prepared: material, labour, plant, overheads",
-                "Every rate shows its source, and lines without an approved rate are flagged",
-                "Your margin rules are applied and scenarios are prepared for commercial review",
+                "Every rate shows its source; lines without an approved rate are flagged",
             ],
-            needs: ["Historical priced BOQs", "Your rate library and supplier quotes", "Approved margin and risk rules"],
-            produces: ["Draft costing sheet", "Rate source trail", "Unpriced-lines list", "Pricing scenarios"],
-            human: "The agent never invents a missing rate. Final price, margin and risk acceptance stay with your commercial manager.",
+            needs: ["Structured BOQ", "Rate library and supplier quotations", "Historical priced projects (where available)", "Approved margin and risk rules"],
+            produces: ["Draft costing sheet", "Rate source trail", "Pricing scenarios for review"],
+            exceptions: ["Lines with no approved rate", "Rates outside your usual range", "Assumptions that affect the price"],
+            reviewer: "Estimation / commercial manager",
+            human: "No missing rate is invented. Final price, margin and risk acceptance stay with your commercial manager.",
+            next: "Approved quantities feed Procurement",
+            nextId: "procurement",
             visual: "pricing",
         },
         {
             id: "procurement",
-            name: "Procurement Coordination",
+            name: "Procurement",
             short: "Procurement",
             headline: "Like-for-like supplier comparisons, without the copy-paste.",
+            todayHeadline: "Quotes in every format, compared line by line.",
             today: [
                 "Quotations arrive in a different format from every supplier",
                 "The comparative statement is built by hand",
@@ -173,57 +196,70 @@ export const OS = {
             ],
             withMonjez: [
                 "Each quotation is extracted into one standard format",
-                "A like-for-like comparative statement is built automatically",
+                "A like-for-like comparative statement is built",
                 "Spec deviations, exclusions, lead times and payment terms are flagged",
-                "Clarification questions and reminders are drafted for you",
-                "Your procurement manager selects the supplier",
+                "Clarification questions and reminders are drafted for approval",
             ],
             needs: ["RFQs and material schedules", "Supplier quotations (PDF, Excel, email)", "Approved vendor list"],
-            produces: ["Comparative statement", "Deviations & exclusions list", "Follow-up tracker", "Draft clarification emails"],
-            human: "Supplier selection, LPOs and anything sent outside the company need your approval.",
+            produces: ["Comparative statement", "Deviations & exclusions list", "Follow-up tracker"],
+            exceptions: ["Spec deviations and alternate brands", "Exclusions and conditions", "Lead times beyond the programme"],
+            reviewer: "Procurement manager",
+            human: "Supplier selection, LPOs and anything sent outside the company follow your approval rules.",
+            next: "Orders and deliveries are tracked in Project Operations",
+            nextId: "coordination",
             visual: "procurement",
         },
         {
             id: "coordination",
-            name: "Project Coordination",
+            name: "Project Operations",
             short: "Projects",
-            headline: "Site updates, RFIs and actions in one place. No more chasing.",
+            headline: "Site updates, RFIs and actions in one place.",
+            todayHeadline: "Updates scattered across chats, calls and sheets.",
             today: [
                 "Updates are scattered across WhatsApp groups, emails and calls",
-                "PMs chase status every day",
+                "Project managers chase status every day",
                 "RFIs, submittals and actions live in separate sheets",
                 "Overdue items are noticed late",
             ],
             withMonjez: [
                 "Site voice notes, photos and messages become structured daily reports",
-                "RFI, submittal and action registers are kept up to date",
-                "Owners of overdue items get reminders",
+                "RFI, submittal and action registers are kept current",
+                "Owners of overdue items are reminded",
                 "Exceptions go to the project manager, not to everyone",
             ],
             needs: ["Site reports, voice notes and photos", "RFI and submittal logs", "Programme milestones"],
-            produces: ["Daily site report", "RFI & action tracker", "Overdue and exception alerts"],
-            human: "Progress percentages and quantities from site notes only count once the PM confirms them.",
+            produces: ["Daily site report", "RFI & action tracker", "Overdue alerts"],
+            exceptions: ["Overdue RFIs and submittals", "Progress figures not yet confirmed", "Actions without an owner"],
+            reviewer: "Project manager",
+            human: "Progress percentages and quantities from site notes only count once the project manager confirms them.",
+            next: "Confirmed updates feed Management Reporting",
+            nextId: "reporting",
             visual: "tracker",
         },
         {
             id: "reporting",
             name: "Management Reporting",
             short: "Reporting",
-            headline: "The weekly picture the owner keeps asking for, built automatically.",
+            headline: "The weekly picture the owner keeps asking for.",
+            todayHeadline: "The same numbers requested from five people.",
             today: [
-                "The owner asks five people for the same numbers",
+                "The owner asks several people for the same numbers",
                 "Reports are rebuilt in Excel or PowerPoint every week",
                 "Figures are out of date before the meeting starts",
             ],
             withMonjez: [
-                "Agreed figures are pulled from your trackers, sheets and ERP exports",
-                "Tender pipeline, project status, procurement and cash items are consolidated",
+                "Agreed figures are pulled from the connected trackers, sheets and exports",
+                "Tender pipeline, project status and procurement items are consolidated",
                 "One weekly report highlights the exceptions",
-                "The owner reviews it and asks follow-up questions in plain language",
+                "Each figure shows where it came from",
             ],
-            needs: ["Tender log and project trackers", "ERP or finance exports (read access)", "The KPIs you actually manage by"],
-            produces: ["Weekly management report", "Pipeline and win/loss view", "Claim & variation backup list", "Exceptions list"],
-            human: "Every report shows where its numbers came from. Figures are only as current as the systems they read.",
+            needs: ["Tender log and project trackers", "Procurement and finance exports (read access)", "The KPIs you actually manage by"],
+            produces: ["Weekly management report", "Pipeline and win/loss view", "Exceptions list"],
+            exceptions: ["Figures that couldn’t be sourced", "Items behind programme", "Decisions waiting on management"],
+            reviewer: "Owner / general manager",
+            human: "Reports show where their numbers came from, and they are only as current as the systems they read.",
+            next: "Decisions flow back to the tender and project teams",
+            nextId: "tender",
             visual: "report",
         },
     ] satisfies Workflow[],
@@ -232,73 +268,127 @@ export const OS = {
 export type Agent = {
     id: string;
     name: string;
-    role: string;
-    takesIn: string;
-    handsBack: string;
+    task: string;
+    inputs: string;
+    outputs: string;
     owner: string;
-    does: string[];
 };
 
 export const TEAM = {
     eyebrow: "What we build",
-    title: "Your AI team,",
-    titleAccent: "built around how your company works.",
-    sub: "Each agent does one job, reports to a named person on your team, and works in the tools you already use. Nothing reaches a client, a supplier or a price without a human approving it.",
+    title: "An AI system designed",
+    titleAccent: "around how your company works.",
+    sub: "Monjez connects repetitive tasks into workflows tailored to your company’s documents, business rules and existing tools. Each workflow has a defined responsibility, reviewable outputs and an accountable person on your team where approval is required.",
     coordinator: {
-        name: "Office Manager",
-        role: "Routes incoming documents to the right agent, tracks what’s waiting on whom, and sends your team one daily summary.",
+        name: "Your company’s AI workflows",
+        role: "The modules share the same documents and data, so the output of one step becomes the input of the next. Which modules are built depends on your agreed scope.",
     },
     agents: [
-        { id: "tender", name: "Tender Desk", role: "Reads tender packs and builds the requirements register.", takesIn: "ITT, specs, addenda", handsBack: "Tender summary + compliance register", owner: "Tender Manager" , does: ["Indexes every file in the tender pack", "Pulls out deadlines, bonds and submission rules", "Flags missing documents and conflicting clauses", "Drafts clarification questions for review"] },
-        { id: "boq", name: "BOQ Checker", role: "Structures BOQs and flags missing or inconsistent lines.", takesIn: "BOQ in PDF or Excel", handsBack: "Clean BOQ + exceptions report", owner: "QS / Estimator" , does: ["Extracts line items from PDF or Excel", "Normalises units and descriptions to your conventions", "Flags missing quantities, duplicates and provisional sums", "Never changes a quantity on its own"] },
-        { id: "rates", name: "Rate Builder", role: "Drafts rate build-ups from your approved history.", takesIn: "Clean BOQ, rate library, quotes", handsBack: "Draft costing sheet with sources", owner: "Estimation Manager" , does: ["Matches lines to your approved rate library", "Pulls in the latest supplier quotations", "Shows the source behind every draft rate", "Lists lines with no approved rate"] },
-        { id: "procurement", name: "Procurement Desk", role: "Compares supplier quotations like for like.", takesIn: "RFQs and supplier quotes", handsBack: "Comparative statement + follow-ups", owner: "Procurement Manager" , does: ["Extracts every supplier quotation into one format", "Builds the like-for-like comparison", "Flags exclusions, lead times and payment terms", "Drafts follow-ups for your approval"] },
-        { id: "site", name: "Site Reporter", role: "Turns site voice notes and messages into daily reports.", takesIn: "Voice notes, photos, messages", handsBack: "Daily report + action list", owner: "Project Manager" , does: ["Turns voice notes and photos into a daily report", "Keeps RFI, submittal and action logs current", "Reminds owners of overdue items", "Escalates exceptions to the PM"] },
-        { id: "commercial", name: "Commercial Reporter", role: "Builds the owner’s weekly report and keeps the paper trail behind claims and variations.", takesIn: "Trackers, site records, ERP exports", handsBack: "Weekly report + claim backup list", owner: "Owner / Commercial Manager" , does: ["Consolidates tenders, projects and procurement", "Highlights exceptions instead of everything", "Keeps the records behind claims and variations", "Shows where every number came from"] },
+        {
+            id: "tender",
+            name: "Tender Management",
+            task: "Organises tender requirements, deadlines, missing documents and bid-preparation tasks.",
+            inputs: "Tender documents, instructions to tenderers, specifications and relevant attachments",
+            outputs: "A structured requirements register, deadline summary and a list of items requiring review",
+            owner: "Your designated bid or tender manager",
+        },
+        {
+            id: "boq",
+            name: "BOQ Analysis",
+            task: "Structures quantity schedules and flags missing or inconsistent line items.",
+            inputs: "BOQ in PDF or Excel, relevant specification sections and your item conventions",
+            outputs: "A structured BOQ, an exceptions report and questions for the consultant",
+            owner: "Quantity surveyor or estimator",
+        },
+        {
+            id: "rates",
+            name: "Estimating & Pricing",
+            task: "Prepares draft cost build-ups and pricing inputs from your approved sources.",
+            inputs: "Structured BOQ, rate library, supplier quotations and, where available, historical priced projects",
+            outputs: "A draft costing sheet with rate sources and a list of unpriced lines",
+            owner: "Estimation or commercial manager",
+        },
+        {
+            id: "procurement",
+            name: "Procurement Coordination",
+            task: "Compares supplier quotations and keeps purchasing follow-ups moving.",
+            inputs: "RFQs, material schedules and supplier quotations",
+            outputs: "A comparative statement, deviations list and follow-up tracker",
+            owner: "Procurement manager",
+        },
+        {
+            id: "site",
+            name: "Project Operations",
+            task: "Turns project updates into structured reports and tracks outstanding actions.",
+            inputs: "Site reports, voice notes, photos, RFI and submittal logs",
+            outputs: "A daily report, action and RFI tracker, and overdue alerts",
+            owner: "Project manager",
+        },
+        {
+            id: "commercial",
+            name: "Management Reporting",
+            task: "Consolidates available tender, project and procurement data into one view.",
+            inputs: "Tender log, project trackers and finance or ERP exports",
+            outputs: "A weekly management report with an exceptions list",
+            owner: "Owner or general manager",
+        },
     ] satisfies Agent[],
+    control: {
+        title: "Automation and approval, by design",
+        body: "Each workflow automates the repetitive steps you agree on. Sensitive decision points, such as pricing approval and external submissions, stay with the people you name, as set out in the workflow design.",
+    },
     tools: ["Excel & Google Sheets", "Outlook & Gmail", "SharePoint, OneDrive & Google Drive", "WhatsApp (where approved)", "Your ERP (after technical review)"],
     models: "Model-agnostic: we build on Claude, OpenAI or other models, whichever fits each task and your data policy.",
-    note: "This is an example team. Yours is designed around your workflows and starts with one agent.",
+    note: "Modules are built to your scope. Most companies start with one.",
 };
 
 export const JOURNEY = {
-    eyebrow: "Your first 90 days",
-    title: "One workflow live first.",
-    titleAccent: "Then we expand on measured results.",
-    sub: "No six-month transformation programme. We find the one bottleneck costing you the most, ship an agent for it, measure it against your baseline, and grow from there.",
+    eyebrow: "How we implement",
+    title: "From your current process",
+    titleAccent: "to a working workflow.",
+    sub: "Four steps, one workflow at a time.",
     stages: [
         {
-            when: "Before kickoff",
-            title: "Discovery",
-            body: "We map how the workflow runs today, collect sample documents, measure the baseline, and agree the one workflow to start with, plus acceptance criteria.",
-            walk: "A scoped first agent, a measured baseline and written success criteria.",
+            when: "Step 1",
+            title: "Understand the process",
+            body: "We map how the work runs today, identify the repetitive steps and record the baseline: time spent, frequency and the people involved.",
+            walk: "A mapped workflow and a measured baseline.",
         },
         {
-            when: "Days 1–7",
-            title: "First deployment",
-            body: "We build the first agent on the agreed workflow, test it on your real documents, and set up the human review step before anything goes live.",
-            walk: "A working agent your team is using on live work.",
+            when: "Step 2",
+            title: "Design the workflow",
+            body: "We define the inputs, business rules, integrations, outputs and approval points, and agree what success looks like.",
+            walk: "A written scope with clear approval points.",
         },
         {
-            when: "Weeks 2–4",
-            title: "Integration",
-            body: "We connect it to the inbox, shared drive, spreadsheets or ERP it needs, as access and technical review allow. Permissions are set, and your team is onboarded.",
-            walk: "The agent working inside your existing tools, with clear permissions.",
+            when: "Step 3",
+            title: "Build and test",
+            body: "We implement the agreed workflow and validate it against representative company documents and scenarios, including the awkward ones.",
+            walk: "A workflow tested on your own documents.",
         },
         {
-            when: "Weeks 4–8",
-            title: "Optimisation",
-            body: "We track usage, accuracy, exceptions and manual corrections against the baseline, then tighten the rules where the agent needs it.",
-            walk: "A measured before/after, not a feeling.",
-        },
-        {
-            when: "Weeks 8–12",
-            title: "Expansion",
-            body: "We pick the next workflows based on measured results and your priorities. Most connect to the data the first agent already uses.",
-            walk: "A prioritised roadmap for your next agents.",
+            when: "Step 4",
+            title: "Deploy and improve",
+            body: "We introduce the workflow to your team, monitor how it behaves, handle exceptions and improve it based on observed results.",
+            walk: "A live workflow, measured against the baseline.",
         },
     ],
-    caveat: "Timelines depend on scope, data quality, integrations, system access and how quickly your team reviews outputs. Complex ERP integrations or drawing-heavy takeoff may need a longer first phase, and we’ll tell you before kickoff, not after.",
+    caveat: "Scope and timing depend on the complexity of the workflow, document quality, system access and integration requirements. A first workflow can be introduced within 7 days of kickoff when those are ready.",
+};
+
+export const TRUST = {
+    eyebrow: "Trust & control",
+    title: "Reliable by design,",
+    titleAccent: "accountable by default.",
+    sub: "How we approach accuracy, data and decision-making in every workflow we build.",
+    items: [
+        { title: "Traceable outputs", body: "Outputs can be reviewed and traced back to their source documents where technically available." },
+        { title: "Exceptions surfaced", body: "Missing information and detected inconsistencies are flagged for your team, not silently ignored." },
+        { title: "Your approval rules", body: "Pricing, contractual commitments and other sensitive commercial decisions follow the approval rules you agree." },
+        { title: "Your tools first", body: "Existing tools are kept where practical and integrated where technically feasible." },
+        { title: "Data controls agreed upfront", body: "Data access, processing, retention and security controls are set for each implementation and the service providers it uses." },
+    ],
+    note: "We don’t claim perfect accuracy, complete security or guaranteed compatibility. We test on your documents and tell you what we find.",
 };
 
 export const GCC = {
@@ -354,68 +444,60 @@ export const GUARANTEE = {
         "Set out in written terms before work starts",
     ],
     honest: "If your numbers don’t support $50,000, we’ll say so and propose a smaller guarantee or a paid pilot instead.",
-    ctaPrimary: "Book a Free Call",
-    ctaSecondary: "See the AI team we build",
+    ctaPrimary: "Review Your Workflow",
+    ctaSecondary: "Explore the AI System",
 };
 
 export const FAQ = {
     eyebrow: "FAQ",
-    title: "Straight answers",
+    title: "Clear answers",
     titleAccent: "to fair questions.",
     sub: "Still unsure? Book a call. If AI isn’t the right fix for your problem, we’ll tell you.",
-    cta: "Talk to the team",
+    cta: "Review Your Workflow",
     items: [
         {
-            q: "What does Monjez actually build?",
-            a: "Custom AI agents and connected workflows for one job at a time: reading tender packs, structuring BOQs, drafting rate build-ups, comparing supplier quotations, turning site updates into reports, or consolidating the owner’s weekly numbers. Each one is built around your documents, your rules and the tools you already use, with a human review step.",
+            q: "What exactly does Monjez build?",
+            a: "Monjez designs and implements custom AI systems that connect repetitive tasks across construction workflows. Depending on the agreed scope, that can include tender-document processing, BOQ organisation, estimating support, supplier quotation comparisons, project coordination and management reporting.",
         },
         {
-            q: "How is this different from automation software or a chatbot?",
-            a: "Off-the-shelf tools give you a fixed product and ask you to adapt to it. A chatbot answers questions when someone asks. We design a workflow: what comes in, which company rules apply, what gets checked, who approves, and where the result goes next. If a simple tool already solves your problem, we’ll tell you.",
+            q: "How is this different from a chatbot or standard automation tool?",
+            a: "We focus on the workflow itself: where information comes from, which business rules apply, how results are produced and how information moves to the next step. Your existing tools are incorporated where appropriate rather than replaced by default.",
         },
         {
-            q: "Can it work with our spreadsheets, documents and current tools?",
-            a: "Usually, yes. Most workflows start from the Excel files, PDFs, email inboxes and shared drives you already use. ERP and other system integrations depend on what your system allows (API, database access or import/export), so we confirm feasibility in a technical review before promising anything.",
-        },
-        {
-            q: "Do we need to replace our existing systems?",
-            a: "No. In most cases we work around your ERP and existing systems rather than replacing them. Our job is to remove the manual steps that happen between them.",
+            q: "Do we need to replace our current systems?",
+            a: "No. The aim is to work with your existing tools wherever practical. Integration depends on available APIs, permissions, data formats and the technical characteristics of each system, so we assess feasibility before the implementation scope is confirmed.",
         },
         {
             q: "How do you handle sensitive company information?",
-            a: "Before we build, we agree which data is used, who can access it, where it’s stored, which AI providers process it, how long it’s kept and how it’s deleted. We don’t upload your documents to any external tool until that’s approved, and agents only get the access their job needs.",
+            a: "Before implementation we identify the data required, access permissions, processing and storage arrangements, retention policies and the service providers involved. We agree these with you, and only describe the controls that apply to your actual deployment.",
         },
         {
-            q: "How accurate is AI with BOQs, pricing and tender documents?",
-            a: "It depends on the documents: clean digital BOQs behave very differently from scanned drawings. AI is strong at reading, extracting, structuring and cross-checking, and it still makes mistakes. That’s why every output links back to its source, uncertain items are flagged, and we measure accuracy on your own documents before go-live. We don’t quote accuracy percentages we haven’t tested.",
+            q: "Can AI process BOQs and tender documents with 100% accuracy?",
+            a: "No, and we don’t assume it can. Document quality, scanned files, complex drawings and conflicting specifications all affect results. Workflows are tested against representative documents, important exceptions are surfaced for review, and commercial decisions are verified by the appropriate people.",
         },
         {
-            q: "Where is human review required?",
-            a: "Anywhere a mistake would cost money or create a commitment: quantities used for pricing, rates and margins, go/no-go decisions, supplier selection, anything sent to a client or supplier, and anything touching payroll. The agent prepares; your people decide.",
+            q: "Does this replace employees?",
+            a: "The objective is to reduce repetitive manual work and help your existing team handle more work. AI supports defined tasks; professional judgement, commercial accountability and important decisions stay with your people.",
         },
         {
-            q: "How long does the first implementation take?",
-            a: "We target a first live agent within 7 days of kickoff. Kickoff means the scope is agreed and we have sample documents, system access and a named process owner. Complex integrations or drawing-heavy takeoff can need a longer first phase, and we’ll say so up front.",
+            q: "How long does implementation take?",
+            a: "The first workflow can be ready within seven days of kickoff when the scope is defined and the required documents, permissions and dependencies are available. More complex integrations or specialised document processing can take longer, and we’ll say so before we start.",
         },
         {
-            q: "How do we know whether the investment is worth it?",
-            a: "We measure the baseline first: how many hours the workflow takes today, how often, and who does it. Then we compare after go-live. Our guarantee is tied to that measurement, and if the numbers don’t justify the build, we’ll recommend not doing it.",
-        },
-        {
-            q: "Will this replace our estimators or project team?",
-            a: "No. The goal is to take repetitive document work off your team so the same people can handle more tenders and projects. Technical judgement, approvals and client relationships stay with them.",
+            q: "How do you determine ROI?",
+            a: "We assess the current workflow: time spent, task frequency, the people involved, workload, and measurable costs of errors or delays where available. We then estimate the potential impact and compare it with implementation and operating costs. Estimates are not guaranteed results.",
         },
     ],
 };
 
 export const APPLY = {
-    eyebrow: "Apply",
-    title: "Book a free workflow call.",
-    sub: "Tell us a little about your company. It takes under a minute. If there’s a fit, you’ll pick a time for your call on the next screen.",
+    eyebrow: "Next step",
+    title: "Let’s identify where your team loses time.",
+    sub: "Tell us a little about your company and how work currently moves through your team. We’ll use it to work out which workflow may be worth automating, and what needs to stay under your team’s review.",
     points: [
-        "We review your biggest operational bottleneck",
+        "If there’s a fit, we define the scope of your first workflow",
+        "We list the documents, access and dependencies it needs",
         "You get an honest view of what AI can and can’t do for it",
-        "If there’s a fit, we outline the first agent and how we’d measure it",
     ],
     privacy: "We use these details only to prepare for your call. We never share them.",
     countries: ["United Arab Emirates", "Saudi Arabia", "Qatar", "Kuwait", "Bahrain", "Oman", "Outside the GCC"],
@@ -441,10 +523,10 @@ export const APPLY = {
 };
 
 export const FOOTER = {
-    tagline: "Custom AI systems for fit-out and construction contractors across the GCC. We build the capability inside your business.",
-    ctaTitle: "Ready to take the retyping off your team?",
-    ctaText: "Book a free call. We’ll look at one workflow together.",
-    ctaBtn: "Book a Free Call",
+    tagline: "Custom AI systems for fit-out and construction contractors across the GCC. We build connected workflows around how your company already works.",
+    ctaTitle: "Let’s identify where your team loses time.",
+    ctaText: "Tell us how work moves through your team today.",
+    ctaBtn: "Review Your Workflow",
 };
 
 // Interface strings that live inside components.
@@ -452,7 +534,7 @@ export const UI = {
     langSwitch: { label: "العربية", aria: "التبديل إلى العربية", href: "ar" },
     skip: "Skip to application",
     nav: { home: "Monjez, back to top", open: "Open menu", close: "Close menu", apply: "Apply", main: "Main" },
-    hero: { sample: "Sample tender · illustrative data", watch: "Watch the 2-minute walkthrough", videoTitle: "Monjez walkthrough" },
+    hero: { sample: "Illustrative demonstration · sample tender", watch: "Watch the 2-minute walkthrough", videoTitle: "Monjez walkthrough" },
     impact: {
         illustrative: "Illustrative example",
         potential: "Potential outcome",
@@ -472,16 +554,16 @@ export const UI = {
         disclaimer: "This is arithmetic on your assumptions, not a quote, a client result or a guarantee. Hours only count as value once they’re actually released from the task.",
         cta: "Measure your real baseline",
     },
-    os: { tablist: "Workflows", workflow: "Workflow", flowIn: "tender pack in", flowOut: "owner’s desk", compare: "Compare process", sample: "Sample output · illustrative data" },
+    os: { tablist: "Workflows", workflow: "Workflow", flowIn: "tender document in", flowOut: "management reporting", compare: "Compare process", sample: "Illustrative demonstration · not client data", goNext: "Go to next workflow" },
     team: {
-        file: "Agent file",
-        builtOn: "Built on your documents and rules",
-        does: "What it does",
-        moves: "How the work moves",
-        takesIn: "Takes in",
-        handsBack: "Hands back",
-        approvedBy: "Approved by",
-        worksInside: "Works inside",
+        file: "Module",
+        builtOn: "Built around your documents and rules",
+        task: "Task",
+        inputs: "Inputs",
+        outputs: "Outputs",
+        owner: "Reviewed by",
+        worksInside: "Can connect with (subject to feasibility)",
+        control: "Approval & control",
     },
     journey: { stage: "Stage", walk: "You walk away with" },
     gcc: {
@@ -517,7 +599,7 @@ export const UI = {
         optional: "(optional)",
         select: "Select…",
         toolsPlaceholder: "e.g. BOQs come as PDFs, we retype them into Excel, quotes arrive by email and WhatsApp…",
-        submit: "Continue to booking",
+        submit: "Review Your Workflow",
         sending: "Sending…",
         sendingSr: "Sending your application",
         errors: {
@@ -570,6 +652,6 @@ export const UI = {
     },
 };
 
-export const EN = { NAV_LINKS, HERO, IMPACT, OS, TEAM, JOURNEY, GCC, TESTIMONIAL, GUARANTEE, FAQ, APPLY, FOOTER, UI };
+export const EN = { NAV_LINKS, HERO, IMPACT, OS, TEAM, JOURNEY, TRUST, GCC, TESTIMONIAL, GUARANTEE, FAQ, APPLY, FOOTER, UI };
 export type Content = typeof EN;
 export type Locale = "en" | "ar";

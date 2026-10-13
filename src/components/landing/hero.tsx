@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { AlertTriangle, CheckCircle2, FileSpreadsheet, FileText, Play } from "lucide-react";
+import { AlertTriangle, CalendarClock, CheckCircle2, FileSpreadsheet, FileText, Play, ShieldCheck } from "lucide-react";
 import { useContent } from "./content-context";
 import { LANDING_CONFIG } from "./config";
 import { Chip, Container, ScrollLink, WindowFrame } from "./primitives";
@@ -96,7 +96,7 @@ function HeroMock() {
                     </div>
                     <div className="mt-3 flex flex-wrap items-center gap-2">
                         <Chip tone="flag">2 flagged for the tender manager</Chip>
-                        <Chip>Go / no-go: your call</Chip>
+                        <Chip>Decision: bid manager</Chip>
                     </div>
                 </div>
             </div>
@@ -122,20 +122,22 @@ export function Hero() {
                         <span className="h-1.5 w-1.5 rounded-full bg-mj-accent" aria-hidden />
                         {HERO.badge}
                     </span>
-                    <h1 className="mt-6 text-balance font-display text-[40px] font-semibold leading-[1.04] tracking-[-0.03em] text-mj-ink sm:text-[56px] lg:text-[68px]">
+                    <h1 className="mt-6 text-balance font-display text-[34px] font-semibold leading-[1.08] tracking-[-0.03em] text-mj-ink sm:text-[48px] lg:text-[58px]">
                         {HERO.titleLead} <span className="text-mj-accent">{HERO.titleAccent}</span>
                     </h1>
-                    <p className="mx-auto mt-6 max-w-[680px] text-pretty text-[17px] leading-[1.65] text-mj-body sm:text-[18.5px]">
-                        {HERO.sub} <strong className="font-semibold text-mj-ink">{HERO.subStrong}</strong>
-                    </p>
+                    <p className="mx-auto mt-6 max-w-[700px] text-pretty text-[17px] leading-[1.65] text-mj-body sm:text-[18px]">{HERO.sub}</p>
                     <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
                         <ScrollLink to="apply" variant="primary" size="lg" arrow className="w-full sm:w-auto">
                             {HERO.ctaPrimary}
                         </ScrollLink>
-                        <ScrollLink to="team" variant="secondary" size="lg" className="w-full sm:w-auto">
+                        <ScrollLink to="system" variant="secondary" size="lg" className="w-full sm:w-auto">
                             {HERO.ctaSecondary}
                         </ScrollLink>
                     </div>
+                    <p className="mx-auto mt-5 flex max-w-[620px] items-start justify-center gap-2 text-[13.5px] leading-relaxed text-mj-muted">
+                        <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-mj-accent" aria-hidden />
+                        <span>{HERO.timeline}</span>
+                    </p>
                 </div>
 
                 <div className="relative mx-auto mt-14 max-w-[1040px] sm:mt-16">
@@ -155,18 +157,14 @@ export function Hero() {
                     <p className="mt-3 text-center font-mono text-[11px] text-mj-muted">{UI.hero.sample}</p>
                 </div>
 
-                <dl className="mx-auto mt-12 grid max-w-[960px] gap-px overflow-hidden rounded-2xl border border-mj-line bg-mj-line sm:grid-cols-3">
-                    {HERO.stats.map((s) => (
-                        <div key={s.value} className="bg-mj-cream px-6 py-5 text-center sm:text-start">
-                            <dt className="sr-only">{s.label}</dt>
-                            <dd>
-                                <span className="block font-display text-[24px] font-semibold tracking-[-0.02em] text-mj-ink">{s.value}</span>
-                                <span className="mt-1 block text-[13.5px] leading-snug text-mj-muted">{s.label}</span>
-                            </dd>
-                        </div>
+                <ul className="mx-auto mt-12 grid max-w-[1000px] gap-3 sm:grid-cols-3">
+                    {HERO.trust.map((t) => (
+                        <li key={t} className="flex gap-3 rounded-2xl border border-mj-line bg-white/70 px-4 py-4 text-[14px] leading-snug text-mj-ink">
+                            <ShieldCheck className="mt-0.5 h-[18px] w-[18px] shrink-0 text-mj-accent" aria-hidden />
+                            {t}
+                        </li>
                     ))}
-                </dl>
-                <p className="mx-auto mt-3 max-w-[960px] text-center text-[12px] text-mj-muted sm:text-start">{HERO.footnote}</p>
+                </ul>
             </Container>
             <VideoModal src={video} title={UI.hero.videoTitle} onClose={() => setVideo(null)} />
         </section>

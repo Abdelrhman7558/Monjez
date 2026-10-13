@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Activity, Compass, Plug, Rocket, TrendingUp, Minus, Plus, type LucideIcon } from "lucide-react";
+import { Compass, FlaskConical, PenTool, Rocket, Minus, Plus, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useContent } from "./content-context";
 import { Container, Reveal, Section, SectionHead } from "./primitives";
 
-const ICONS: LucideIcon[] = [Compass, Rocket, Plug, Activity, TrendingUp];
+const ICONS: LucideIcon[] = [Compass, PenTool, FlaskConical, Rocket];
 
 export function Journey() {
     const { JOURNEY, UI } = useContent();
@@ -46,8 +46,7 @@ export function Journey() {
                                         >
                                             <span>
                                                 <span className="flex items-center gap-3 font-mono text-[11.5px] uppercase tracking-[0.14em]">
-                                                    <span className="text-mj-accent">{UI.journey.stage} 0{i + 1}</span>
-                                                    <span className="text-mj-muted">{s.when}</span>
+                                                    <span className="text-mj-accent">{s.when}</span>
                                                 </span>
                                                 <span className="mt-1.5 block font-display text-[24px] font-semibold tracking-[-0.015em] text-mj-ink sm:text-[28px]">{s.title}</span>
                                             </span>
