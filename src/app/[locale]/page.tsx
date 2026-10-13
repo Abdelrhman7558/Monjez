@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans_Arabic, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { ContractorLanding } from "@/components/landing/landing";
+import { LandingTracking } from "@/components/landing/tracking";
 import type { Locale } from "@/components/landing/content";
 
 const display = Space_Grotesk({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-display", display: "swap" });
@@ -61,6 +62,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     return (
         <div className={`${display.variable} ${mono.variable} ${arabic.variable}`}>
             <ContractorLanding locale={locale} />
+            <LandingTracking />
         </div>
     );
 }

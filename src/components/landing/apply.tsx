@@ -167,7 +167,7 @@ export function Apply() {
     } = useForm<ApplyInput>({
         resolver: zodResolver(schema),
         mode: "onTouched",
-        defaultValues: { name: "", email: "", company: "", tools: "" },
+        defaultValues: { name: "", email: "", company: "", phone: "", tools: "" },
     });
 
     const onSubmit = async (data: ApplyInput) => {
@@ -271,6 +271,9 @@ export function Apply() {
                                     </Field>
                                     <Field id="apply-company" label={t.fields.company} error={err("company")}>
                                         <input id="apply-company" autoComplete="organization" className={cls("company")} {...aria("company")} {...register("company")} />
+                                    </Field>
+                                    <Field id="apply-phone" label={t.fields.phone} error={err("phone")}>
+                                        <input id="apply-phone" type="tel" dir="ltr" autoComplete="tel" inputMode="tel" placeholder="+971 50 000 0000" className={cls("phone")} {...aria("phone")} {...register("phone")} />
                                     </Field>
                                     <Field id="apply-country" label={t.fields.country} error={err("country")}>
                                         <select id="apply-country" defaultValue="" className={cls("country")} {...aria("country")} {...register("country")}>

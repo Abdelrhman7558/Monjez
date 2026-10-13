@@ -13,6 +13,10 @@ export function makeApplySchema(m: Messages = UI.validation) {
         name: z.string().trim().min(2, m.name).max(100),
         email: z.string().trim().toLowerCase().email(m.email).max(160),
         company: z.string().trim().min(2, m.company).max(140),
+        phone: z
+            .string()
+            .trim()
+            .regex(/^\+?[\d\s()-]{7,20}$/, m.phone),
         country: oneOf(APPLY.countries, m.country),
         companyType: oneOf(APPLY.companyTypes, m.companyType),
         size: oneOf(APPLY.sizes, m.size),
