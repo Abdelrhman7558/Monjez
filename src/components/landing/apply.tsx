@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { makeApplySchema, type ApplyInput, type Tier } from "@/lib/landing/apply";
 import { EN } from "./content";
 import { useContent, useLocale } from "./content-context";
+import { trackLead } from "./tracking";
 import { LANDING_CONFIG } from "./config";
 import { Button, Container, Eyebrow, Section } from "./primitives";
 
@@ -184,6 +185,7 @@ export function Apply() {
             });
             const json = await res.json().catch(() => ({}));
             if (res.ok && json.ok) {
+                if (!json.duplicate) trackLead(json.tier);
                 setSubmitted({ name: data.name, email: data.email });
                 setStatus({ kind: "done", tier: json.tier as Tier });
                 return;
