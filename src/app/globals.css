@@ -44,5 +44,92 @@ html {
 }
 
 body {
-  @apply overflow-x-hidden;
+  /* clip (not hidden) so body doesn't become a scroll container — keeps position: sticky working */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+/* ---------- Contractor landing ---------- */
+.mj-landing {
+  -webkit-font-smoothing: antialiased;
+}
+
+.mj-landing ::selection {
+  background: #4D3B9B;
+  color: #fff;
+}
+
+.mj-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, #4D3B9B 0%, #4D3B9B var(--pct, 50%), #E2DBCF var(--pct, 50%), #E2DBCF 100%);
+  cursor: pointer;
+}
+.mj-range:focus-visible {
+  outline: 2px solid #4D3B9B;
+  outline-offset: 6px;
+}
+.mj-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid #4D3B9B;
+  box-shadow: 0 2px 6px rgba(23, 31, 46, 0.2);
+}
+.mj-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid #4D3B9B;
+  box-shadow: 0 2px 6px rgba(23, 31, 46, 0.2);
+}
+
+/* GCC map: label sizes are in SVG user units; bump them on narrow screens so they stay readable. */
+.mj-map text {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  paint-order: stroke;
+  stroke: #FBFAF7;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.mj-map-country { font-weight: 600; }
+.mj-map-city { font-size: 15px; font-weight: 600; }
+.mj-map-small { font-size: 9.5px; font-weight: 700; }
+@media (max-width: 639px) {
+  .mj-map-label { display: none; }
+  .mj-map-country { font-size: 34px !important; letter-spacing: 1px; }
+}
+
+/* Landing uses a light theme; keep the shared dark body from flashing behind it. */
+body:has(.mj-landing) {
+  background-color: #F5F2EC;
+}
+
+/* Arabic landing: IBM Plex Sans Arabic everywhere outside the English sample screens, no Latin letter-spacing. */
+.mj-landing[lang="ar"],
+.mj-landing[lang="ar"] .font-display,
+.mj-landing[lang="ar"] .font-mono {
+  font-family: var(--font-arabic), var(--font-inter), system-ui, sans-serif;
+}
+.mj-landing[lang="ar"] [class*="tracking-"] {
+  letter-spacing: 0;
+}
+.mj-landing[lang="ar"] [dir="ltr"],
+.mj-landing[lang="ar"] [dir="ltr"] .font-display {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+.mj-landing[lang="ar"] [dir="ltr"] .font-mono {
+  font-family: var(--font-mono), monospace;
+}
+.mj-landing[lang="ar"] h1,
+.mj-landing[lang="ar"] h2 {
+  line-height: 1.3;
+}
+.mj-landing[lang="ar"] .mj-map text {
+  font-family: var(--font-arabic), system-ui, sans-serif;
 }
