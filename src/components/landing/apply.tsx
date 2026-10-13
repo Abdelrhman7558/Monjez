@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, CalendarCheck, Check, Loader2, X } from "lucide-react";
+import { AlertCircle, CalendarCheck, Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { makeApplySchema, type ApplyInput, type Tier } from "@/lib/landing/apply";
 import { EN } from "./content";
@@ -59,90 +59,24 @@ function newId() {
     );
 }
 
-const CAL_ORIGIN = "https://app.cal.com";
-type CalFn = ((...args: unknown[]) => void) & { loaded?: boolean; ns?: Record<string, unknown>; q?: unknown[] };
-
-/** Cal.com's official embed loader (same as their snippet), loaded once on demand. */
-function loadCal(): CalFn {
-    const w = window as unknown as { Cal?: CalFn };
-    if (w.Cal) return w.Cal;
-    /* eslint-disable */
-    (function (C: any, A: string, L: string) {
-        const p = function (a: any, ar: any) { a.q.push(ar); };
-        const d = C.document;
-        C.Cal = C.Cal || function () {
-            const cal = C.Cal; const ar = arguments;
-            if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; }
-            if (ar[0] === L) {
-                const api: any = function () { p(api, arguments); };
-                const namespace = ar[1]; api.q = api.q || [];
-                if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar);
-                return;
-            }
-            p(cal, ar);
-        };
-    })(window, `${CAL_ORIGIN}/embed/embed.js`, "init");
-    /* eslint-enable */
-    w.Cal!("init", { origin: CAL_ORIGIN });
-    return w.Cal!;
+function bookingUrl(base: string, name: string, email: string) {
+    return `${base}?${new URLSearchParams({ name, email }).toString()}`;
 }
 
-/** Booking calendar in a popup over the page (not inline, not a new tab). */
-function BookingModal({ calLink, name, email, title, onClose }: { calLink: string; name: string; email: string; title: string; onClose: () => void }) {
-    const t = useContent().UI.apply;
-    const host = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-        document.addEventListener("keydown", onKey);
-        const prev = document.body.style.overflow;
-        document.body.style.overflow = "hidden";
-        return () => {
-            document.removeEventListener("keydown", onKey);
-            document.body.style.overflow = prev;
-        };
-    }, [onClose]);
-    useEffect(() => {
-        if (!host.current) return;
-        const Cal = loadCal();
-        Cal("inline", { elementOrSelector: host.current, calLink, config: { name, email, layout: "month_view", theme: "light" } });
-        Cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
-    }, [calLink, name, email]);
-    return (
-        <div role="dialog" aria-modal="true" aria-label={title} className="fixed inset-0 z-[90] flex items-center justify-center bg-mj-ink/60 p-3 backdrop-blur-sm sm:p-6" onClick={onClose}>
-            <div className="relative h-[88vh] w-full max-w-[1040px] overflow-hidden rounded-3xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()} data-lenis-prevent>
-                <button
-                    type="button"
-                    onClick={onClose}
-                    aria-label={t.close}
-                    className="absolute end-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-mj-line bg-white text-mj-ink shadow-sm hover:bg-mj-sand"
-                >
-                    <X className="h-5 w-5" aria-hidden />
-                </button>
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[14px] text-mj-muted" role="status">
-                    <Loader2 className="h-6 w-6 animate-spin text-mj-accent" aria-hidden />
-                    {t.loading}
-                </div>
-                <div ref={host} className="relative h-full w-full overflow-auto bg-white/0" dir="ltr" />
-            </div>
-        </div>
-    );
-}
-
+/** After the answers are in, send the visitor straight to the Cal.com booking page (same tab). */
 function BookingStep({ tier, name, email }: { tier: Tier; name: string; email: string }) {
     const t = useContent().UI.apply;
-    const ref = useRef<HTMLDivElement>(null);
     const base = tier === "qualified" ? LANDING_CONFIG.calendlyQualified : LANDING_CONFIG.calendlyDiscovery;
-    const calLink = base.replace(/^https:\/\/cal\.com\//, "");
-    // Open the calendar as soon as the answers are in; the button reopens it if closed.
-    const [open, setOpen] = useState(tier !== "not_fit");
+    const href = bookingUrl(base, name, email);
     useEffect(() => {
-        ref.current?.focus();
-    }, []);
-    const modal = open && <BookingModal calLink={calLink} name={name} email={email} title={t.calendarTitle} onClose={() => setOpen(false)} />;
+        if (tier === "not_fit") return;
+        const id = window.setTimeout(() => window.location.assign(href), 600);
+        return () => window.clearTimeout(id);
+    }, [tier, href]);
 
     if (tier === "not_fit") {
         return (
-            <div ref={ref} tabIndex={-1} className="p-6 outline-none sm:p-10">
+            <div className="p-6 sm:p-10">
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-mj-sand text-mj-ink">
                     <Check className="h-6 w-6" aria-hidden />
                 </span>
@@ -150,36 +84,29 @@ function BookingStep({ tier, name, email }: { tier: Tier; name: string; email: s
                 <p className="mt-3 max-w-[560px] text-[15.5px] leading-relaxed text-mj-body">{t.notFitBody}</p>
                 <p className="mt-4 text-[14px] text-mj-muted">
                     {t.notFitPre}{" "}
-                    <button type="button" onClick={() => setOpen(true)} className="font-medium text-mj-accent underline underline-offset-4">
+                    <a href={href} className="font-medium text-mj-accent underline underline-offset-4">
                         {t.notFitLink}
-                    </button>
+                    </a>
                     .
                 </p>
-                {modal}
             </div>
         );
     }
 
     const first = name.split(" ")[0];
     return (
-        <div ref={ref} tabIndex={-1} className="p-6 outline-none sm:p-10">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-mj-ok-soft text-mj-ok">
-                <CalendarCheck className="h-6 w-6" aria-hidden />
+        <div className="p-6 sm:p-10" role="status">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-mj-ok-soft text-mj-ok">
+                <Loader2 className="h-6 w-6 animate-spin" aria-hidden />
             </span>
             <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-mj-ok">{t.received}</p>
             <h3 className="mt-1 font-display text-[24px] font-semibold tracking-[-0.01em] text-mj-ink sm:text-[28px]">
                 {tier === "qualified" ? t.qualifiedTitle(first) : t.discoveryTitle(first)}
             </h3>
-            <p className="mt-2 max-w-[560px] text-[15px] leading-relaxed text-mj-body">{tier === "qualified" ? t.qualifiedBody : t.discoveryBody}</p>
-            <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-mj-ink px-6 py-3 text-[15px] font-semibold text-white hover:bg-mj-accent-deep"
-            >
+            <a href={href} className="mt-6 inline-flex items-center gap-2 rounded-full bg-mj-ink px-6 py-3 text-[15px] font-semibold text-white hover:bg-mj-accent-deep">
                 <CalendarCheck className="h-4 w-4" aria-hidden />
                 {t.openCalendar}
-            </button>
-            {modal}
+            </a>
         </div>
     );
 }
