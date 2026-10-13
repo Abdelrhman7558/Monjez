@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, CalendarCheck, Check, ExternalLink, Loader2 } from "lucide-react";
+import { AlertCircle, CalendarCheck, Check, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { makeApplySchema, type ApplyInput, type Tier } from "@/lib/landing/apply";
 import { EN } from "./content";
@@ -59,24 +59,59 @@ function newId() {
     );
 }
 
-function calendlyUrl(base: string, name: string, email: string) {
-    const params = new URLSearchParams({
-        embed_type: "Inline",
-        embed_domain: typeof window !== "undefined" ? window.location.hostname : "",
-        hide_gdpr_banner: "1",
-        name,
-        email,
-    });
-    return `${base}?${params.toString()}`;
+function bookingUrl(base: string, name: string, email: string) {
+    const params = new URLSearchParams({ name, email, theme: "light" });
+    return `${base}/embed?${params.toString()}`;
+}
+
+/** Booking calendar in a popup over the page (not inline, not a new tab). */
+function BookingModal({ src, title, onClose }: { src: string; title: string; onClose: () => void }) {
+    const t = useContent().UI.apply;
+    const [loaded, setLoaded] = useState(false);
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+        document.addEventListener("keydown", onKey);
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.removeEventListener("keydown", onKey);
+            document.body.style.overflow = prev;
+        };
+    }, [onClose]);
+    return (
+        <div role="dialog" aria-modal="true" aria-label={title} className="fixed inset-0 z-[90] flex items-center justify-center bg-mj-ink/60 p-3 backdrop-blur-sm sm:p-6" onClick={onClose}>
+            <div className="relative h-[88vh] w-full max-w-[1040px] overflow-hidden rounded-3xl bg-white shadow-2xl" onClick={(e) => e.stopPropagation()} data-lenis-prevent>
+                <button
+                    type="button"
+                    onClick={onClose}
+                    aria-label={t.close}
+                    className="absolute end-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-mj-line bg-white text-mj-ink shadow-sm hover:bg-mj-sand"
+                >
+                    <X className="h-5 w-5" aria-hidden />
+                </button>
+                {!loaded && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[14px] text-mj-muted" role="status">
+                        <Loader2 className="h-6 w-6 animate-spin text-mj-accent" aria-hidden />
+                        {t.loading}
+                    </div>
+                )}
+                <iframe src={src} title={title} onLoad={() => setLoaded(true)} className={cn("block h-full w-full border-0 transition-opacity duration-300", loaded ? "opacity-100" : "opacity-0")} />
+            </div>
+        </div>
+    );
 }
 
 function BookingStep({ tier, name, email }: { tier: Tier; name: string; email: string }) {
     const t = useContent().UI.apply;
     const ref = useRef<HTMLDivElement>(null);
-    const [loaded, setLoaded] = useState(false);
+    const base = tier === "qualified" ? LANDING_CONFIG.calendlyQualified : LANDING_CONFIG.calendlyDiscovery;
+    const src = bookingUrl(base, name, email);
+    // Open the calendar as soon as the answers are in; the button reopens it if closed.
+    const [open, setOpen] = useState(tier !== "not_fit");
     useEffect(() => {
         ref.current?.focus();
     }, []);
+    const modal = open && <BookingModal src={src} title={t.calendarTitle} onClose={() => setOpen(false)} />;
 
     if (tier === "not_fit") {
         return (
@@ -85,66 +120,39 @@ function BookingStep({ tier, name, email }: { tier: Tier; name: string; email: s
                     <Check className="h-6 w-6" aria-hidden />
                 </span>
                 <h3 className="mt-5 font-display text-[26px] font-semibold tracking-[-0.015em] text-mj-ink">{t.notFitTitle}</h3>
-                <p className="mt-3 max-w-[560px] text-[15.5px] leading-relaxed text-mj-body">
-                    {t.notFitBody}
-                </p>
+                <p className="mt-3 max-w-[560px] text-[15.5px] leading-relaxed text-mj-body">{t.notFitBody}</p>
                 <p className="mt-4 text-[14px] text-mj-muted">
                     {t.notFitPre}{" "}
-                    <a href={LANDING_CONFIG.calendlyDiscovery} target="_blank" rel="noopener noreferrer" className="font-medium text-mj-accent underline underline-offset-4">
+                    <button type="button" onClick={() => setOpen(true)} className="font-medium text-mj-accent underline underline-offset-4">
                         {t.notFitLink}
-                    </a>
+                    </button>
                     .
                 </p>
+                {modal}
             </div>
         );
     }
 
-    const base = tier === "qualified" ? LANDING_CONFIG.calendlyQualified : LANDING_CONFIG.calendlyDiscovery;
-    const src = calendlyUrl(base, name, email);
     const first = name.split(" ")[0];
-
     return (
-        <div ref={ref} tabIndex={-1} className="outline-none">
-            <div className="flex flex-col gap-4 border-b border-mj-line p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-                <div className="flex items-start gap-4">
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-mj-ok-soft text-mj-ok">
-                        <CalendarCheck className="h-6 w-6" aria-hidden />
-                    </span>
-                    <div>
-                        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-mj-ok">{t.received}</p>
-                        <h3 className="mt-1 font-display text-[22px] font-semibold tracking-[-0.01em] text-mj-ink sm:text-[26px]">
-                            {tier === "qualified" ? t.qualifiedTitle(first) : t.discoveryTitle(first)}
-                        </h3>
-                        <p className="mt-1.5 text-[14.5px] text-mj-body">
-                            {tier === "qualified"
-                                ? t.qualifiedBody
-                                : t.discoveryBody}
-                        </p>
-                    </div>
-                </div>
-                <a
-                    href={base}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex shrink-0 items-center gap-1.5 text-[13.5px] font-medium text-mj-accent underline underline-offset-4"
-                >
-                    {t.openCalendar} <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-                </a>
-            </div>
-            <div className="relative h-[720px]" data-lenis-prevent>
-                {!loaded && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[14px] text-mj-muted" role="status">
-                        <Loader2 className="h-6 w-6 animate-spin text-mj-accent" aria-hidden />
-                        {t.loading}
-                    </div>
-                )}
-                <iframe
-                    src={src}
-                    title={t.calendarTitle}
-                    onLoad={() => setLoaded(true)}
-                    className={cn("relative block h-full w-full border-0 transition-opacity duration-300", loaded ? "opacity-100" : "opacity-0")}
-                />
-            </div>
+        <div ref={ref} tabIndex={-1} className="p-6 outline-none sm:p-10">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-mj-ok-soft text-mj-ok">
+                <CalendarCheck className="h-6 w-6" aria-hidden />
+            </span>
+            <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-mj-ok">{t.received}</p>
+            <h3 className="mt-1 font-display text-[24px] font-semibold tracking-[-0.01em] text-mj-ink sm:text-[28px]">
+                {tier === "qualified" ? t.qualifiedTitle(first) : t.discoveryTitle(first)}
+            </h3>
+            <p className="mt-2 max-w-[560px] text-[15px] leading-relaxed text-mj-body">{tier === "qualified" ? t.qualifiedBody : t.discoveryBody}</p>
+            <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-mj-ink px-6 py-3 text-[15px] font-semibold text-white hover:bg-mj-accent-deep"
+            >
+                <CalendarCheck className="h-4 w-4" aria-hidden />
+                {t.openCalendar}
+            </button>
+            {modal}
         </div>
     );
 }

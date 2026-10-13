@@ -4,8 +4,9 @@ export const LANDING_CONFIG = {
     // Calendly. Checked 13 Oct 2026: the links in the live funnel config (monjez-monjez-agency/45-min-audit and /30min)
     // return 404, and calendly.com/monjez/vip is "not a valid URL". calendly.com/monjez/monjez ("Monjez", 45 min)
     // is the only working event found, so both tiers use it until a separate discovery event exists.
-    calendlyQualified: "https://calendly.com/monjez/monjez",
-    calendlyDiscovery: "https://calendly.com/monjez/monjez",
+    // Cal.com booking (13 Oct 2026). Opens in a popup after the application form is submitted.
+    calendlyQualified: "https://cal.com/monjez/fit-out-operations-review",
+    calendlyDiscovery: "https://cal.com/monjez/fit-out-operations-review",
 
     // Hero walkthrough video. Leave empty to show the product mock-up only.
     // Paste a Loom / YouTube / Vimeo *embed* URL here when the hero video is ready.
