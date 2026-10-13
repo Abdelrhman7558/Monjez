@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type KeyboardEvent } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { AlertTriangle, ArrowRight, BarChart3, ClipboardList, Calculator, FileSearch, Truck, UserCheck, Users, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useContent } from "./content-context";
@@ -109,12 +109,10 @@ export function OperatingSystem() {
                 </div>
 
                 <div id="wf-panel" role="tabpanel" aria-labelledby={`wf-tab-${wf.id}`} className="mt-10 grid gap-8 lg:grid-cols-[1fr_1.05fr] lg:gap-12 [&>*]:min-w-0">
-                    <AnimatePresence mode="wait" initial={false}>
                         <motion.div
                             key={wf.id + mode}
-                            initial={reduce ? false : { opacity: 0, y: 8 }}
+                            initial={reduce ? false : { opacity: 0.4, y: 6 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={reduce ? undefined : { opacity: 0, y: -6 }}
                             transition={{ duration: 0.25 }}
                         >
                             <h3 className="font-display text-[24px] font-semibold leading-snug tracking-[-0.015em] text-mj-ink sm:text-[28px]">
@@ -237,21 +235,17 @@ export function OperatingSystem() {
                                 </>
                             )}
                         </motion.div>
-                    </AnimatePresence>
 
                     <div className="lg:sticky lg:top-28 lg:self-start">
-                        <AnimatePresence mode="wait" initial={false}>
-                            <motion.div
+                                <motion.div
                                 key={wf.id + mode}
-                                initial={reduce ? false : { opacity: 0, scale: 0.985 }}
+                                initial={reduce ? false : { opacity: 0.4, scale: 0.99 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                exit={reduce ? undefined : { opacity: 0, scale: 0.985 }}
                                 transition={{ duration: 0.25 }}
                             >
                                 {isToday ? <TodayView type={wf.visual} /> : <WorkflowVisualView type={wf.visual} />}
                             </motion.div>
-                        </AnimatePresence>
-                        <p className="mt-3 font-mono text-[11px] text-mj-muted">{UI.os.sample}</p>
+                            <p className="mt-3 font-mono text-[11px] text-mj-muted">{UI.os.sample}</p>
                     </div>
                 </div>
 
