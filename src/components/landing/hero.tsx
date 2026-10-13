@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { AlertTriangle, CalendarClock, CheckCircle2, FileSpreadsheet, FileText, Play, ShieldCheck } from "lucide-react";
 import { useContent } from "./content-context";
 import { LANDING_CONFIG } from "./config";
-import { Chip, Container, ScrollLink, WindowFrame } from "./primitives";
+import { Chip, Container, ScrollLink, WindowFrame, HeroFrame } from "./primitives";
 import { VideoModal } from "./video-modal";
 import { Link } from "@/navigation";
 
@@ -112,11 +112,7 @@ export function Hero() {
 
     return (
         <section id="top" className="relative overflow-hidden bg-mj-cream pb-14 pt-28 sm:pb-16 sm:pt-32 lg:pt-36">
-            {/* quiet architectural grid */}
-            <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 opacity-[0.55] [background-image:linear-gradient(to_right,#E7E1D6_1px,transparent_1px),linear-gradient(to_bottom,#E7E1D6_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,black,transparent_75%)]"
-            />
+            <HeroFrame />
             <Container className="relative">
                 <div className="mx-auto max-w-[860px] text-center">
                     <span className="inline-flex items-center gap-2 rounded-full border border-mj-accent-line bg-white/70 px-3.5 py-1.5 text-[12.5px] font-medium text-mj-accent-deep">

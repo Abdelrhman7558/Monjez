@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { Container, Eyebrow, Reveal, ScrollLink, Section } from "./primitives";
+import { Container, Eyebrow, Reveal, ScrollLink, Section, HeroFrame } from "./primitives";
 import { useContent } from "./content-context";
 import { SystemMap } from "./system-map";
 import { OperatingSystem } from "./operating-system";
@@ -38,7 +38,6 @@ function Converge() {
       className="relative mx-auto aspect-[16/9] w-full max-w-[760px] sm:aspect-[2/1]"
       aria-hidden
     >
-      <div className="absolute inset-0 rounded-[28px] border border-mj-line bg-white/60 [background-image:linear-gradient(to_right,#ECE6DB_1px,transparent_1px),linear-gradient(to_bottom,#ECE6DB_1px,transparent_1px)] [background-size:36px_36px]" />
       {chips.map((c, i) => {
         const angle = (i / chips.length) * Math.PI * 2 - Math.PI / 2;
         const px = Math.cos(angle) * 36;
@@ -104,7 +103,8 @@ function SystemPageBody() {
   return (
     <>
       <section className="relative overflow-hidden bg-mj-cream pb-14 pt-28 sm:pt-32 lg:pb-16 lg:pt-36">
-        <Container>
+        <HeroFrame />
+        <Container className="relative">
           <Reveal className="mx-auto max-w-[720px] text-center">
             <Eyebrow>{P.eyebrow}</Eyebrow>
             <h1 className="mt-4 text-balance font-display text-[32px] font-semibold leading-[1.08] tracking-[-0.03em] text-mj-ink sm:text-[42px] lg:text-[50px]">

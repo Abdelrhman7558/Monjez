@@ -3,7 +3,7 @@
 import { Mail } from "lucide-react";
 import { useLocale } from "./content-context";
 import { LANDING_CONFIG } from "./config";
-import { Container, Reveal } from "./primitives";
+import { Container, Reveal, HeroFrame } from "./primitives";
 import { LandingShell } from "./shell";
 import type { Locale } from "./content";
 import { JOIN } from "./join-content";
@@ -11,8 +11,9 @@ import { JOIN } from "./join-content";
 function Body() {
   const J = JOIN[useLocale()];
   return (
-    <section className="bg-mj-cream pb-24 pt-32 sm:pt-40">
-      <Container>
+    <section className="relative overflow-hidden bg-mj-cream pb-24 pt-32 sm:pt-40">
+            <HeroFrame />
+      <Container className="relative">
         <Reveal className="mx-auto max-w-[680px] text-center">
           <p className="font-mono text-[11.5px] uppercase tracking-[0.16em] text-mj-accent">
             {J.eyebrow}

@@ -5,7 +5,7 @@ import { ArrowLeft, BookOpen, ClipboardCheck, FileText, Play, Sparkles, type Luc
 import { cn } from "@/lib/utils";
 import { Link } from "@/navigation";
 import { useContent, useLocale } from "./content-context";
-import { Container, Reveal, ScrollLink } from "./primitives";
+import { Container, Reveal, ScrollLink, HeroFrame } from "./primitives";
 import { LandingShell } from "./shell";
 import { RESOURCE_TYPES, RESOURCES_LIST, getResource, localized, type Resource, type ResourceType } from "./resources-data";
 import type { Locale } from "./content";
@@ -65,8 +65,9 @@ function ResourcesIndexBody() {
     const count = (t: ResourceType | "all") => (t === "all" ? list.length : list.filter((r) => r.type === t).length);
 
     return (
-        <section className="relative bg-mj-cream pb-20 pt-28 sm:pt-32 lg:pt-36">
-            <Container>
+        <section className="relative overflow-hidden bg-mj-cream pb-20 pt-28 sm:pt-32 lg:pt-36">
+            <HeroFrame />
+            <Container className="relative">
                 <Reveal className="mx-auto max-w-[760px] text-center">
                     <span className="inline-flex items-center gap-2 rounded-full border border-mj-accent-line bg-white/70 px-3.5 py-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-mj-accent-deep">
                         <Sparkles className="h-3.5 w-3.5" aria-hidden />
