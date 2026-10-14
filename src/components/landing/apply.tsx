@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState , useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CalendarCheck, Check, Loader2 } from "lucide-react";
@@ -10,6 +10,7 @@ import { EN } from "./content";
 import { useContent, useLocale } from "./content-context";
 import { trackLead } from "./tracking";
 import { LANDING_CONFIG } from "./config";
+import { PhoneInput } from "./phone-input";
 import { Button, Container, Eyebrow, Section } from "./primitives";
 
 type Status =
@@ -126,12 +127,17 @@ export function Apply() {
         register,
         handleSubmit,
         setError,
+        setValue,
+        trigger,
         formState: { errors },
     } = useForm<ApplyInput>({
         resolver: zodResolver(schema),
         mode: "onTouched",
         defaultValues: { name: "", email: "", company: "", phone: "", tools: "" },
     });
+
+    register("phone");
+    const onPhone = useCallback((v: string) => setValue("phone", v, { shouldValidate: Boolean(errors.phone) }), [setValue, errors.phone]);
 
     const onSubmit = async (data: ApplyInput) => {
         // A ref, not state: two clicks in the same tick both see the old state.
@@ -237,7 +243,15 @@ export function Apply() {
                                         <input id="apply-company" autoComplete="organization" className={cls("company")} {...aria("company")} {...register("company")} />
                                     </Field>
                                     <Field id="apply-phone" label={t.fields.phone} error={err("phone")}>
-                                        <input id="apply-phone" type="tel" dir="ltr" autoComplete="tel" inputMode="tel" placeholder="+971 50 000 0000" className={cls("phone")} {...aria("phone")} {...register("phone")} />
+                                        <PhoneInput
+                                            id="apply-phone"
+                                            ar={locale === "ar"}
+                                            searchLabel={t.countrySearch}
+                                            invalid={Boolean(errors.phone)}
+                                            className={cls("phone")}
+                                            onChange={onPhone}
+                                            onBlur={() => trigger("phone")}
+                                        />
                                     </Field>
                                     <Field id="apply-country" label={t.fields.country} error={err("country")}>
                                         <select id="apply-country" defaultValue="" className={cls("country")} {...aria("country")} {...register("country")}>

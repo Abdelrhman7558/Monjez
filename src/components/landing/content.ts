@@ -673,6 +673,7 @@ export const UI = {
         qualifiedBody: "45-minute workflow audit. Bring one real example: a tender pack, a BOQ or a supplier comparison.",
         discoveryBody: "We’ll use the call to see whether a first agent makes sense for your company.",
         openCalendar: "Book your call",
+        countrySearch: "Search country or code (e.g. EG)",
         close: "Close calendar",
         loading: "Loading available times…",
         calendarTitle: "Book your call with Monjez",
